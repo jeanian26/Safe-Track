@@ -90,6 +90,11 @@ const styles = StyleSheet.create({
   linkButtonText: {
     color: Colors.onSurface,
   },
+  headingText: {
+    paddingTop: 20,
+    fontSize: 24,
+    fontWeight: '600',
+  },
 });
 
 // Welcome
@@ -128,8 +133,8 @@ export default class Welcome extends Component {
           </View>
 
           <View style={styles.center}>
-            <Paragraph>Find your food online.</Paragraph>
-            <Paragraph>Try different flavours. Enjoy!</Paragraph>
+            <Paragraph style={styles.headingText}>SAFE TRACK</Paragraph>
+            <Paragraph>Smart way Alert!</Paragraph>
           </View>
 
           <View style={styles.center}>

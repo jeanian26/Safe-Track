@@ -29,16 +29,13 @@ import Colors from '../../theme/colors';
 const bgImg = 'http://www.newgeography.com/files/manila-1.jpg';
 
 const slide1Img = {
-  uri:
-    'https://ik.imagekit.io/6bxllfhzy/foodvila/assets/img/fyf_Wzj-bXNwsN.png',
+  uri: 'https://img.icons8.com/office/160/000000/racism.png',
 };
 const slide2Img = {
-  uri:
-    'https://ik.imagekit.io/6bxllfhzy/foodvila/assets/img/payment__wcgkxrFjg.png',
+  uri: 'https://img.icons8.com/office/160/000000/fraud.png',
 };
 const slide3Img = {
-  uri:
-    'https://ik.imagekit.io/6bxllfhzy/foodvila/assets/img/fast-del_LP8Jfhjai.png',
+  uri: 'https://img.icons8.com/office/160/000000/horror.png',
 };
 
 const slides = [
@@ -46,19 +43,19 @@ const slides = [
     id: 'slide1',
     img: slide1Img,
     title: 'Safety First',
-    description: 'Fastest way to order delicious food.',
+    description: 'Safety is priceless so is your life.',
   },
   {
     id: 'slide2',
     img: slide2Img,
-    title: 'Easy payment',
-    description: 'Pay online with your credit card.',
+    title: 'Stay Alert',
+    description: "If you don't want to get hurt, stay alert!",
   },
   {
     id: 'slide3',
     img: slide3Img,
-    title: 'Fast delivery',
-    description: 'Get & enjoy delicious food to your door.',
+    title: 'Fast Response ',
+    description: 'Make safety a way of life.',
   },
 ];
 
@@ -99,13 +96,13 @@ const styles = StyleSheet.create({
   slideImgContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: 200,
-    height: 200,
-    borderRadius: 100,
+    width: 250,
+    height: 250,
+    borderRadius: 30,
     backgroundColor: '#fff',
   },
   slideImg: {
-    width: 190,
+    width: 150,
     height: 150,
     resizeMode: 'cover',
   },

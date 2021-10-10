@@ -112,7 +112,7 @@ export default class SignIn extends Component {
     };
   }
 
-  emailChange = text => {
+  emailChange = (text) => {
     this.setState({
       email: text,
     });
@@ -125,7 +125,7 @@ export default class SignIn extends Component {
     });
   };
 
-  passwordChange = text => {
+  passwordChange = (text) => {
     this.setState({
       password: text,
     });
@@ -145,19 +145,19 @@ export default class SignIn extends Component {
     });
   };
 
-  focusOn = nextFiled => () => {
+  focusOn = (nextFiled) => () => {
     if (nextFiled) {
       nextFiled.focus();
     }
   };
 
-  showInputModal = value => () => {
+  showInputModal = (value) => () => {
     this.setState({
       inputModalVisible: value,
     });
   };
 
-  navigateTo = screen => () => {
+  navigateTo = (screen) => () => {
     const {navigation} = this.props;
     navigation.navigate(screen);
   };
@@ -196,7 +196,7 @@ export default class SignIn extends Component {
 
             <View style={styles.form}>
               <UnderlineTextInput
-                onRef={r => {
+                onRef={(r) => {
                   this.email = r;
                 }}
                 onChangeText={this.emailChange}
@@ -215,7 +215,7 @@ export default class SignIn extends Component {
               />
 
               <UnderlinePasswordInput
-                onRef={r => {
+                onRef={(r) => {
                   this.password = r;
                 }}
                 onChangeText={this.passwordChange}
@@ -256,32 +256,8 @@ export default class SignIn extends Component {
 
               <View style={styles.separator}>
                 <View style={styles.line} />
-                <Text style={styles.orText}>or</Text>
-                <View style={styles.line} />
-              </View>
 
-              <View style={styles.buttonsGroup}>
-                <Button
-                  onPress={this.navigateTo('HomeNavigator')}
-                  color="#063d8a"
-                  socialIconName="facebook-square"
-                  iconColor={Colors.white}
-                  title={'Sign in with Facebook'.toUpperCase()}
-                  rounded
-                  borderRadius
-                  titleColor={'#fff'}
-                />
-                <View style={styles.vSpacer} />
-                <Button
-                  onPress={this.navigateTo('HomeNavigator')}
-                  color="#fe4c1c"
-                  socialIconName="google"
-                  iconColor={Colors.white}
-                  title={'Sign in with Google'.toUpperCase()}
-                  rounded
-                  borderRadius
-                  titleColor={'#fff'}
-                />
+                <View style={styles.line} />
               </View>
             </View>
 

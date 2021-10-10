@@ -109,7 +109,7 @@ export default class SignUp extends Component {
     };
   }
 
-  emailChange = text => {
+  emailChange = (text) => {
     this.setState({
       email: text,
     });
@@ -123,7 +123,7 @@ export default class SignUp extends Component {
     });
   };
 
-  phoneChange = text => {
+  phoneChange = (text) => {
     this.setState({
       phone: text,
     });
@@ -137,7 +137,7 @@ export default class SignUp extends Component {
     });
   };
 
-  passwordChange = text => {
+  passwordChange = (text) => {
     this.setState({
       password: text,
     });
@@ -158,7 +158,7 @@ export default class SignUp extends Component {
     });
   };
 
-  navigateTo = screen => () => {
+  navigateTo = (screen) => () => {
     const {navigation} = this.props;
     navigation.navigate(screen);
   };
@@ -175,7 +175,7 @@ export default class SignUp extends Component {
     );
   };
 
-  focusOn = nextFiled => () => {
+  focusOn = (nextFiled) => () => {
     if (nextFiled) {
       nextFiled.focus();
     }
@@ -204,7 +204,7 @@ export default class SignUp extends Component {
 
             <View style={styles.form}>
               <UnderlineTextInput
-                onRef={r => {
+                onRef={(r) => {
                   this.email = r;
                 }}
                 onChangeText={this.emailChange}
@@ -223,7 +223,7 @@ export default class SignUp extends Component {
               />
 
               <UnderlineTextInput
-                onRef={r => {
+                onRef={(r) => {
                   this.phone = r;
                 }}
                 onChangeText={this.phoneChange}
@@ -242,7 +242,7 @@ export default class SignUp extends Component {
               />
 
               <UnderlinePasswordInput
-                onRef={r => {
+                onRef={(r) => {
                   this.password = r;
                 }}
                 onChangeText={this.passwordChange}
@@ -262,9 +262,9 @@ export default class SignUp extends Component {
 
               <View style={styles.buttonContainer}>
                 <Button
-                color={'#fff'}
-                rounded
-                borderRadius
+                  color={'#fff'}
+                  rounded
+                  borderRadius
                   onPress={this.createAccount}
                   title={'Create Account'.toUpperCase()}
                   titleColor={Colors.primaryColor}
@@ -273,34 +273,8 @@ export default class SignUp extends Component {
 
               <View style={styles.separator}>
                 <View style={styles.line} />
-                <Text style={styles.orText}>or</Text>
+
                 <View style={styles.line} />
-              </View>
-
-              <View style={styles.buttonsGroup}>
-                <Button
-                  onPress={this.createAccount}
-                  color="#063d8a"
-                  socialIconName="facebook-square"
-                  iconColor={Colors.white}
-                  title={'Sign up with Facebook'.toUpperCase()}
-                  rounded
-                  borderRadius
-                  titleColor={'#fff'}
-                />
-
-                <View style={styles.vSpacer} />
-
-                <Button
-                  onPress={this.createAccount}
-                  color="#fe4c1c"
-                  socialIconName="google"
-                  iconColor={Colors.white}
-                  title={'Sign up with Google'.toUpperCase()}
-                  rounded
-                  borderRadius
-                  titleColor={'#fff'}
-                />
               </View>
             </View>
 

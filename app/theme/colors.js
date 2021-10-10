@@ -22,7 +22,7 @@ const themes = {
     onAccentColor: '#fff',
 
     // secondary color, primary color split
-    secondaryColor: '#b90039',
+    secondaryColor: '#3FB39E',
     onSecondaryColor: '#fff',
 
     // tertiary color, secondary color intermediately related

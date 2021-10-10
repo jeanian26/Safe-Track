@@ -7,7 +7,7 @@
 
 // import dependencies
 import React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 
 // import components
@@ -20,7 +20,7 @@ import Home from '../screens/home/Home2';
 import Search from '../screens/search/Search';
 
 // import Favorites screen
-import Favorites from '../screens/favorites/Favorites';
+import Map from '../screens/Map/Map';
 
 // import Cart screen
 import Cart from '../screens/cart/Cart';
@@ -30,7 +30,7 @@ import Settings from '../screens/settings/Settings';
 
 // import colors
 import Colors from '../theme/colors';
-import { color } from 'react-native-reanimated';
+import {color} from 'react-native-reanimated';
 
 // HomeNavigator Config
 
@@ -49,16 +49,15 @@ function HomeNavigator() {
     <Tab.Navigator
       initialRouteName="Home"
       backBehavior="initialRoute"
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ color, focused, size }: Props) => {
+      screenOptions={({route}) => ({
+        tabBarIcon: ({color, focused, size}: Props) => {
           let iconName;
 
           if (route.name === 'Home') {
             iconName = 'home';
-          }
-          else if (route.name === 'Search') {
+          } else if (route.name === 'Search') {
             iconName = 'magnify';
-          } else if (route.name === 'Favorites') {
+          } else if (route.name === 'Map') {
             iconName = `heart${focused ? '' : '-outline'}`;
           } else if (route.name === 'Settings') {
             iconName = `account-settings${focused ? '' : '-outline'}`;
@@ -73,15 +72,16 @@ function HomeNavigator() {
         inactiveTintColor: Colors.secondaryText,
         showLabel: false, // hide labels
         style: {
-          backgroundColor: Colors.surface // TabBar background
+          backgroundColor: Colors.surface, // TabBar background
         },
       }}>
-
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Search" component={Search} />
-      <Tab.Screen name="Cart" component={Cart}
+      <Tab.Screen
+        name="Cart"
+        component={Cart}
         options={{
-          tabBarIcon: props => (
+          tabBarIcon: (props) => (
             <TabBadgeIcon
               name={`cart${props.focused ? '' : '-outline'}`}
               badgeCount={5}
@@ -91,9 +91,7 @@ function HomeNavigator() {
         }}
       />
 
-
-      <Tab.Screen name="Favorites" component={Favorites} />
-
+      <Tab.Screen name="Map" component={Map} />
 
       <Tab.Screen name="Settings" component={Settings} />
     </Tab.Navigator>
