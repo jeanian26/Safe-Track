@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /**
  * Foodvila - React Native Template
  *
@@ -16,6 +17,7 @@ import {
   Button,
 } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
+import MapView from 'react-native-maps';
 
 // import components
 
@@ -26,6 +28,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.background,
+  },
+  map: {
+    width: '100%',
+    height: '100%',
   },
 });
 
@@ -66,9 +72,15 @@ export default class Map extends Component {
           barStyle="dark-content"
         />
         <Button onPress={this.getLocation} title="get location" />
-        <View>
-          <Text>Map</Text>
-        </View>
+        <MapView
+          style={styles.map}
+          initialRegion={{
+            latitude: 37.78825,
+            longitude: -122.4324,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+        />
       </SafeAreaView>
     );
   }
