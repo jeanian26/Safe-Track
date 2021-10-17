@@ -1,5 +1,5 @@
 /**
- * Foodvila - React Native Template
+ * safetrack - React Native Template
  *
  * @format
  * @flow
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const renderOrderItemsTotal = items => {
+const renderOrderItemsTotal = (items) => {
   const total = items.reduce((prev, next) => prev + next.price, 0);
   return total;
 };
@@ -128,7 +128,7 @@ const OrderItem = ({
         </View>
       </View>
 
-      <Divider type="middle" color={Colors.primaryColor}/>
+      <Divider type="middle" color={Colors.primaryColor} />
 
       <View style={styles.pv8}>
         {orderItems.map((item, index) => (
@@ -151,7 +151,7 @@ const OrderItem = ({
           </View>
 
           <Button
-            color={Colors.primaryColor }
+            color={Colors.primaryColor}
             title="Track"
             titleColor={Colors.white}
             buttonStyle={styles.extraSmallButton}
@@ -167,7 +167,7 @@ const OrderItem = ({
           </View>
 
           <Button
-            color={Colors.primaryColor }
+            color={Colors.primaryColor}
             title="Cancel"
             titleColor={Colors.white}
             buttonStyle={styles.extraSmallButton}
@@ -183,7 +183,7 @@ const OrderItem = ({
           </View>
 
           <Button
-            color={Colors.primaryColor }
+            color={Colors.primaryColor}
             title="Reorder"
             titleColor={Colors.white}
             buttonStyle={styles.extraSmallButton}

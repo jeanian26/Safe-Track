@@ -1,5 +1,5 @@
 /**
- * Foodvila - React Native Template
+ * safetrack - React Native Template
  *
  * @format
  * @flow
@@ -110,13 +110,13 @@ export default class ForgotPassword extends Component {
     });
   };
 
-  emailChange = text => {
+  emailChange = (text) => {
     this.setState({
       email: text,
     });
   };
 
-  navigateTo = screen => {
+  navigateTo = (screen) => {
     const {navigation} = this.props;
     navigation.navigate(screen);
   };
@@ -202,7 +202,7 @@ export default class ForgotPassword extends Component {
             </View>
 
             <ActivityIndicatorModal
-              statusBarColor={Colors.primaryColor }
+              statusBarColor={Colors.primaryColor}
               message="Please wait . . ."
               onRequestClose={this.closeModal}
               title="Sending instructions"

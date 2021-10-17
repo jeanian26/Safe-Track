@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-               BuildableName = "foodvila-tvOS.app"
-               BlueprintName = "foodvila-tvOS"
-               ReferencedContainer = "container:foodvila.xcodeproj">
+               BuildableName = "safetrack-tvOS.app"
+               BlueprintName = "safetrack-tvOS"
+               ReferencedContainer = "container:safetrack.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E48F1E0B4A5D006451C7"
-               BuildableName = "foodvila-tvOSTests.xctest"
-               BlueprintName = "foodvila-tvOSTests"
-               ReferencedContainer = "container:foodvila.xcodeproj">
+               BuildableName = "safetrack-tvOSTests.xctest"
+               BlueprintName = "safetrack-tvOSTests"
+               ReferencedContainer = "container:safetrack.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "foodvila-tvOS.app"
-            BlueprintName = "foodvila-tvOS"
-            ReferencedContainer = "container:foodvila.xcodeproj">
+            BuildableName = "safetrack-tvOS.app"
+            BlueprintName = "safetrack-tvOS"
+            ReferencedContainer = "container:safetrack.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "foodvila-tvOS.app"
-            BlueprintName = "foodvila-tvOS"
-            ReferencedContainer = "container:foodvila.xcodeproj">
+            BuildableName = "safetrack-tvOS.app"
+            BlueprintName = "safetrack-tvOS"
+            ReferencedContainer = "container:safetrack.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

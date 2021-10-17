@@ -1,5 +1,5 @@
 /**
- * Foodvila - React Native Template
+ * safetrack - React Native Template
  *
  * @format
  * @flow
@@ -131,15 +131,8 @@ export default class RestaurantCard extends Component<Props, State> {
   }
 
   render() {
-    const {
-      activeOpacity,
-      onPress,
-      imageUri,
-      name,
-      rating,
-      price,
-      cuisines,
-    } = this.props;
+    const {activeOpacity, onPress, imageUri, name, rating, price, cuisines} =
+      this.props;
 
     return (
       <View style={styles.container}>

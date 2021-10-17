@@ -1,5 +1,5 @@
 /**
- * Foodvila - React Native Template
+ * safetrack - React Native Template
  *
  * @format
  * @flow
@@ -22,8 +22,7 @@ import Layout from '../../theme/layout';
 
 // Welcome Config
 const headerImg = {
-  uri:
-    'https://www.lamudi.com.ph/journal/wp-content/uploads/2019/05/Depositphotos_10275018_s-2019-696x463.jpg',
+  uri: 'https://www.lamudi.com.ph/journal/wp-content/uploads/2019/05/Depositphotos_10275018_s-2019-696x463.jpg',
 };
 
 // Welcome Styles
