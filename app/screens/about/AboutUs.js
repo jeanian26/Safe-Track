@@ -210,7 +210,7 @@ export default class AboutUs extends Component {
                       <Subtitle1 style={[styles.info, styles.infoText]}>
                         Jane Doe
                       </Subtitle1>
-                      <Caption style={styles.caption}>Main Chef</Caption>
+                      <Caption style={styles.caption}></Caption>
                     </View>
                   </View>
 

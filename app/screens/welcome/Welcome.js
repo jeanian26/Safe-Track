@@ -124,11 +124,7 @@ export default class Welcome extends Component {
 
         <View style={styles.footer}>
           <View style={styles.logoContainer}>
-            <Logo
-              logoStyle={{borderRadius: 100}}
-              size={96}
-              tintColor={Colors.secondaryColor}
-            />
+            <Logo logoStyle={{borderRadius: 100}} size={96} />
           </View>
 
           <View style={styles.center}>

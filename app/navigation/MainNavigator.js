@@ -170,7 +170,7 @@ function MainNavigatorA() {
           name="DeliveryAddress"
           component={DeliveryAddress}
           options={({navigation}) => ({
-            title: 'Delivery Address',
+            title: 'Address',
             headerRight: () => (
               <HeaderIconButton
                 onPress={() => navigation.goBack()}

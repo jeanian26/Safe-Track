@@ -17,6 +17,7 @@ import {
   Text,
   PermissionsAndroid,
   Image,
+  Button,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -33,6 +34,7 @@ import Colors from '../../theme/colors';
 // Search Config
 const isRTL = I18nManager.isRTL;
 const SEARCH_ICON = 'magnify';
+const ADD_ICON = 'account-multiple-plus';
 
 // Search Styles
 const styles = StyleSheet.create({
@@ -72,6 +74,13 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primaryColor,
     overflow: 'hidden',
   },
+  AddButtonContainer: {
+    position: 'absolute',
+    right: 5,
+    borderRadius: 4,
+    backgroundColor: Colors.primaryColor,
+    overflow: 'hidden',
+  },
   searchButton: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -102,8 +111,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   profilePic: {
-    width: 80,
-    height: 80,
+    width: 70,
+    height: 70,
   },
 });
 
@@ -113,11 +122,11 @@ export default class Search extends Component {
     super(props);
 
     this.state = {
-      id: [1, 3, 4, 5, 6, 7],
+      id: [],
       phoneNumbers: [],
       displayName: ['None'],
-      source:
-        'https://www.pngall.com/wp-content/uploads/5/Profile-PNG-Clipart.png',
+      uri: 'https://www.pngall.com/wp-content/uploads/5/Profile-PNG-Clipart.png',
+      data: [],
     };
   }
 
@@ -131,15 +140,21 @@ export default class Search extends Component {
   componentDidMount() {
     var phoneNumbers = [];
     var displayName = [];
+    var id = [];
     Contacts.getAll().then(
       (contacts) => {
         for (var i = 0; i < contacts.length; i++) {
+          id.push(i);
           displayName.push(contacts[i].displayName);
           phoneNumbers.push(contacts[i].phoneNumbers[0].number);
         }
+        this.setState({data: contacts});
         this.setState({
+          id: [...this.state.id, ...id],
           phoneNumbers: [...this.state.phoneNumbers, ...phoneNumbers],
+          displayName: [...this.state.displayName, ...displayName],
         });
+        console.log(contacts);
         console.log(phoneNumbers);
       },
       () => {},
@@ -178,18 +193,35 @@ export default class Search extends Component {
               </View>
             </TouchableItem>
           </View>
-          <View>
-            {this.state.phoneNumbers.map((item) => (
-              <Text key={item}>{item}</Text>
-            ))}
-            {this.state.phoneNumbers.map((item) => (
-              <Image
-                key={item}
-                source={this.state.source}
-                style={styles.profilePic}
-              />
-            ))}
-          </View>
+
+          {this.state.data.map((item) => (
+            <View
+              style={{
+                paddingTop: 10,
+                paddingBottom: 10,
+                flexDirection: 'row',
+                borderBottomColor: '#909090',
+                borderBottomWidth: 1,
+                alignItems: 'center',
+              }}>
+              <Image source={{uri: this.state.uri}} style={styles.profilePic} />
+              <View style={{paddingLeft: 20}}>
+                <Text>{item.displayName}</Text>
+                <Text>{item.phoneNumbers[0].number}</Text>
+              </View>
+              <View style={styles.AddButtonContainer}>
+                <TouchableItem onPress={this.getContact}>
+                  <View style={styles.searchButton}>
+                    <Icon
+                      name={ADD_ICON}
+                      size={23}
+                      color={Colors.onPrimaryColor}
+                    />
+                  </View>
+                </TouchableItem>
+              </View>
+            </View>
+          ))}
         </View>
       </SafeAreaView>
     );
