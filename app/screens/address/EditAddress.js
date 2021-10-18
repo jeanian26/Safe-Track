@@ -1,5 +1,5 @@
 /**
- * safetrack - React Native Template
+ *
  *
  * @format
  * @flow

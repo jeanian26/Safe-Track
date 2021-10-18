@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 /**
- * safetrack - React Native Template
+ *
  *
  * @format
  * @flow
