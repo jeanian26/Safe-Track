@@ -224,7 +224,7 @@ export default class Home extends Component {
       onPress={this.navigateTo('Product')}
       onPressRemove={this.onPressRemove(item)}
       onPressAdd={this.onPressAdd(item)}
-      onCartPress={this.navigateTo('Cart')}
+      onCartPress={this.navigateTo('Camera')}
       swipeoutDisabled
       key={index}
       imageUri={item.imageUri}

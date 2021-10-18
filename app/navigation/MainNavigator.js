@@ -35,18 +35,8 @@ import TermsConditions from '../screens/terms/TermsConditions';
 // import HomeNavigator
 import HomeNavigator from './HomeNavigator1';
 
-// import Product screen
-import Product from '../screens/product/Product';
-
-// import Categories screen
-import Categories from '../screens/categories/Categories';
-import Category from '../screens/categories/Category';
-
 // import Search results screen
 import SearchResults from '../screens/search/SearchResults';
-
-// import Checkout screen
-import Checkout from '../screens/checkout/Checkout';
 
 // import EditProfile screen
 import EditProfile from '../screens/profile/EditProfile';
@@ -60,17 +50,8 @@ import AddAddress from '../screens/address/AddAddress';
 // import EditAddress screen
 import EditAddress from '../screens/address/EditAddress';
 
-// import Payment screen
-import PaymentMethod from '../screens/payment/PaymentMethod';
-
-// import AddCreditCard screen
-import AddCreditCard from '../screens/payment/AddCreditCard';
-
 // import Notifications screen
 import Notifications from '../screens/notifications/Notifications';
-
-// import Orders screen
-import Orders from '../screens/orders/Orders';
 
 // import AboutUs screen
 import AboutUs from '../screens/about/AboutUs';
@@ -162,25 +143,7 @@ function MainNavigatorA() {
           component={HomeNavigator}
           options={{headerShown: false}}
         />
-        <Stack.Screen
-          name="Categories"
-          component={Categories}
-          options={{
-            title: 'All Categories',
-          }}
-        />
-        <Stack.Screen
-          name="Category"
-          component={Category}
-          options={{
-            title: 'Pizza',
-          }}
-        />
-        <Stack.Screen
-          name="Product"
-          component={Product}
-          options={{headerShown: false}}
-        />
+
         <Stack.Screen
           name="SearchResults"
           component={SearchResults}
@@ -188,17 +151,7 @@ function MainNavigatorA() {
             title: 'Search Results',
           }}
         />
-        <Stack.Screen
-          name="Checkout"
-          component={Checkout}
-          options={{
-            title: 'Checkout',
-            headerStyle: {
-              elevation: 0,
-              shadowOpacity: 0,
-            },
-          }}
-        />
+
         <Stack.Screen
           name="EditProfile"
           component={EditProfile}
@@ -241,39 +194,12 @@ function MainNavigatorA() {
             title: 'Edit Address',
           }}
         />
-        <Stack.Screen
-          name="PaymentMethod"
-          component={PaymentMethod}
-          options={({navigation}) => ({
-            title: 'Payment Method',
-            headerRight: () => (
-              <HeaderIconButton
-                onPress={() => navigation.goBack()}
-                name={SAVE_ICON}
-                color={Colors.primaryColor}
-              />
-            ),
-          })}
-        />
-        <Stack.Screen
-          name="AddCreditCard"
-          component={AddCreditCard}
-          options={{
-            title: 'Add Credit Card',
-          }}
-        />
+
         <Stack.Screen
           name="Notifications"
           component={Notifications}
           options={{
             title: 'Notifications',
-          }}
-        />
-        <Stack.Screen
-          name="Orders"
-          component={Orders}
-          options={{
-            title: 'My Orders',
           }}
         />
         <Stack.Screen

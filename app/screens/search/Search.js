@@ -14,6 +14,9 @@ import {
   StyleSheet,
   TextInput,
   View,
+  Text,
+  PermissionsAndroid,
+  Image,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -22,6 +25,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Heading6} from '../../components/text/CustomText';
 import TouchableItem from '../../components/TouchableItem';
 import SafeAreaView from '../../components/SafeAreaView';
+import Contacts from 'react-native-contacts';
 
 // import colors
 import Colors from '../../theme/colors';
@@ -97,6 +101,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  profilePic: {
+    width: 80,
+    height: 80,
+  },
 });
 
 // Search
@@ -104,7 +112,13 @@ export default class Search extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      id: [1, 3, 4, 5, 6, 7],
+      phoneNumbers: [],
+      displayName: ['None'],
+      source:
+        'https://www.pngall.com/wp-content/uploads/5/Profile-PNG-Clipart.png',
+    };
   }
 
   navigateTo = (screen) => () => {
@@ -114,6 +128,23 @@ export default class Search extends Component {
 
     navigation.navigate(screen);
   };
+  componentDidMount() {
+    var phoneNumbers = [];
+    var displayName = [];
+    Contacts.getAll().then(
+      (contacts) => {
+        for (var i = 0; i < contacts.length; i++) {
+          displayName.push(contacts[i].displayName);
+          phoneNumbers.push(contacts[i].phoneNumbers[0].number);
+        }
+        this.setState({
+          phoneNumbers: [...this.state.phoneNumbers, ...phoneNumbers],
+        });
+        console.log(phoneNumbers);
+      },
+      () => {},
+    );
+  }
 
   render() {
     const {} = this.state;
@@ -137,7 +168,7 @@ export default class Search extends Component {
             style={styles.textInput}
           />
           <View style={styles.searchButtonContainer}>
-            <TouchableItem onPress={() => {}}>
+            <TouchableItem onPress={this.getContact}>
               <View style={styles.searchButton}>
                 <Icon
                   name={SEARCH_ICON}
@@ -146,6 +177,18 @@ export default class Search extends Component {
                 />
               </View>
             </TouchableItem>
+          </View>
+          <View>
+            {this.state.phoneNumbers.map((item) => (
+              <Text key={item}>{item}</Text>
+            ))}
+            {this.state.phoneNumbers.map((item) => (
+              <Image
+                key={item}
+                source={this.state.source}
+                style={styles.profilePic}
+              />
+            ))}
           </View>
         </View>
       </SafeAreaView>

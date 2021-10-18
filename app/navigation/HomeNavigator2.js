@@ -22,8 +22,8 @@ import Search from '../screens/search/Search';
 // import Favorites screen
 import Map from '../screens/Map/Map';
 
-// import Cart screen
-import Cart from '../screens/cart/Cart';
+// import Camera screen
+import Camera from '../screens/Camera/Camera';
 
 // import Settings screen
 import Settings from '../screens/settings/Settings';
@@ -78,12 +78,12 @@ function HomeNavigator() {
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Search" component={Search} />
       <Tab.Screen
-        name="Cart"
-        component={Cart}
+        name="Camera"
+        component={Camera}
         options={{
           tabBarIcon: (props) => (
             <TabBadgeIcon
-              name={`cart${props.focused ? '' : '-outline'}`}
+              name={`camera${props.focused ? '' : '-outline'}`}
               badgeCount={5}
               {...props}
             />
