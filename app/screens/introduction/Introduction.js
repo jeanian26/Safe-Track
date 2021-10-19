@@ -22,6 +22,8 @@ import Swiper from 'react-native-swiper';
 import ContainedButton from '../../components/buttons/ContainedButton';
 import GradientContainer from '../../components/gradientcontainer/GradientContainer';
 import {Heading5, Paragraph} from '../../components/text/CustomText';
+import {passAuth, checkLoggedIn} from '../../config/firebase';
+import {onAuthStateChanged} from 'firebase/auth';
 
 // import colors
 import Colors from '../../theme/colors';
@@ -177,6 +179,9 @@ export default class Introduction extends Component {
   navigateTo = (screen) => () => {
     const {navigation} = this.props;
     navigation.navigate(screen);
+  };
+  componentDidMount = () => {
+    checkLoggedIn();
   };
 
   render() {

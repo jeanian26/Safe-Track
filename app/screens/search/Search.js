@@ -206,7 +206,7 @@ export default class Search extends Component {
               }}>
               <Image source={{uri: this.state.uri}} style={styles.profilePic} />
               <View style={{paddingLeft: 20}}>
-                <Text>{item.displayName}</Text>
+                <Text style={{fontSize: 20}}>{item.displayName}</Text>
                 <Text>{item.phoneNumbers[0].number}</Text>
               </View>
               <View style={styles.AddButtonContainer}>
