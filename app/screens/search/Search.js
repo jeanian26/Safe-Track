@@ -1,5 +1,5 @@
 /**
- * Foodvila - React Native Template
+ *
  *
  * @format
  * @flow
@@ -14,6 +14,11 @@ import {
   StyleSheet,
   TextInput,
   View,
+  Text,
+  PermissionsAndroid,
+  Image,
+  Button,
+  ScrollView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -22,6 +27,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Heading6} from '../../components/text/CustomText';
 import TouchableItem from '../../components/TouchableItem';
 import SafeAreaView from '../../components/SafeAreaView';
+import Contacts from 'react-native-contacts';
 
 // import colors
 import Colors from '../../theme/colors';
@@ -29,6 +35,7 @@ import Colors from '../../theme/colors';
 // Search Config
 const isRTL = I18nManager.isRTL;
 const SEARCH_ICON = 'magnify';
+const ADD_ICON = 'account-multiple-plus';
 
 // Search Styles
 const styles = StyleSheet.create({
@@ -68,6 +75,13 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primaryColor,
     overflow: 'hidden',
   },
+  AddButtonContainer: {
+    position: 'absolute',
+    right: 5,
+    borderRadius: 4,
+    backgroundColor: Colors.primaryColor,
+    overflow: 'hidden',
+  },
   searchButton: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -97,6 +111,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  profilePic: {
+    width: 70,
+    height: 70,
+  },
 });
 
 // Search
@@ -104,7 +122,13 @@ export default class Search extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      id: [],
+      phoneNumbers: [],
+      displayName: ['None'],
+      uri: 'https://www.pngall.com/wp-content/uploads/5/Profile-PNG-Clipart.png',
+      data: [],
+    };
   }
 
   navigateTo = (screen) => () => {
@@ -114,6 +138,29 @@ export default class Search extends Component {
 
     navigation.navigate(screen);
   };
+  componentDidMount() {
+    var phoneNumbers = [];
+    var displayName = [];
+    var id = [];
+    Contacts.getAll().then(
+      (contacts) => {
+        for (var i = 0; i < contacts.length; i++) {
+          id.push(i);
+          displayName.push(contacts[i].displayName);
+          phoneNumbers.push(contacts[i].phoneNumbers[0].number);
+        }
+        this.setState({data: contacts});
+        this.setState({
+          id: [...this.state.id, ...id],
+          phoneNumbers: [...this.state.phoneNumbers, ...phoneNumbers],
+          displayName: [...this.state.displayName, ...displayName],
+        });
+        console.log(contacts);
+        console.log(phoneNumbers);
+      },
+      () => {},
+    );
+  }
 
   render() {
     const {} = this.state;
@@ -137,7 +184,7 @@ export default class Search extends Component {
             style={styles.textInput}
           />
           <View style={styles.searchButtonContainer}>
-            <TouchableItem onPress={() => {}}>
+            <TouchableItem onPress={this.getContact}>
               <View style={styles.searchButton}>
                 <Icon
                   name={SEARCH_ICON}
@@ -147,6 +194,41 @@ export default class Search extends Component {
               </View>
             </TouchableItem>
           </View>
+        </View>
+        <View style={{flex: 1, paddingLeft: 13, paddingRight: 13}}>
+          <ScrollView>
+            {this.state.data.map((item) => (
+              <View
+                style={{
+                  paddingTop: 10,
+                  paddingBottom: 10,
+                  flexDirection: 'row',
+                  borderBottomColor: '#909090',
+                  borderBottomWidth: 1,
+                  alignItems: 'center',
+                }}>
+                <Image
+                  source={{uri: this.state.uri}}
+                  style={styles.profilePic}
+                />
+                <View style={{paddingLeft: 20}}>
+                  <Text style={{fontSize: 20}}>{item.displayName}</Text>
+                  <Text>{item.phoneNumbers[0].number}</Text>
+                </View>
+                <View style={styles.AddButtonContainer}>
+                  <TouchableItem onPress={this.getContact}>
+                    <View style={styles.searchButton}>
+                      <Icon
+                        name={ADD_ICON}
+                        size={23}
+                        color={Colors.onPrimaryColor}
+                      />
+                    </View>
+                  </TouchableItem>
+                </View>
+              </View>
+            ))}
+          </ScrollView>
         </View>
       </SafeAreaView>
     );

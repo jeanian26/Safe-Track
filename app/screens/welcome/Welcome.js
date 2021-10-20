@@ -1,5 +1,5 @@
 /**
- * Foodvila - React Native Template
+ *
  *
  * @format
  * @flow
@@ -22,8 +22,7 @@ import Layout from '../../theme/layout';
 
 // Welcome Config
 const headerImg = {
-  uri:
-    'https://www.lamudi.com.ph/journal/wp-content/uploads/2019/05/Depositphotos_10275018_s-2019-696x463.jpg',
+  uri: 'https://www.lamudi.com.ph/journal/wp-content/uploads/2019/05/Depositphotos_10275018_s-2019-696x463.jpg',
 };
 
 // Welcome Styles
@@ -125,11 +124,7 @@ export default class Welcome extends Component {
 
         <View style={styles.footer}>
           <View style={styles.logoContainer}>
-            <Logo
-              logoStyle={{borderRadius: 100}}
-              size={96}
-              tintColor={Colors.secondaryColor}
-            />
+            <Logo logoStyle={{borderRadius: 100}} size={96} />
           </View>
 
           <View style={styles.center}>

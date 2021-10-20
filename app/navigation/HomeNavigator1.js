@@ -1,5 +1,5 @@
 /**
- * Foodvila - React Native Template
+ *
  *
  * @format
  * @flow
@@ -22,9 +22,8 @@ import Search from '../screens/search/Search';
 import Map from '../screens/Map/Map';
 
 // import Cart screen
-import Cart from '../screens/cart/Cart';
+import Camera from '../screens/Camera/Camera';
 
-// import Settings screen
 import Settings from '../screens/settings/Settings';
 
 // import colors
@@ -75,8 +74,8 @@ function HomeNavigator() {
       }}>
       <Tab.Screen name="Search" component={Search} />
       <Tab.Screen
-        name="Cart"
-        component={Cart}
+        name="Camera"
+        component={Camera}
         options={{
           tabBarIcon: (props) => (
             <TabBadgeIcon

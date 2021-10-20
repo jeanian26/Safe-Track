@@ -1,5 +1,5 @@
 /**
- * Foodvila - React Native Template
+ *
  *
  * @format
  * @flow
@@ -263,21 +263,7 @@ export default class SignIn extends Component {
 
             <TouchableWithoutFeedback
               onPress={this.navigateTo('TermsConditions')}>
-              <View style={styles.footer}>
-                <Text style={styles.footerText}>
-                  By signing in, you accepts our
-                </Text>
-                <View style={styles.termsContainer}>
-                  <Text style={[styles.footerText, styles.footerLink]}>
-                    Terms & Conditions
-                  </Text>
-                  <Text style={styles.footerText}> and </Text>
-                  <Text style={[styles.footerText, styles.footerLink]}>
-                    Privacy Policy
-                  </Text>
-                  <Text style={styles.footerText}>.</Text>
-                </View>
-              </View>
+              <View style={styles.footer}></View>
             </TouchableWithoutFeedback>
           </View>
         </KeyboardAwareScrollView>

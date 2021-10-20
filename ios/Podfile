@@ -3,7 +3,7 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 
 platform :ios, '10.0'
 
-target 'foodvila' do
+target 'safetrack' do
   config = use_native_modules!
 
   use_react_native!(:path => config["reactNativePath"])
@@ -14,7 +14,7 @@ target 'foodvila' do
 
   pod 'RNFS', :path => '../node_modules/react-native-fs'
 
-  target 'foodvilaTests' do
+  target 'safetrackTests' do
     inherit! :complete
     # Pods for testing
   end
@@ -29,10 +29,10 @@ target 'foodvila' do
   end
 end
 
-target 'foodvila-tvOS' do
-  # Pods for foodvila-tvOS
+target 'safetrack-tvOS' do
+  # Pods for safetrack-tvOS
 
-  target 'foodvila-tvOSTests' do
+  target 'safetrack-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
   end

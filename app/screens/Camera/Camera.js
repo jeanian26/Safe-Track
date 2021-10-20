@@ -1,5 +1,6 @@
+/* eslint-disable prettier/prettier */
 /**
- * Foodvila - React Native Template
+ *
  *
  * @format
  * @flow

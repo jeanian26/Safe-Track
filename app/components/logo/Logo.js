@@ -1,5 +1,5 @@
 /**
- * Foodvila - React Native Template
+ *
  *
  * @format
  * @flow
@@ -40,7 +40,7 @@ type Props = {
   type: 'text-wide',
 };
 
-const logoSource = type => {
+const logoSource = (type) => {
   if (type === 'text-wide') {
     return LOGO_TEXT_WIDE;
   }

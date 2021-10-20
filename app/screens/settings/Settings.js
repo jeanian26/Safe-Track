@@ -1,5 +1,5 @@
 /**
- * Foodvila - React Native Template
+ *
  *
  * @format
  * @flow
@@ -290,7 +290,7 @@ export default class Settings extends Component {
           <Setting
             onPress={this.navigateTo('TermsConditions')}
             icon={TERMS_ICON}
-            title="Terms and Conditions"
+            title="Settings"
           />
           <Divider type="inset" marginLeft={DIVIDER_MARGIN_LEFT} />
 
