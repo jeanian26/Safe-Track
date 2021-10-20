@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /**
  *
  *
@@ -261,8 +262,7 @@ export default class SignIn extends Component {
               </View>
             </View>
 
-            <TouchableWithoutFeedback
-              onPress={this.navigateTo('TermsConditions')}>
+            <TouchableWithoutFeedback>
               <View style={styles.footer}></View>
             </TouchableWithoutFeedback>
           </View>

@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /**
  *
  *
@@ -18,6 +19,8 @@ import {Paragraph} from '../../components/text/CustomText';
 import SafeAreaView from '../../components/SafeAreaView';
 import UnderlineTextInput from '../../components/textinputs/UnderlineTextInput';
 
+import {sendPasswordResetEmail} from 'firebase/auth';
+import {passAuth} from '../../config/firebase';
 // import colors
 import Colors from '../../theme/colors';
 
@@ -90,8 +93,6 @@ export default class ForgotPassword extends Component {
       this.keyboardDidHide,
     );
   };
-
-  // avoid memory leak
   componentWillUnmount = () => {
     clearTimeout(this.timeout);
     this.keyboardDidShowListener.remove();
@@ -123,18 +124,25 @@ export default class ForgotPassword extends Component {
 
   resetPassword = () => {
     Keyboard.dismiss();
+
     this.setState(
       {
         modalVisible: true,
         emailFocused: false,
       },
       () => {
-        // for demo purpose after 3s close modal
         this.timeout = setTimeout(() => {
           this.closeModal();
         }, 3000);
       },
     );
+    sendPasswordResetEmail(passAuth(), this.state.email)
+      .then(() => {
+        console.log('success');
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   closeModal = () => {

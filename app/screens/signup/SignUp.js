@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /**
  *
  *
@@ -173,7 +174,6 @@ export default class SignUp extends Component {
     });
 
     var result = signUpUser(this.state.email, this.state.password);
-    console.log(result);
     if (result.uid) {
       ToastAndroid.showWithGravity(
         'Registration Complete proceed to login',

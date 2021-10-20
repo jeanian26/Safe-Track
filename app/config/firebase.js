@@ -6,6 +6,7 @@ import {
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
 } from 'firebase/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyALWJDjGJ4PDcJ5j7XZewfcdtlbwsQAxsw',
@@ -32,8 +33,10 @@ export function checkLoggedIn() {
       // https://firebase.google.com/docs/reference/js/firebase.User
       const uid = user.uid;
       console.log('user logged in', uid);
+      return uid;
     } else {
       console.log('no user logged in');
+      return false;
     }
   });
 }

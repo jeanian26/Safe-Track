@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /**
  *
  *
@@ -180,8 +181,9 @@ export default class Introduction extends Component {
     const {navigation} = this.props;
     navigation.navigate(screen);
   };
-  componentDidMount = () => {
-    checkLoggedIn();
+  componentDidMount = async () => {
+    var result = await checkLoggedIn();
+    console.log('introduction', result);
   };
 
   render() {
