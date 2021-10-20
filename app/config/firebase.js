@@ -43,11 +43,11 @@ export const signUpUser = async (email, password) => {
     createUserWithEmailAndPassword(auth, email, password).then((result) => {
       const user = result.user;
       console.log(user);
+      return user.uid;
     });
   } catch (error) {
-    return {
-      error: error.message,
-    };
+    console.log('error', error);
+    return error;
   }
 };
 

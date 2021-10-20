@@ -18,6 +18,7 @@ import {
   PermissionsAndroid,
   Image,
   Button,
+  ScrollView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -193,35 +194,41 @@ export default class Search extends Component {
               </View>
             </TouchableItem>
           </View>
-
-          {this.state.data.map((item) => (
-            <View
-              style={{
-                paddingTop: 10,
-                paddingBottom: 10,
-                flexDirection: 'row',
-                borderBottomColor: '#909090',
-                borderBottomWidth: 1,
-                alignItems: 'center',
-              }}>
-              <Image source={{uri: this.state.uri}} style={styles.profilePic} />
-              <View style={{paddingLeft: 20}}>
-                <Text style={{fontSize: 20}}>{item.displayName}</Text>
-                <Text>{item.phoneNumbers[0].number}</Text>
+        </View>
+        <View style={{flex: 1, paddingLeft: 13, paddingRight: 13}}>
+          <ScrollView>
+            {this.state.data.map((item) => (
+              <View
+                style={{
+                  paddingTop: 10,
+                  paddingBottom: 10,
+                  flexDirection: 'row',
+                  borderBottomColor: '#909090',
+                  borderBottomWidth: 1,
+                  alignItems: 'center',
+                }}>
+                <Image
+                  source={{uri: this.state.uri}}
+                  style={styles.profilePic}
+                />
+                <View style={{paddingLeft: 20}}>
+                  <Text style={{fontSize: 20}}>{item.displayName}</Text>
+                  <Text>{item.phoneNumbers[0].number}</Text>
+                </View>
+                <View style={styles.AddButtonContainer}>
+                  <TouchableItem onPress={this.getContact}>
+                    <View style={styles.searchButton}>
+                      <Icon
+                        name={ADD_ICON}
+                        size={23}
+                        color={Colors.onPrimaryColor}
+                      />
+                    </View>
+                  </TouchableItem>
+                </View>
               </View>
-              <View style={styles.AddButtonContainer}>
-                <TouchableItem onPress={this.getContact}>
-                  <View style={styles.searchButton}>
-                    <Icon
-                      name={ADD_ICON}
-                      size={23}
-                      color={Colors.onPrimaryColor}
-                    />
-                  </View>
-                </TouchableItem>
-              </View>
-            </View>
-          ))}
+            ))}
+          </ScrollView>
         </View>
       </SafeAreaView>
     );

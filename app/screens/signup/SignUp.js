@@ -14,6 +14,7 @@ import {
   Text,
   TouchableWithoutFeedback,
   View,
+  ToastAndroid,
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
@@ -21,7 +22,7 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import Button from '../../components/buttons/Button';
 import UnderlinePasswordInput from '../../components/textinputs/UnderlinePasswordInput';
 import UnderlineTextInput from '../../components/textinputs/UnderlineTextInput';
-
+import {signUpUser} from '../../config/firebase';
 // import colors, layout
 import Colors from '../../theme/colors';
 import Layout from '../../theme/layout';
@@ -165,14 +166,27 @@ export default class SignUp extends Component {
 
   createAccount = () => {
     // const { email, phone, password } = this.state;
-    this.setState(
-      {
-        emailFocused: false,
-        phoneFocused: false,
-        passwordFocused: false,
-      },
-      this.navigateTo('HomeNavigator '),
-    );
+    this.setState({
+      emailFocused: false,
+      phoneFocused: false,
+      passwordFocused: false,
+    });
+
+    var result = signUpUser(this.state.email, this.state.password);
+    console.log(result);
+    if (result.uid) {
+      ToastAndroid.showWithGravity(
+        'Registration Complete proceed to login',
+        ToastAndroid.SHORT,
+        ToastAndroid.CENTER,
+      );
+    } else {
+      ToastAndroid.showWithGravity(
+        'Registration Failed Try Again',
+        ToastAndroid.SHORT,
+        ToastAndroid.CENTER,
+      );
+    }
   };
 
   focusOn = (nextFiled) => () => {
@@ -278,23 +292,8 @@ export default class SignUp extends Component {
               </View>
             </View>
 
-            <TouchableWithoutFeedback
-              onPress={this.navigateTo('TermsConditions')}>
-              <View style={styles.footer}>
-                <Text style={styles.footerText}>
-                  By registering, you accepts our
-                </Text>
-                <View style={styles.termsContainer}>
-                  <Text style={[styles.footerText, styles.footerLink]}>
-                    Terms & Conditions
-                  </Text>
-                  <Text style={styles.footerText}> and </Text>
-                  <Text style={[styles.footerText, styles.footerLink]}>
-                    Privacy Policy
-                  </Text>
-                  <Text style={styles.footerText}>.</Text>
-                </View>
-              </View>
+            <TouchableWithoutFeedback>
+              <View style={styles.footer}></View>
             </TouchableWithoutFeedback>
           </View>
         </KeyboardAwareScrollView>
