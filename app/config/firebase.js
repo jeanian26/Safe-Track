@@ -5,6 +5,7 @@ import {
   onAuthStateChanged,
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
+  signInWithEmailAndPassword,
 } from 'firebase/auth';
 
 const firebaseConfig = {
@@ -32,8 +33,10 @@ export function checkLoggedIn() {
       // https://firebase.google.com/docs/reference/js/firebase.User
       const uid = user.uid;
       console.log('user logged in', uid);
+      return uid;
     } else {
       console.log('no user logged in');
+      return false;
     }
   });
 }
@@ -43,7 +46,7 @@ export const signUpUser = async (email, password) => {
     createUserWithEmailAndPassword(auth, email, password).then((result) => {
       const user = result.user;
       console.log(user);
-      return user.uid;
+      return user;
     });
   } catch (error) {
     console.log('error', error);
@@ -63,3 +66,5 @@ export const sendEmailWithPassword = async (email) => {
     };
   }
 };
+
+export const signInUser = async (email, password) => {};

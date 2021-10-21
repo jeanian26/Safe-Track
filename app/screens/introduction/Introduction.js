@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /**
  *
  *
@@ -180,8 +181,19 @@ export default class Introduction extends Component {
     const {navigation} = this.props;
     navigation.navigate(screen);
   };
-  componentDidMount = () => {
-    checkLoggedIn();
+  componentDidMount = async () => {
+    const {navigation} = this.props;
+    onAuthStateChanged(passAuth(), (user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        const uid = user.uid;
+        console.log('user logged in', uid);
+        navigation.navigate('HomeNavigator');
+      } else {
+        console.log('no user logged in');
+      }
+    });
   };
 
   render() {
