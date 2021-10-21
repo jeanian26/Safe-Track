@@ -5,8 +5,8 @@ import {
   onAuthStateChanged,
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
+  signInWithEmailAndPassword,
 } from 'firebase/auth';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyALWJDjGJ4PDcJ5j7XZewfcdtlbwsQAxsw',
@@ -46,7 +46,7 @@ export const signUpUser = async (email, password) => {
     createUserWithEmailAndPassword(auth, email, password).then((result) => {
       const user = result.user;
       console.log(user);
-      return user.uid;
+      return user;
     });
   } catch (error) {
     console.log('error', error);
@@ -66,3 +66,5 @@ export const sendEmailWithPassword = async (email) => {
     };
   }
 };
+
+export const signInUser = async (email, password) => {};

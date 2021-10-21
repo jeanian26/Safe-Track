@@ -182,8 +182,18 @@ export default class Introduction extends Component {
     navigation.navigate(screen);
   };
   componentDidMount = async () => {
-    var result = await checkLoggedIn();
-    console.log('introduction', result);
+    const {navigation} = this.props;
+    onAuthStateChanged(passAuth(), (user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        const uid = user.uid;
+        console.log('user logged in', uid);
+        navigation.navigate('HomeNavigator');
+      } else {
+        console.log('no user logged in');
+      }
+    });
   };
 
   render() {

@@ -23,7 +23,8 @@ import Button from '../../components/buttons/Button';
 import InputModal from '../../components/modals/InputModal';
 import UnderlinePasswordInput from '../../components/textinputs/UnderlinePasswordInput';
 import UnderlineTextInput from '../../components/textinputs/UnderlineTextInput';
-
+import {signInWithEmailAndPassword} from 'firebase/auth';
+import {passAuth} from '../../config/firebase';
 // import colors, layout
 import Colors from '../../theme/colors';
 import Layout from '../../theme/layout';
@@ -163,14 +164,27 @@ export default class SignIn extends Component {
     navigation.navigate(screen);
   };
 
-  signIn = () => {
-    this.setState(
-      {
-        emailFocused: false,
-        passwordFocused: false,
-      },
-      this.navigateTo('HomeNavigator'),
-    );
+  signIn = () => () => {
+    const {navigation} = this.props;
+    this.setState({
+      emailFocused: false,
+      passwordFocused: false,
+    });
+
+    signInWithEmailAndPassword(
+      passAuth(),
+      this.state.email,
+      this.state.password,
+    )
+      .then((userCredential) => {
+        console.log('Success', userCredential);
+        navigation.navigate('HomeNavigator');
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log('Error' + errorCode, errorMessage);
+      });
   };
 
   render() {
@@ -240,7 +254,7 @@ export default class SignIn extends Component {
                   color={'#fff'}
                   rounded
                   borderRadius
-                  onPress={this.navigateTo('HomeNavigator')}
+                  onPress={this.signIn()}
                   title={'Sign in'.toUpperCase()}
                   titleColor={Colors.primaryColor}
                 />
@@ -253,12 +267,6 @@ export default class SignIn extends Component {
                   style={styles.forgotPasswordText}>
                   Forgot password?
                 </Text>
-              </View>
-
-              <View style={styles.separator}>
-                <View style={styles.line} />
-
-                <View style={styles.line} />
               </View>
             </View>
 
