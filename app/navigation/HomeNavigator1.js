@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /**
  *
  *
@@ -5,28 +6,15 @@
  * @flow
  */
 
-// import dependencies
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
-
-// import components
 import TabBadgeIcon from '../components/navigation/TabBadgeIcon';
-
-// import Home screen
 import Home from '../screens/home/Home1';
-
-// import Search screen
 import Search from '../screens/search/Search';
-
 import Map from '../screens/Map/Map';
-
-// import Cart screen
 import Camera from '../screens/Camera/Camera';
-
 import Settings from '../screens/settings/Settings';
-
-// import colors
 import Colors from '../theme/colors';
 import {color} from 'react-native-reanimated';
 import {Platform, StyleSheet} from 'react-native';
@@ -60,16 +48,15 @@ function HomeNavigator() {
             iconName = `account-settings${focused ? '' : '-outline'}`;
           }
 
-          // You can return any component that you like here!
           return <Icon name={iconName} size={size} color={color} />;
         },
       })}
       tabBarOptions={{
         activeTintColor: Colors.primaryColor,
         inactiveTintColor: Colors.secondaryText,
-        showLabel: false, // hide labels
+        showLabel: false,
         style: {
-          backgroundColor: Colors.surface, // TabBar background
+          backgroundColor: Colors.surface,
         },
       }}>
       <Tab.Screen name="Search" component={Search} />
@@ -92,7 +79,6 @@ function HomeNavigator() {
           tabBarIcon: (props) => (
             <TabBadgeIcon
               name={`home${props.focused ? '' : '-outline'}`}
-              //badgeCount={5}
               {...props}
               size={35}
               color={Colors.onPrimaryColor}
