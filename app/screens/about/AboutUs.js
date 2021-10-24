@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /**
  *
  *
@@ -9,40 +10,28 @@
 import React, {Component} from 'react';
 import {
   I18nManager,
-  ImageBackground,
-  Linking,
   SafeAreaView,
   StatusBar,
   StyleSheet,
   Text,
   View,
+  ScrollView,
+  Image,
 } from 'react-native';
-import FAIcon from 'react-native-vector-icons/FontAwesome';
-import Swiper from 'react-native-swiper';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-// import components
-import Avatar from '../../components/avatar/Avatar';
-import GradientContainer from '../../components/gradientcontainer/GradientContainer';
-import {
-  Caption,
-  Heading5,
-  Subtitle1,
-  Subtitle2,
-} from '../../components/text/CustomText';
+import {getDatabase, ref, child, get} from 'firebase/database';
+
 import TouchableItem from '../../components/TouchableItem';
 
 // import colors
 import Colors from '../../theme/colors';
 
-import getImgSource from '../../utils/getImgSource.js';
-
 // AboutUs Config
 const isRTL = I18nManager.isRTL;
-const FACEBOOK_ICON = 'facebook';
-const INSTAGRAM_ICON = 'instagram';
-const TWITTER_ICON = 'twitter';
-const OVERLAY_COLOR = 'rgba(185, 0, 57, 0.4)';
+
 const AVATAR_SIZE = 54;
+const ADD_ICON = 'account-multiple-plus';
 
 // AboutUs Styles
 const styles = StyleSheet.create({
@@ -150,13 +139,41 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: Colors.primaryColor,
   },
+  profilePic: {
+    width: 70,
+    height: 70,
+  },
+  searchResults: {
+    paddingTop: 10,
+    paddingBottom: 10,
+    flexDirection: 'row',
+    borderBottomColor: '#909090',
+    borderBottomWidth: 1,
+    alignItems: 'center',
+  },
+  AddButtonContainer: {
+    position: 'absolute',
+    right: 5,
+    borderRadius: 4,
+    backgroundColor: Colors.primaryColor,
+    overflow: 'hidden',
+  },
+  searchButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 38,
+    height: 38,
+  },
 });
 
 // AboutUs
 export default class AboutUs extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      data: [],
+      uri: 'https://www.pngall.com/wp-content/uploads/5/Profile-PNG-Clipart.png',
+    };
   }
 
   goBack = () => {
@@ -164,9 +181,26 @@ export default class AboutUs extends Component {
     navigation.goBack();
   };
 
-  callPhone = () => {
-    Linking.openURL(`tel:${1601234567}`);
-  };
+  componentDidMount() {
+    const self = this;
+    const dbRef = ref(getDatabase());
+    get(child(dbRef, `contacts/`))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          console.log(snapshot.val());
+          self.setState({data: snapshot.val()});
+          console.log(self.state.data);
+          Object.keys(snapshot.val()).map((item, index) => {
+            console.log(snapshot.val()[item].name);
+          });
+        } else {
+          console.log('No data available');
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
 
   render() {
     return (
@@ -176,175 +210,36 @@ export default class AboutUs extends Component {
           barStyle="dark-content"
         />
 
-        <View style={styles.content}>
-          <View style={styles.swiperContainer}>
-            <Swiper
-              loop={false}
-              index={isRTL ? 2 : 0} // number of slides - 1
-              paginationStyle={styles.paginationStyle}
-              activeDotStyle={styles.activeDot}
-              dotStyle={styles.dot}>
-              <ImageBackground
-                source={getImgSource(
-                  'https://ik.imagekit.io/6bxllfhzy/safetrack/assets/img/about_1_F78goywjMj.jpg',
-                )}
-                style={styles.bgImg}>
-                <GradientContainer
-                  colors={
-                    isRTL
-                      ? ['transparent', OVERLAY_COLOR]
-                      : [OVERLAY_COLOR, 'transparent']
-                  }
-                  start={isRTL ? {x: 0, y: 0} : {x: 0.1, y: 0}}
-                  end={isRTL ? {x: 0.4, y: 0} : {x: 1, y: 0}}
-                  containerStyle={styles.swiperContent}>
-                  <View style={styles.row}>
-                    <View style={styles.avatarWrapper}>
-                      <Avatar
-                        imageUri={require('../../assets/img/profile_2.jpeg')}
-                        size={AVATAR_SIZE}
-                        rounded
-                      />
-                    </View>
-                    <View style={styles.pl8}>
-                      <Subtitle1 style={[styles.info, styles.infoText]}>
-                        Jane Doe
-                      </Subtitle1>
-                      <Caption style={styles.caption}></Caption>
-                    </View>
+        <View style={{flex: 1, paddingLeft: 13, paddingRight: 13}}>
+          <ScrollView>
+            {Object.keys(this.state.data).map((item, index) => {
+              return (
+                <View style={styles.searchResults}>
+                  <Image
+                    source={{uri: this.state.uri}}
+                    style={styles.profilePic}
+                  />
+                  <View style={{paddingLeft: 20}}>
+                    <Text style={{fontSize: 20}}>
+                      {this.state.data[item].name}
+                    </Text>
+                    <Text>{this.state.data[item].phone}</Text>
                   </View>
-
-                  <View style={styles.description}>
-                    <Subtitle1 style={styles.infoText}>
-                      Lorem Ipsum is simply dummy text of the printing and
-                      typesetting industry.
-                    </Subtitle1>
+                  <View style={styles.AddButtonContainer}>
+                    <TouchableItem>
+                      <View style={styles.searchButton}>
+                        <Icon
+                          name={ADD_ICON}
+                          size={23}
+                          color={Colors.onPrimaryColor}
+                        />
+                      </View>
+                    </TouchableItem>
                   </View>
-                </GradientContainer>
-              </ImageBackground>
-
-              <ImageBackground
-                source={getImgSource(
-                  'https://ik.imagekit.io/6bxllfhzy/safetrack/assets/img/about_3_BTgyTa1wu.jpg',
-                )}
-                style={styles.bgImg}>
-                <GradientContainer
-                  colors={
-                    isRTL
-                      ? ['transparent', OVERLAY_COLOR]
-                      : [OVERLAY_COLOR, 'transparent']
-                  }
-                  start={isRTL ? {x: 0, y: 0} : {x: 0.1, y: 0}}
-                  end={isRTL ? {x: 0.4, y: 0} : {x: 1, y: 0}}
-                  containerStyle={styles.swiperContent}>
-                  <View style={styles.description}>
-                    <Subtitle1 style={styles.infoText}>
-                      Lorem Ipsum is simply dummy text of the printing and
-                      typesetting industry.
-                    </Subtitle1>
-                  </View>
-                </GradientContainer>
-              </ImageBackground>
-
-              <ImageBackground
-                source={getImgSource(
-                  'https://ik.imagekit.io/6bxllfhzy/safetrack/assets/img/about_2_-3DFjz0B4n.jpg',
-                )}
-                style={styles.bgImg}>
-                <GradientContainer
-                  colors={
-                    isRTL
-                      ? ['transparent', OVERLAY_COLOR]
-                      : [OVERLAY_COLOR, 'transparent']
-                  }
-                  start={isRTL ? {x: 0, y: 0} : {x: 0.1, y: 0}}
-                  end={isRTL ? {x: 0.4, y: 0} : {x: 1, y: 0}}
-                  containerStyle={styles.swiperContent}>
-                  <View style={styles.row}>
-                    <View>
-                      <Caption style={[styles.caption, styles.pb6]}>
-                        ADDRESS
-                      </Caption>
-                      <Subtitle1 style={[styles.info, styles.infoText]}>
-                        3814 Stroop Hill Road,
-                      </Subtitle1>
-                      <Subtitle1 style={[styles.info, styles.infoText]}>
-                        Roswell, GA 30076
-                      </Subtitle1>
-                    </View>
-                  </View>
-                  <View style={styles.description}>
-                    <Subtitle1 style={styles.infoText}>
-                      Please visit us.
-                    </Subtitle1>
-                  </View>
-                </GradientContainer>
-              </ImageBackground>
-            </Swiper>
-          </View>
-
-          <View style={styles.center}>
-            <Subtitle2>CALL US</Subtitle2>
-            <Heading5 style={styles.phone} onPress={this.callPhone}>
-              1-420-123-456-7
-            </Heading5>
-          </View>
-          <View style={styles.description}>
-            <Subtitle1>
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-              industry. Lorem Ipsum has been the industry's standard dummy text
-              ever since the 1500s, when an unknown printer took a galley of
-              type and scrambled it to make a type specimen book.
-            </Subtitle1>
-          </View>
-          <View style={styles.center}>
-            <Subtitle2>FOLLOW US</Subtitle2>
-            <View style={styles.social}>
-              <View style={styles.socialButton}>
-                <TouchableItem rippleColor={Colors.white} borderless>
-                  <View style={styles.socialIconContainer}>
-                    <FAIcon
-                      name={FACEBOOK_ICON}
-                      size={20}
-                      color={Colors.white}
-                    />
-                  </View>
-                </TouchableItem>
-              </View>
-
-              <View style={styles.socialButton}>
-                <TouchableItem rippleColor={Colors.white} borderless>
-                  <View style={styles.socialIconContainer}>
-                    <FAIcon
-                      name={INSTAGRAM_ICON}
-                      size={22}
-                      color={Colors.white}
-                    />
-                  </View>
-                </TouchableItem>
-              </View>
-
-              <View style={styles.socialButton}>
-                <TouchableItem rippleColor={Colors.white} borderless>
-                  <View style={styles.socialIconContainer}>
-                    <FAIcon
-                      name={TWITTER_ICON}
-                      size={21}
-                      color={Colors.white}
-                    />
-                  </View>
-                </TouchableItem>
-              </View>
-            </View>
-          </View>
-        </View>
-
-        <View style={styles.footer}>
-          <TouchableItem>
-            <View style={styles.footerButton}>
-              <Text style={styles.footerButtonText}>www.safetrack.com</Text>
-            </View>
-          </TouchableItem>
+                </View>
+              );
+            })}
+          </ScrollView>
         </View>
       </SafeAreaView>
     );
