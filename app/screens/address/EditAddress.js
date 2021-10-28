@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /**
  *
  *
@@ -116,15 +117,15 @@ export default class EditAddress extends Component {
 
     this.state = {
       addressType: 'home',
-      number: '18082',
+      number: '',
       numberFocused: false,
-      street: 'Petunia Dr',
+      street: '',
       streetFocused: false,
-      district: 'Rockwood',
+      district: '',
       districtFocused: false,
-      zip: '48173',
+      zip: '',
       zipFocused: false,
-      city: 'Miami',
+      city: '',
       cityFocused: false,
       modalVisible: false,
       messageTitle: 'Saving address details',
@@ -277,61 +278,9 @@ export default class EditAddress extends Component {
 
         <KeyboardAwareScrollView
           contentContainerStyle={styles.contentContainerStyle}>
-          <View style={styles.row}>
-            <View style={styles.picker}>
-              <View
-                style={[
-                  styles.touchArea,
-                  addressType === 'home' && {
-                    backgroundColor: Colors.primaryColor,
-                  },
-                ]}>
-                <TouchableItem onPress={this.setAddressType('home')}>
-                  <View style={styles.iconContainer}>
-                    <Icon
-                      name={HOME_ICON}
-                      size={19}
-                      color={
-                        addressType === 'home'
-                          ? Colors.onPrimaryColor
-                          : ICON_COLOR
-                      }
-                    />
-                  </View>
-                </TouchableItem>
-              </View>
-              <Caption>Home</Caption>
-            </View>
-
-            <View style={styles.picker}>
-              <View
-                style={[
-                  styles.touchArea,
-                  addressType === 'office' && {
-                    backgroundColor: Colors.primaryColor,
-                  },
-                ]}>
-                <TouchableItem onPress={this.setAddressType('office')}>
-                  <View style={styles.iconContainer}>
-                    <Icon
-                      name={OFFICE_ICON}
-                      size={19}
-                      color={
-                        addressType === 'office'
-                          ? Colors.onPrimaryColor
-                          : ICON_COLOR
-                      }
-                    />
-                  </View>
-                </TouchableItem>
-              </View>
-              <Caption>Office</Caption>
-            </View>
-          </View>
-
           <View style={styles.instructionContainer}>
             <Paragraph style={styles.instruction}>
-              Edit your delivery address details
+              Edit your Personal address details
             </Paragraph>
           </View>
 

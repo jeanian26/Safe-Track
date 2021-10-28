@@ -85,11 +85,11 @@ export default class EditProfile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: 'John Doe',
+      name: '',
       nameFocused: false,
-      email: 'john.doe@example.com',
+      email: '',
       emailFocused: false,
-      phone: '+1 23 4567890',
+      phone: '',
       phoneFocused: false,
     };
   }

@@ -181,13 +181,13 @@ export default class Introduction extends Component {
     const {navigation} = this.props;
     navigation.navigate(screen);
   };
-  componentDidMount = async () => {
+  componentDidMount = () => {
     const {navigation} = this.props;
     onAuthStateChanged(passAuth(), (user) => {
       if (user) {
         const uid = user.uid;
         console.log('user logged in', uid);
-        //navigation.navigate('HomeNavigator');
+        navigation.navigate('HomeNavigator');
       } else {
         console.log('no user logged in');
       }
