@@ -165,7 +165,7 @@ export default class SignUp extends Component {
     navigation.navigate(screen);
   };
 
-  createAccount = () => {
+  createAccount = async () => {
     // const { email, phone, password } = this.state;
     this.setState({
       emailFocused: false,
@@ -173,7 +173,8 @@ export default class SignUp extends Component {
       passwordFocused: false,
     });
 
-    var result = signUpUser(this.state.email, this.state.password);
+    var result = await signUpUser(this.state.email, this.state.password);
+
     if (result.uid) {
       ToastAndroid.showWithGravity(
         'Registration Complete proceed to login',

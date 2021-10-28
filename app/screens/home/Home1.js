@@ -66,9 +66,6 @@ export default class Home extends Component {
       },
     );
   }
-  componentWillUnmount() {
-    this.appStateSubscription.remove();
-  }
 
   render() {
     const {} = this.state;
