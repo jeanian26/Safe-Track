@@ -235,25 +235,21 @@ export default class Settings extends Component {
                   size={80}
                 />
                 <View style={styles.profileCenter}>
-                  <Subtitle1 style={styles.name}>John Doe</Subtitle1>
-                  <Subtitle2 style={styles.email}>
-                    john.doe@example.com
-                  </Subtitle2>
+                  <Subtitle1 style={styles.name}>Name</Subtitle1>
+                  <Subtitle2 style={styles.email}>Email</Subtitle2>
                 </View>
               </View>
             </View>
           </TouchableItem>
 
           <Setting
-            onPress={this.navigateTo('DeliveryAddress')}
+            onPress={this.navigateTo('EditAddress')}
             icon={ADDRESS_ICON}
             title="Personal Address"
             extraData={
               <View>
-                <Subtitle2 style={styles.extraData}>
-                  566 Olen Thomas Drive
-                </Subtitle2>
-                <Subtitle2 style={styles.extraData}>Dallas TX, USA</Subtitle2>
+                <Subtitle2 style={styles.extraData}>address 1</Subtitle2>
+                <Subtitle2 style={styles.extraData}>address 2</Subtitle2>
               </View>
             }
           />

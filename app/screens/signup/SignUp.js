@@ -16,6 +16,7 @@ import {
   TouchableWithoutFeedback,
   View,
   ToastAndroid,
+  Alert,
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
@@ -23,7 +24,8 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import Button from '../../components/buttons/Button';
 import UnderlinePasswordInput from '../../components/textinputs/UnderlinePasswordInput';
 import UnderlineTextInput from '../../components/textinputs/UnderlineTextInput';
-import {signUpUser} from '../../config/firebase';
+import {createUserWithEmailAndPassword} from 'firebase/auth';
+import {passAuth} from '../../config/firebase';
 // import colors, layout
 import Colors from '../../theme/colors';
 import Layout from '../../theme/layout';
@@ -165,26 +167,69 @@ export default class SignUp extends Component {
     navigation.navigate(screen);
   };
 
-  createAccount = () => {
+  createAccount = async () => {
     // const { email, phone, password } = this.state;
     this.setState({
       emailFocused: false,
       phoneFocused: false,
       passwordFocused: false,
     });
+    const {navigation} = this.props;
+    try {
+      createUserWithEmailAndPassword(
+        passAuth(),
+        this.state.email,
+        this.state.password,
+      )
+        .then((result) => {
+          navigation.navigate('SignIn');
+          const user = result.user;
+          console.log(user);
+          Alert.alert(
+            'Signup ',
+            'Succesfully Created an Account.. Proceed to login',
 
-    var result = signUpUser(this.state.email, this.state.password);
-    if (result.uid) {
-      ToastAndroid.showWithGravity(
-        'Registration Complete proceed to login',
-        ToastAndroid.SHORT,
-        ToastAndroid.CENTER,
-      );
-    } else {
-      ToastAndroid.showWithGravity(
-        'Registration Failed Try Again',
-        ToastAndroid.SHORT,
-        ToastAndroid.CENTER,
+            [
+              {
+                text: 'ok',
+                style: 'cancel',
+              },
+            ],
+            {
+              cancelable: true,
+            },
+          );
+        })
+        .catch((error) => {
+          Alert.alert(
+            'Signup ',
+            `Failed to Create an Account..${error}`,
+
+            [
+              {
+                text: 'ok',
+                style: 'cancel',
+              },
+            ],
+            {
+              cancelable: true,
+            },
+          );
+        });
+    } catch (error) {
+      Alert.alert(
+        'Signup ',
+        'Failed to Create an Account..Try Again',
+
+        [
+          {
+            text: 'ok',
+            style: 'cancel',
+          },
+        ],
+        {
+          cancelable: true,
+        },
       );
     }
   };

@@ -181,6 +181,20 @@ export default class SignIn extends Component {
       .then((userCredential) => {
         console.log('Success', userCredential);
         console.log(userCredential._tokenResponse.displayName);
+        Alert.alert(
+          'Signup ',
+          `Welcome Back ${userCredential._tokenResponse.displayName}`,
+
+          [
+            {
+              text: 'ok',
+              style: 'cancel',
+            },
+          ],
+          {
+            cancelable: true,
+          },
+        );
         navigation.navigate('HomeNavigator');
       })
       .catch((error) => {
@@ -188,6 +202,20 @@ export default class SignIn extends Component {
         const errorMessage = error.message;
         self.showAlert(false);
         console.log('Error' + errorCode, errorMessage);
+        Alert.alert(
+          'Signup ',
+          'Failed to Login',
+
+          [
+            {
+              text: 'ok',
+              style: 'cancel',
+            },
+          ],
+          {
+            cancelable: true,
+          },
+        );
       });
   };
   showAlert = () => {
