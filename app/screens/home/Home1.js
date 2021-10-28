@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /**
  *
  *
@@ -7,7 +8,14 @@
 
 // import dependencies
 import React, {Component} from 'react';
-import {SafeAreaView, StatusBar, StyleSheet, View, Text} from 'react-native';
+import {
+  AppState,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  View,
+  Text,
+} from 'react-native';
 
 // import utils
 import getImgSource from '../../utils/getImgSource.js';
@@ -30,13 +38,37 @@ export default class Home extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      appState: AppState.currentState,
+    };
   }
 
   navigateTo = (screen) => () => {
     const {navigation} = this.props;
     navigation.navigate(screen);
   };
+  componentDidMount() {
+    this.appStateSubscription = AppState.addEventListener(
+      'change',
+      (nextAppState) => {
+        if (
+          this.state.appState.match(/inactive|background/) &&
+          nextAppState === 'active'
+        ) {
+          console.log('App has come to the foreground!');
+        } else {
+          console.log('background');
+          setTimeout(function () {
+            console.log('task run on background');
+          }, 5000);
+        }
+        this.setState({appState: nextAppState});
+      },
+    );
+  }
+  componentWillUnmount() {
+    this.appStateSubscription.remove();
+  }
 
   render() {
     const {} = this.state;
@@ -45,7 +77,7 @@ export default class Home extends Component {
       <SafeAreaView style={styles.screenContainer}>
         <StatusBar backgroundColor={Colors.white} barStyle="dark-content" />
         <View style={styles.container}>
-          <Text>Home</Text>
+          <Text>{this.state.appState}</Text>
         </View>
       </SafeAreaView>
     );

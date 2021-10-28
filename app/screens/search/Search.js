@@ -1,11 +1,5 @@
-/**
- *
- *
- * @format
- * @flow
- */
+/* eslint-disable prettier/prettier */
 
-// import dependencies
 import React, {Component} from 'react';
 import {
   I18nManager,
@@ -19,8 +13,10 @@ import {
   Image,
   Button,
   ScrollView,
+  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import uuid from 'react-native-uuid';
 
 // import components
 
@@ -28,6 +24,9 @@ import {Heading6} from '../../components/text/CustomText';
 import TouchableItem from '../../components/TouchableItem';
 import SafeAreaView from '../../components/SafeAreaView';
 import Contacts from 'react-native-contacts';
+import {passAuth} from '../../config/firebase';
+import {onAuthStateChanged} from 'firebase/auth';
+import {getDatabase, ref, set} from 'firebase/database';
 
 // import colors
 import Colors from '../../theme/colors';
@@ -115,6 +114,14 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
   },
+  searchResults: {
+    paddingTop: 10,
+    paddingBottom: 10,
+    flexDirection: 'row',
+    borderBottomColor: '#909090',
+    borderBottomWidth: 1,
+    alignItems: 'center',
+  },
 });
 
 // Search
@@ -123,11 +130,11 @@ export default class Search extends Component {
     super(props);
 
     this.state = {
-      id: [],
-      phoneNumbers: [],
-      displayName: ['None'],
       uri: 'https://www.pngall.com/wp-content/uploads/5/Profile-PNG-Clipart.png',
       data: [],
+      dataToDisplay: [],
+      searchValue: '',
+      uid: '',
     };
   }
 
@@ -139,32 +146,61 @@ export default class Search extends Component {
     navigation.navigate(screen);
   };
   componentDidMount() {
-    var phoneNumbers = [];
-    var displayName = [];
-    var id = [];
     Contacts.getAll().then(
       (contacts) => {
-        for (var i = 0; i < contacts.length; i++) {
-          id.push(i);
-          displayName.push(contacts[i].displayName);
-          phoneNumbers.push(contacts[i].phoneNumbers[0].number);
-        }
         this.setState({data: contacts});
-        this.setState({
-          id: [...this.state.id, ...id],
-          phoneNumbers: [...this.state.phoneNumbers, ...phoneNumbers],
-          displayName: [...this.state.displayName, ...displayName],
-        });
-        console.log(contacts);
-        console.log(phoneNumbers);
+        this.setState({dataToDisplay: contacts});
       },
       () => {},
+    );
+    onAuthStateChanged(passAuth(), (user) => {
+      if (user) {
+        const uid = user.uid;
+        this.setState({uid: uid});
+      } else {
+        console.log('no user logged in');
+      }
+    });
+  }
+
+  searchPress(text) {
+    text = text.toLowerCase();
+    var arrayOfData = [];
+    for (let i = 0; i < this.state.data.length; i++) {
+      var rowValue = this.state.data[i].displayName;
+      var rowValueLower = rowValue.toLowerCase();
+      if (rowValueLower.startsWith(text)) {
+        console.log(this.state.data[i].displayName);
+        arrayOfData.push(this.state.data[i]);
+      }
+    }
+    console.log(arrayOfData);
+    this.setState({dataToDisplay: arrayOfData});
+  }
+  addContact(index) {
+    const db = getDatabase();
+    set(ref(db, 'contacts/' + uuid.v4({offset: 10})), {
+      name: this.state.data[index].displayName,
+      phone: this.state.data[index].phoneNumbers[0].number,
+      userID: this.state.uid,
+    });
+    Alert.alert(
+      'Contact Added',
+      `${this.state.data[index].displayName} \n${this.state.data[index].phoneNumbers[0].number}`,
+
+      [
+        {
+          text: 'ok',
+          style: 'cancel',
+        },
+      ],
+      {
+        cancelable: true,
+      },
     );
   }
 
   render() {
-    const {} = this.state;
-
     return (
       <SafeAreaView style={styles.screenContainer}>
         <StatusBar
@@ -182,9 +218,10 @@ export default class Search extends Component {
             returnKeyType="search"
             maxLength={50}
             style={styles.textInput}
+            onChangeText={(text) => this.searchPress(text)}
           />
           <View style={styles.searchButtonContainer}>
-            <TouchableItem onPress={this.getContact}>
+            <TouchableItem onPress={{}}>
               <View style={styles.searchButton}>
                 <Icon
                   name={SEARCH_ICON}
@@ -197,16 +234,8 @@ export default class Search extends Component {
         </View>
         <View style={{flex: 1, paddingLeft: 13, paddingRight: 13}}>
           <ScrollView>
-            {this.state.data.map((item) => (
-              <View
-                style={{
-                  paddingTop: 10,
-                  paddingBottom: 10,
-                  flexDirection: 'row',
-                  borderBottomColor: '#909090',
-                  borderBottomWidth: 1,
-                  alignItems: 'center',
-                }}>
+            {this.state.dataToDisplay.map((item, index) => (
+              <View style={styles.searchResults}>
                 <Image
                   source={{uri: this.state.uri}}
                   style={styles.profilePic}
@@ -216,7 +245,7 @@ export default class Search extends Component {
                   <Text>{item.phoneNumbers[0].number}</Text>
                 </View>
                 <View style={styles.AddButtonContainer}>
-                  <TouchableItem onPress={this.getContact}>
+                  <TouchableItem onPress={() => this.addContact(index)}>
                     <View style={styles.searchButton}>
                       <Icon
                         name={ADD_ICON}

@@ -77,7 +77,7 @@ export default class Cart extends Component {
           if (promise) {
             this.setState({isRecording: true});
             const data = await promise;
-            let fileName = 'VID_currentDate.mp4';
+
             this.setState({isRecording: false});
             console.log('takeVideo', data);
             const destinationAddress = RNFS.ExternalDirectoryPath + '/vid.mp4';

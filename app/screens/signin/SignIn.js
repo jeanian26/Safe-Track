@@ -15,6 +15,7 @@ import {
   Text,
   TouchableWithoutFeedback,
   View,
+  Alert,
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
@@ -170,6 +171,7 @@ export default class SignIn extends Component {
       emailFocused: false,
       passwordFocused: false,
     });
+    const self = this;
 
     signInWithEmailAndPassword(
       passAuth(),
@@ -178,13 +180,31 @@ export default class SignIn extends Component {
     )
       .then((userCredential) => {
         console.log('Success', userCredential);
+        console.log(userCredential._tokenResponse.displayName);
         navigation.navigate('HomeNavigator');
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
+        self.showAlert(false);
         console.log('Error' + errorCode, errorMessage);
       });
+  };
+  showAlert = () => {
+    Alert.alert(
+      'TEST',
+      'TEST',
+
+      [
+        {
+          text: 'ok',
+          style: 'cancel',
+        },
+      ],
+      {
+        cancelable: true,
+      },
+    );
   };
 
   render() {

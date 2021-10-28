@@ -1,3 +1,4 @@
+/* eslint-disable consistent-this */
 /* eslint-disable prettier/prettier */
 /**
  *
@@ -15,9 +16,11 @@ import {
   View,
   Text,
   Button,
+  Alert,
 } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import MapView from 'react-native-maps';
+import {Marker} from 'react-native-maps';
 
 // import components
 
@@ -40,18 +43,42 @@ export default class Map extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      mapREgion: null,
+      lastLat: null,
+      lastLong: null,
+      region: {
+        latitude: 1,
+        longitude: 1,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      },
+      latLng: {
+        latitude: 1,
+        longitude: 1,
+      },
+    };
   }
 
   getLocation = () => {
-    Geolocation.getCurrentPosition((info) => console.log(info));
-  };
-
-  componentDidMount() {
+    const self = this;
     if (true) {
       Geolocation.getCurrentPosition(
         (position) => {
-          console.log(position);
+          console.log(position.coords.longitude);
+          console.log(position.coords.latitude);
+          self.reverseGeoCode(
+            position.coords.latitude,
+            position.coords.longitude,
+          );
+          self.setState({
+            region: {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+            },
+          });
         },
         (error) => {
           // See error code charts below.
@@ -60,7 +87,49 @@ export default class Map extends Component {
         {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
       );
     }
-  }
+  };
+  reverseGeoCode = (lat, long) => {
+    const self = this;
+    const url = `https://reverse.geocoder.ls.hereapi.com/6.2/reversegeocode.json?prox=${long}%2C${lat}%2C137&mode=retrieveAddresses&maxresults=1&gen=9&apiKey=v_9DU2wi_FDqhJ71oCKfMHhCBVt7L7HszBSG72sWvAQ`;
+    console.log('URL: ', url);
+    fetch(
+      `https://reverse.geocoder.ls.hereapi.com/6.2/reversegeocode.json?prox=${lat}%2C${long}%2C137&mode=retrieveAddresses&maxresults=1&gen=9&apiKey=v_9DU2wi_FDqhJ71oCKfMHhCBVt7L7HszBSG72sWvAQ`,
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+      },
+    )
+      .then((r) => r.json())
+      .then((r) => {
+        console.log(r.Response.View[0].Result[0].Location.Address.Label);
+        self.showAlert(
+          r.Response.View[0].Result[0].Location.Address.Label,
+          lat,
+          long,
+        );
+      });
+  };
+
+  showAlert = (location, lat, long) =>
+    Alert.alert(
+      'Location',
+      `${location} \nLatitue: ${lat} \nLongitude:${long}`,
+
+      [
+        {
+          text: 'ok',
+          style: 'cancel',
+        },
+      ],
+      {
+        cancelable: true,
+      },
+    );
+
+  componentDidMount() {}
 
   render() {
     const {} = this.state;
@@ -72,15 +141,14 @@ export default class Map extends Component {
           barStyle="dark-content"
         />
         <Button onPress={this.getLocation} title="get location" />
-        <MapView
-          style={styles.map}
-          initialRegion={{
-            latitude: 37.78825,
-            longitude: -122.4324,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }}
-        />
+        <MapView style={styles.map} region={this.state.region}>
+          <Marker
+            coordinate={{
+              latitude: this.state.region.latitude,
+              longitude: this.state.region.longitude,
+            }}
+          />
+        </MapView>
       </SafeAreaView>
     );
   }
