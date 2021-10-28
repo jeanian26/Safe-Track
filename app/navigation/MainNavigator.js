@@ -207,7 +207,7 @@ function MainNavigatorA() {
           name="AboutUs"
           component={AboutUs}
           options={{
-            title: 'About Us',
+            title: 'Social Networks',
           }}
         />
       </Stack.Navigator>

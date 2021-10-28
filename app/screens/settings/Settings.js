@@ -244,47 +244,6 @@ export default class Settings extends Component {
             </View>
           </TouchableItem>
 
-          <Divider />
-
-          <TouchableItem onPress={this.navigateTo('Notifications')}>
-            <View style={[styles.row, styles.setting]}>
-              <View style={styles.leftSide}>
-                <View style={styles.iconContainer}>
-                  {notificationsOn ? (
-                    <Icon
-                      name={NOTIFICATION_ICON}
-                      size={24}
-                      color={Colors.primaryColor}
-                    />
-                  ) : (
-                    <Icon
-                      name={NOTIFICATION_OFF_ICON}
-                      size={24}
-                      color={Colors.primaryColor}
-                    />
-                  )}
-                </View>
-                <Subtitle1 style={styles.mediumText}>Notifications</Subtitle1>
-              </View>
-
-              {/*
-                FIX: when android:supportsRtl="true" not added to AndroidManifest.xml
-                <View style={isRTL && {transform: [{scaleX: -1}]}}> 
-              */}
-              <View>
-                <Switch
-                  trackColor={{
-                    true: IOS && Colors.primaryColor,
-                  }}
-                  thumbColor={IOS ? Colors.onPrimaryColor : Colors.primaryColor}
-                  onValueChange={this.toggleNotifications}
-                  value={notificationsOn}
-                />
-              </View>
-            </View>
-          </TouchableItem>
-          <Divider type="inset" marginLeft={DIVIDER_MARGIN_LEFT} />
-
           <Setting
             onPress={this.navigateTo('DeliveryAddress')}
             icon={ADDRESS_ICON}
@@ -312,7 +271,7 @@ export default class Settings extends Component {
           <Setting
             onPress={this.navigateTo('AboutUs')}
             icon={ABOUT_ICON}
-            title="About Us"
+            title="Social Networks"
           />
           <Divider type="inset" marginLeft={DIVIDER_MARGIN_LEFT} />
 

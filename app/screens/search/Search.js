@@ -1,12 +1,5 @@
 /* eslint-disable prettier/prettier */
-/**
- *
- *
- * @format
- * @flow
- */
 
-// import dependencies
 import React, {Component} from 'react';
 import {
   I18nManager,
@@ -162,8 +155,6 @@ export default class Search extends Component {
     );
     onAuthStateChanged(passAuth(), (user) => {
       if (user) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/firebase.User
         const uid = user.uid;
         this.setState({uid: uid});
       } else {
