@@ -1,11 +1,5 @@
-/**
- *
- *
- * @format
- * @flow
- */
+/* eslint-disable prettier/prettier */
 
-// import dependencies
 import React, {Component} from 'react';
 import {
   Platform,
@@ -13,26 +7,37 @@ import {
   StatusBar,
   StyleSheet,
   View,
+  Alert,
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {launchImageLibrary} from 'react-native-image-picker';
+import {passAuth} from '../../config/firebase';
+import {
+  getDatabase,
+  ref as refDatabase,
+  onValue,
+  child,
+  get,
+  set,
+} from 'firebase/database';
+import {onAuthStateChanged, getAuth, updateProfile} from 'firebase/auth';
 
-// import components
+import {getStorage, ref, uploadBytes, getDownloadURL} from 'firebase/storage';
+
 import Avatar from '../../components/avatar/Avatar';
 import Icon from '../../components/icon/Icon';
 import {Subtitle2} from '../../components/text/CustomText';
 import TouchableItem from '../../components/TouchableItem';
 import UnderlineTextInput from '../../components/textinputs/UnderlineTextInput';
+import Button from '../../components/buttons/Button';
 
-// import colors
 import Colors from '../../theme/colors';
 
-// EditProfile Config
 const AVATAR_SIZE = 100;
 const IOS = Platform.OS === 'ios';
 const CAMERA_ICON = IOS ? 'ios-camera' : 'md-camera';
 const INPUT_FOCUSED_BORDER_COLOR = Colors.primaryColor;
 
-// EditProfile Styles
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -78,19 +83,26 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
     paddingHorizontal: 0,
   },
+  buttonContainer: {
+    paddingTop: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
 
-// EditProfile
 export default class EditProfile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: '',
+      name: 'John Doe',
       nameFocused: false,
-      email: '',
+      email: 'john.doe@example.com',
       emailFocused: false,
       phone: '',
       phoneFocused: false,
+      imagePickerVisible: false,
+      imagePath: null,
+      uri: require('../../assets/img/profile.jpg'),
     };
   }
 
@@ -110,6 +122,119 @@ export default class EditProfile extends Component {
       nameFocused: true,
       emailFocused: false,
       phoneFocused: false,
+    });
+  };
+  saveProfile() {
+    const {navigation} = this.props;
+    const auth = getAuth();
+    updateProfile(auth.currentUser, {
+      displayName: this.state.name,
+      phoneNumber: '1235467',
+      email: this.state.email,
+    })
+      .then(() => {
+        global.DISPLAY_NAME = this.state.name;
+        global.EMAIL = this.state.email;
+        navigation.navigate('Settings');
+      })
+      .catch((error) => {
+        console.log('failed');
+      });
+    const db = getDatabase();
+    set(refDatabase(db, 'userPhoneNumber/' + global.USERID), {
+      phone: this.state.phone,
+    });
+  }
+
+  chooseImage = async () => {
+    let options = {
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+
+    /** @type {any} */
+    const metadata = {
+      contentType: 'image/jpg',
+    };
+    const self = this;
+
+    launchImageLibrary(options, (res) => {
+      console.log('Response = ', res);
+      if (res.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (res.error) {
+        console.log('ImagePicker Error: ', res.error);
+      } else if (res.customButton) {
+        console.log('User tapped custom button: ', res.customButton);
+      } else {
+        console.log('response', JSON.stringify(res));
+        const uri = res.assets[0].uri;
+        this.uploadImage(uri);
+        self.setState({
+          uri: uri,
+        });
+      }
+    });
+  };
+  componentDidMount = async () => {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    if (user !== null) {
+      user.providerData.forEach((profile) => {
+        this.setState({name: profile.displayName});
+        this.setState({email: profile.email});
+      });
+    }
+
+    const storage = getStorage();
+    getDownloadURL(ref(storage, `profile_images/${global.USERID}.jpg`))
+      .then((url) => {
+        this.setState({uri: url});
+      })
+      .catch((error) => {
+        console.log('error', error);
+      });
+
+    const dbRef = refDatabase(getDatabase());
+    get(child(dbRef, `userPhoneNumber/${global.USERID}`))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          let result = snapshot.val();
+          this.setState({phone: result.phone});
+        } else {
+          console.log('No data available');
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  uploadImage = async (uri) => {
+    const filename = global.USERID + '.jpg';
+    //const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
+    const storage = getStorage();
+    const metadata = {
+      contentType: 'image/jpg',
+    };
+    const storageRef = ref(storage, `/profile_images/${filename}`);
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function (e) {
+        console.log(e);
+        reject(new TypeError('Network request failed'));
+      };
+      xhr.responseType = 'blob';
+      xhr.open('GET', uri, true);
+      xhr.send(null);
+    });
+    uploadBytes(storageRef, blob, metadata).then((snapshot) => {
+      console.log('Uploaded a blob or file!', snapshot);
     });
   };
 
@@ -160,15 +285,11 @@ export default class EditProfile extends Component {
 
         <KeyboardAwareScrollView enableOnAndroid>
           <View style={styles.avatarSection}>
-            <Avatar
-              imageUri={require('../../assets/img/profile.jpg')}
-              rounded
-              size={AVATAR_SIZE}
-            />
+            <Avatar imageUri={this.state.uri} rounded size={AVATAR_SIZE} />
 
             <View style={styles.whiteCircle}>
               <View style={styles.cameraButtonContainer}>
-                <TouchableItem>
+                <TouchableItem onPress={() => this.chooseImage()}>
                   <View style={styles.cameraButton}>
                     <Icon
                       name={CAMERA_ICON}
@@ -225,6 +346,18 @@ export default class EditProfile extends Component {
               inputFocused={phoneFocused}
               focusedBorderColor={INPUT_FOCUSED_BORDER_COLOR}
               inputContainerStyle={styles.inputContainerStyle}
+            />
+          </View>
+          <View style={styles.buttonContainer}>
+            <Button
+              onPress={() => {
+                this.saveProfile();
+              }}
+              color={Colors.primaryColor}
+              small
+              title={'SAVE PROFILE'.toUpperCase()}
+              titleColor={Colors.background}
+              borderRadius={100}
             />
           </View>
         </KeyboardAwareScrollView>

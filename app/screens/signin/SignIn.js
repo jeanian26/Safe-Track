@@ -181,6 +181,8 @@ export default class SignIn extends Component {
       .then((userCredential) => {
         console.log(userCredential._tokenResponse.localId);
         global.USERID = userCredential._tokenResponse.localId;
+        global.DISPLAY_NAME = userCredential._tokenResponse.displayName;
+        global.EMAIL = userCredential._tokenResponse.email;
         Alert.alert(
           'Signup ',
           `Welcome Back ${userCredential._tokenResponse.displayName}`,
