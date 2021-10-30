@@ -31,10 +31,9 @@ export function checkLoggedIn() {
     if (user) {
       const uid = user.uid;
       console.log('user logged in', uid);
-      return uid;
+      global.USERID = uid;
     } else {
       console.log('no user logged in');
-      return false;
     }
   });
 }

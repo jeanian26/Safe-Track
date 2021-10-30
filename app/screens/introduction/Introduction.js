@@ -187,6 +187,7 @@ export default class Introduction extends Component {
       if (user) {
         const uid = user.uid;
         console.log('user logged in', uid);
+        global.USERID = uid;
         navigation.navigate('HomeNavigator');
       } else {
         console.log('no user logged in');

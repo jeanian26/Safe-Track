@@ -184,7 +184,7 @@ export default class AboutUs extends Component {
   componentDidMount() {
     const self = this;
     const dbRef = ref(getDatabase());
-    get(child(dbRef, `contacts/`))
+    get(child(dbRef, 'contacts/'))
       .then((snapshot) => {
         if (snapshot.exists()) {
           console.log(snapshot.val());
@@ -213,31 +213,33 @@ export default class AboutUs extends Component {
         <View style={{flex: 1, paddingLeft: 13, paddingRight: 13}}>
           <ScrollView>
             {Object.keys(this.state.data).map((item, index) => {
-              return (
-                <View style={styles.searchResults}>
-                  <Image
-                    source={{uri: this.state.uri}}
-                    style={styles.profilePic}
-                  />
-                  <View style={{paddingLeft: 20}}>
-                    <Text style={{fontSize: 20}}>
-                      {this.state.data[item].name}
-                    </Text>
-                    <Text>{this.state.data[item].phone}</Text>
+              if (global.USERID === this.state.data[item].userID) {
+                return (
+                  <View style={styles.searchResults}>
+                    <Image
+                      source={{uri: this.state.uri}}
+                      style={styles.profilePic}
+                    />
+                    <View style={{paddingLeft: 20}}>
+                      <Text style={{fontSize: 20}}>
+                        {this.state.data[item].name}
+                      </Text>
+                      <Text>{this.state.data[item].phone}</Text>
+                    </View>
+                    <View style={styles.AddButtonContainer}>
+                      <TouchableItem>
+                        <View style={styles.searchButton}>
+                          <Icon
+                            name={ADD_ICON}
+                            size={23}
+                            color={Colors.onPrimaryColor}
+                          />
+                        </View>
+                      </TouchableItem>
+                    </View>
                   </View>
-                  <View style={styles.AddButtonContainer}>
-                    <TouchableItem>
-                      <View style={styles.searchButton}>
-                        <Icon
-                          name={ADD_ICON}
-                          size={23}
-                          color={Colors.onPrimaryColor}
-                        />
-                      </View>
-                    </TouchableItem>
-                  </View>
-                </View>
-              );
+                );
+              }
             })}
           </ScrollView>
         </View>

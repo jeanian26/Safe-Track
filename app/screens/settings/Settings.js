@@ -235,7 +235,7 @@ export default class Settings extends Component {
                   size={80}
                 />
                 <View style={styles.profileCenter}>
-                  <Subtitle1 style={styles.name}>Name</Subtitle1>
+                  <Subtitle1 style={styles.name}>{global.USERID}</Subtitle1>
                   <Subtitle2 style={styles.email}>Email</Subtitle2>
                 </View>
               </View>

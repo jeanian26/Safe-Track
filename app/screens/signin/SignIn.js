@@ -25,7 +25,7 @@ import InputModal from '../../components/modals/InputModal';
 import UnderlinePasswordInput from '../../components/textinputs/UnderlinePasswordInput';
 import UnderlineTextInput from '../../components/textinputs/UnderlineTextInput';
 import {signInWithEmailAndPassword} from 'firebase/auth';
-import {passAuth} from '../../config/firebase';
+import {passAuth, USERID} from '../../config/firebase';
 // import colors, layout
 import Colors from '../../theme/colors';
 import Layout from '../../theme/layout';
@@ -179,8 +179,8 @@ export default class SignIn extends Component {
       this.state.password,
     )
       .then((userCredential) => {
-        console.log('Success', userCredential);
-        console.log(userCredential._tokenResponse.displayName);
+        console.log(userCredential._tokenResponse.localId);
+        global.USERID = userCredential._tokenResponse.localId;
         Alert.alert(
           'Signup ',
           `Welcome Back ${userCredential._tokenResponse.displayName}`,
