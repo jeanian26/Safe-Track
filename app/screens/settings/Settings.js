@@ -22,8 +22,9 @@ import {
 import {color} from 'react-native-reanimated';
 
 // import components
-import {onAuthStateChanged, getAuth, updateProfile} from 'firebase/auth';
-import {getDatabase, ref as redDatabase, onValue} from 'firebase/database';
+import {getAuth} from 'firebase/auth';
+import {getStorage, ref, getDownloadURL} from 'firebase/storage';
+import {getDatabase, ref as refData, child, get, set} from 'firebase/database';
 import Avatar from '../../components/avatar/Avatar';
 import Divider from '../../components/divider/Divider';
 import Icon from '../../components/icon/Icon';
@@ -171,8 +172,14 @@ export default class Settings extends Component {
     super(props);
     this.state = {
       notificationsOn: true,
-      name: 'Name',
-      email: 'Email address',
+      name: 'test',
+      email: 'test',
+      imageUri: require('../../assets/img/profile.jpg'),
+      number: '',
+      street: '',
+      district: '',
+      city: '',
+      country: 'Philippines',
     };
   }
 
@@ -215,13 +222,42 @@ export default class Settings extends Component {
     this.focusListener = this.props.navigation.addListener('focus', () => {
       const auth = getAuth();
       const user = auth.currentUser;
-      const db = getDatabase();
+      const self = this;
+      console.log(user.uid);
       if (user !== null) {
         user.providerData.forEach((profile) => {
           this.setState({name: profile.displayName});
           this.setState({email: profile.email});
         });
       }
+      const storage = getStorage();
+      getDownloadURL(ref(storage, `profile_images/${user.uid}.jpg`))
+        .then((url) => {
+          self.setState({imageUri: url});
+        })
+        .catch((error) => {
+          // Handle any errors
+        });
+      const dbRef = refData(getDatabase());
+      get(child(dbRef, `address/${user.uid}`))
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            console.log(snapshot.val());
+            const result = snapshot.val();
+            self.setState({
+              number: result.str_number,
+              street: result.street_name,
+              district: result.barangay,
+              city: result.city,
+              zip: result.zipcode,
+            });
+          } else {
+            console.log('No data available');
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     });
   };
 
@@ -266,8 +302,18 @@ export default class Settings extends Component {
             title="Personal Address"
             extraData={
               <View>
-                <Subtitle2 style={styles.extraData}>address 1</Subtitle2>
-                <Subtitle2 style={styles.extraData}>address 2</Subtitle2>
+                <View>
+                  <Subtitle2 style={styles.extraData}>
+                    {this.state.number + ' ' + this.state.street}
+                  </Subtitle2>
+                  <Subtitle2 style={styles.extraData}>
+                    {this.state.district +
+                      ' ' +
+                      this.state.city +
+                      ' ' +
+                      this.state.country}
+                  </Subtitle2>
+                </View>
               </View>
             }
           />

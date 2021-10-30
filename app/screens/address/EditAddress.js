@@ -17,8 +17,8 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-
-// import components
+import {getAuth} from 'firebase/auth';
+import {getDatabase, ref, child, get, set} from 'firebase/database';
 import ActivityIndicatorModal from '../../components/modals/ActivityIndicatorModal';
 import Button from '../../components/buttons/Button';
 import {Caption, Paragraph} from '../../components/text/CustomText';
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
   },
   buttonsContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
     marginTop: 20,
     paddingHorizontal: 20,
@@ -117,33 +117,21 @@ export default class EditAddress extends Component {
 
     this.state = {
       addressType: 'home',
-      number: '',
+      number: '18082',
       numberFocused: false,
-      street: '',
+      street: 'Petunia Dr',
       streetFocused: false,
-      district: '',
+      district: 'Rockwood',
       districtFocused: false,
-      zip: '',
+      zip: '48173',
       zipFocused: false,
-      city: '',
+      city: 'Miami',
       cityFocused: false,
       modalVisible: false,
       messageTitle: 'Saving address details',
+      userID: '',
     };
   }
-
-  componentDidMount = () => {
-    this.keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      this.keyboardDidHide,
-    );
-  };
-
-  // avoid memory leak
-  componentWillUnmount = () => {
-    clearTimeout(this.timeout);
-    this.keyboardDidHideListener.remove();
-  };
 
   keyboardDidHide = () => {
     this.setState({
@@ -192,51 +180,46 @@ export default class EditAddress extends Component {
       nextFiled.focus();
     }
   };
+  saveAddress = () => {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    const {navigation} = this.props;
 
-  removeAddress = () => {
-    Keyboard.dismiss();
-
-    this.setState(
-      {
-        messageTitle: 'Removing address',
-      },
-      () => {
-        this.setState(
-          {
-            modalVisible: true,
-          },
-          () => {
-            // for demo purpose after 3s close modal
-            this.timeout = setTimeout(() => {
-              this.closeModal();
-            }, 3000);
-          },
-        );
-      },
-    );
+    const db = getDatabase();
+    set(ref(db, 'address/' + user.uid), {
+      str_number: this.state.number,
+      street_name: this.state.street,
+      barangay: this.state.district,
+      city: this.state.city,
+      zipcode: this.state.zip,
+    });
+    navigation.navigate('Settings');
   };
 
-  saveAddress = () => {
-    Keyboard.dismiss();
-
-    this.setState(
-      {
-        messageTitle: 'Saving address details',
-      },
-      () => {
-        this.setState(
-          {
-            modalVisible: true,
-          },
-          () => {
-            // for demo purpose after 3s close modal
-            this.timeout = setTimeout(() => {
-              this.closeModal();
-            }, 3000);
-          },
-        );
-      },
-    );
+  componentDidMount = async () => {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    const dbRef = ref(getDatabase());
+    const self = this;
+    get(child(dbRef, `address/${user.uid}`))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          console.log(snapshot.val());
+          const result = snapshot.val();
+          self.setState({
+            number: result.str_number,
+            street: result.street_name,
+            district: result.barangay,
+            city: result.city,
+            zip: result.zipcode,
+          });
+        } else {
+          console.log('No data available');
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   closeModal = () => {
@@ -386,14 +369,6 @@ export default class EditAddress extends Component {
           </View>
 
           <View style={styles.buttonsContainer}>
-            <Button
-              onPress={this.removeAddress}
-              disabled={false}
-              small
-              title={'Remove'.toUpperCase()}
-              buttonStyle={styles.extraSmallButton}
-            />
-
             <Button
               onPress={this.saveAddress}
               disabled={false}
