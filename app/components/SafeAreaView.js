@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /**
  *
  *
@@ -5,15 +6,12 @@
  * @flow
  */
 
-// import dependencies
 import React from 'react';
 import {StyleSheet, ViewStyle} from 'react-native';
 import {SafeAreaView as SafeView} from 'react-native-safe-area-context';
 
-// import colors
 import Colors from '../theme/colors';
 
-// SafeAreaView Styles
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
@@ -21,7 +19,6 @@ const styles = StyleSheet.create({
   },
 });
 
-// SafeAreaView Props
 type Prpos = {
   children: React.ReactNode,
   style: ViewStyle,

@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /**
  *
  *
@@ -26,9 +27,6 @@ import TouchableItem from '../../components/TouchableItem';
 // import colors, layout
 import Colors from '../../theme/colors';
 import Layout from '../../theme/layout';
-
-//import sample data
-import sample_data from '../../config/sample-data';
 
 // Categories Config
 // CARD_WIDTH = (SCREEN_WIDTH - 2 * categoriesContainer.padding - 4 * card.margin) / 2
@@ -99,7 +97,7 @@ export default class Categories extends Component {
     super(props);
 
     this.state = {
-      categories: sample_data.all_categorories,
+      categories: '',
     };
   }
 

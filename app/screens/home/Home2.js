@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /**
  *
  *
@@ -33,7 +34,6 @@ import TouchableItem from '../../components/TouchableItem';
 import Colors from '../../theme/colors';
 
 //import sample data
-import sample_data from '../../config/sample-data';
 
 // Home Config
 const imgHolder = require('../../assets/img/imgholder.png');
@@ -145,9 +145,9 @@ export default class Home extends Component {
     super(props);
 
     this.state = {
-      products: sample_data.products,
-      categories: sample_data.categories,
-      popularProducts: sample_data.popularProducts,
+      products: '',
+      categories: '',
+      popularProducts: '',
     };
   }
 

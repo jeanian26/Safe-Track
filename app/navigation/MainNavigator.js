@@ -1,72 +1,46 @@
 /* eslint-disable prettier/prettier */
-/**
- *
- *
- * @format
- * @flow
- */
 
-// import dependencies
 import React from 'react';
 import {Platform} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
-// import components
 import HeaderIconButton from '../components/navigation/HeaderIconButton';
 
-// import Introduction screen
 import Intro from '../screens/introduction/Introduction';
 
-// import Welcome screen
 import Welcome from '../screens/welcome/Welcome';
 
-// import SignUp screen
 import SignUp from '../screens/signup/SignUp';
 
-// import SignIn screen
 import SignIn from '../screens/signin/SignIn';
 
-// import ForgotPassword screen
 import ForgotPassword from '../screens/forgotpassword/ForgotPassword';
 
-// import TermsConditions screen
 import TermsConditions from '../screens/terms/TermsConditions';
 
-// import HomeNavigator
 import HomeNavigator from './HomeNavigator1';
 
-// import Search results screen
 import SearchResults from '../screens/search/SearchResults';
 
-// import EditProfile screen
 import EditProfile from '../screens/profile/EditProfile';
 
-// import DeliveryAddress screen
 import DeliveryAddress from '../screens/address/DeliveryAddress';
 
-// import AddAddress screen
 import AddAddress from '../screens/address/AddAddress';
 
-// import EditAddress screen
 import EditAddress from '../screens/address/EditAddress';
 
-// import Notifications screen
 import Notifications from '../screens/notifications/Notifications';
 
-// import AboutUs screen
 import AboutUs from '../screens/about/AboutUs';
 
-// import colors
 import Colors from '../theme/colors';
 
-// MainNavigatorA Config
 const SAVE_ICON = Platform.OS === 'ios' ? 'ios-checkmark' : 'md-checkmark';
 
-// create stack navigator
 const Stack = createStackNavigator();
 
-// MainNavigatorA
 function MainNavigatorA() {
   return (
     <NavigationContainer>

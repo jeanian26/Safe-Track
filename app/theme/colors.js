@@ -3,7 +3,7 @@ import config from '../config';
 
 // Color Themes
 const themes = {
-  food: {
+  green: {
     // primary color
     primaryLightColor: '#bc00218c',
     primaryColor: '#3FB39E', //00b970//bc0021

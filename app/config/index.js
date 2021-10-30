@@ -1,5 +1,5 @@
 const config = {
-  theme: 'food',
+  theme: 'green',
 };
 
 export default config;

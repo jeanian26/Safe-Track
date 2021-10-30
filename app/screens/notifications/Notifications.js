@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /**
  *
  *
@@ -27,7 +28,6 @@ import Colors from '../../theme/colors';
 const EMPTY_STATE_ICON = 'bell-ring-outline';
 
 //import sample data
-import sample_data from '../../config/sample-data';
 
 // Notifications Styles
 const styles = StyleSheet.create({
@@ -49,9 +49,7 @@ export default class Notifications extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      notifications: sample_data.notifications,
-    };
+    this.state = {};
   }
 
   goBack = () => {

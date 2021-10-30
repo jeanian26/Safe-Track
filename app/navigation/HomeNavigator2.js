@@ -1,38 +1,22 @@
-/**
- *
- *
- * @format
- * @flow
- */
-
-// import dependencies
+/* eslint-disable prettier/prettier */
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 
-// import components
 import TabBadgeIcon from '../components/navigation/TabBadgeIcon';
 
-// import Home screen
 import Home from '../screens/home/Home2';
 
-// import Search screen
 import Search from '../screens/search/Search';
 
-// import Favorites screen
 import Map from '../screens/Map/Map';
 
-// import Camera screen
 import Camera from '../screens/Camera/Camera';
 
-// import Settings screen
 import Settings from '../screens/settings/Settings';
 
-// import colors
 import Colors from '../theme/colors';
 import {color} from 'react-native-reanimated';
-
-// HomeNavigator Config
 
 type Props = {
   color: string,
@@ -40,10 +24,8 @@ type Props = {
   size: number,
 };
 
-// create bottom tab navigator
 const Tab = createBottomTabNavigator();
 
-// HomeNavigator
 function HomeNavigator() {
   return (
     <Tab.Navigator
@@ -63,16 +45,15 @@ function HomeNavigator() {
             iconName = `account-settings${focused ? '' : '-outline'}`;
           }
 
-          // You can return any component that you like here!
           return <Icon name={iconName} size={size} color={color} />;
         },
       })}
       tabBarOptions={{
         activeTintColor: Colors.primaryColor,
         inactiveTintColor: Colors.secondaryText,
-        showLabel: false, // hide labels
+        showLabel: false,
         style: {
-          backgroundColor: Colors.surface, // TabBar background
+          backgroundColor: Colors.surface,
         },
       }}>
       <Tab.Screen name="Home" component={Home} />
