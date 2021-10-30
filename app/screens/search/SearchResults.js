@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /**
  *
  *
@@ -16,7 +17,6 @@ import ActionProductCardHorizontal from '../../components/cards/ActionProductCar
 import Colors from '../../theme/colors';
 
 //import sample data
-import sample_data from '../../config/sample-data';
 
 // SearchResults Config
 
@@ -37,9 +37,7 @@ export default class SearchResults extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      products: sample_data.search_products,
-    };
+    this.state = {};
   }
 
   navigateTo = (screen) => () => {

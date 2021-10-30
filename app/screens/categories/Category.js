@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /**
  *
  *
@@ -23,7 +24,6 @@ import ProductCard from '../../components/cards/ProductCard';
 import Colors from '../../theme/colors';
 
 //import sample data
-import sample_data from '../../config/sample-data';
 
 // Category Styles
 const styles = StyleSheet.create({
@@ -42,7 +42,7 @@ export default class Category extends Component {
     super(props);
 
     this.state = {
-      products: sample_data.category_product,
+      products: '',
     };
   }
 

@@ -220,17 +220,6 @@ export default class Search extends Component {
             style={styles.textInput}
             onChangeText={(text) => this.searchPress(text)}
           />
-          <View style={styles.searchButtonContainer}>
-            <TouchableItem onPress={{}}>
-              <View style={styles.searchButton}>
-                <Icon
-                  name={SEARCH_ICON}
-                  size={23}
-                  color={Colors.onPrimaryColor}
-                />
-              </View>
-            </TouchableItem>
-          </View>
         </View>
         <View style={{flex: 1, paddingLeft: 13, paddingRight: 13}}>
           <ScrollView>

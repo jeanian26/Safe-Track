@@ -19,18 +19,14 @@ import Colors from '../theme/colors';
 import {color} from 'react-native-reanimated';
 import {Platform, StyleSheet} from 'react-native';
 
-// HomeNavigator Config
-
 type Props = {
   color: string,
   focused: string,
   size: number,
 };
 
-// create bottom tab navigator
 const Tab = createBottomTabNavigator();
 
-// HomeNavigator
 function HomeNavigator() {
   return (
     <Tab.Navigator
