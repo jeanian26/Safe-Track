@@ -12,8 +12,16 @@ import {
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {passAuth} from '../../config/firebase';
+import {
+  getDatabase,
+  ref as refDatabase,
+  onValue,
+  child,
+  get,
+  set,
+} from 'firebase/database';
 import {onAuthStateChanged, getAuth, updateProfile} from 'firebase/auth';
-import {getDatabase, ref as redDatabase, onValue} from 'firebase/database';
+
 import {getStorage, ref, uploadBytes, getDownloadURL} from 'firebase/storage';
 
 import Avatar from '../../components/avatar/Avatar';
@@ -121,16 +129,21 @@ export default class EditProfile extends Component {
     const auth = getAuth();
     updateProfile(auth.currentUser, {
       displayName: this.state.name,
-      phoneNumber: '+1235467',
+      phoneNumber: '1235467',
       email: this.state.email,
     })
       .then(() => {
-        console.log('updated');
+        global.DISPLAY_NAME = this.state.name;
+        global.EMAIL = this.state.email;
         navigation.navigate('Settings');
       })
       .catch((error) => {
         console.log('failed');
       });
+    const db = getDatabase();
+    set(refDatabase(db, 'userPhoneNumber/' + global.USERID), {
+      phone: this.state.phone,
+    });
   }
 
   chooseImage = async () => {
@@ -155,7 +168,6 @@ export default class EditProfile extends Component {
         console.log('ImagePicker Error: ', res.error);
       } else if (res.customButton) {
         console.log('User tapped custom button: ', res.customButton);
-        alert(res.customButton);
       } else {
         console.log('response', JSON.stringify(res));
         const uri = res.assets[0].uri;
@@ -163,17 +175,12 @@ export default class EditProfile extends Component {
         self.setState({
           uri: uri,
         });
-        //console.log(blob);
-        //uploadBytes(storageRef, blob, metadata).then((snapshot) => {
-        //  console.log('Uploaded a blob or file!', snapshot);
-        //});
       }
     });
   };
   componentDidMount = async () => {
     const auth = getAuth();
     const user = auth.currentUser;
-    const db = getDatabase();
     if (user !== null) {
       user.providerData.forEach((profile) => {
         this.setState({name: profile.displayName});
@@ -181,20 +188,33 @@ export default class EditProfile extends Component {
       });
     }
 
-    const self = this;
     const storage = getStorage();
     getDownloadURL(ref(storage, `profile_images/${global.USERID}.jpg`))
       .then((url) => {
-        self.setState({uri: url});
+        this.setState({uri: url});
       })
       .catch((error) => {
         console.log('error', error);
+      });
+
+    const dbRef = refDatabase(getDatabase());
+    get(child(dbRef, `userPhoneNumber/${global.USERID}`))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          let result = snapshot.val();
+          this.setState({phone: result.phone});
+        } else {
+          console.log('No data available');
+        }
+      })
+      .catch((error) => {
+        console.error(error);
       });
   };
 
   uploadImage = async (uri) => {
     const filename = global.USERID + '.jpg';
-    const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
+    //const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
     const storage = getStorage();
     const metadata = {
       contentType: 'image/jpg',

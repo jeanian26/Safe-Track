@@ -182,14 +182,13 @@ export default class AboutUs extends Component {
   };
 
   componentDidMount() {
-    const self = this;
     const dbRef = ref(getDatabase());
     get(child(dbRef, 'contacts/'))
       .then((snapshot) => {
         if (snapshot.exists()) {
           console.log(snapshot.val());
-          self.setState({data: snapshot.val()});
-          console.log(self.state.data);
+          this.setState({data: snapshot.val()});
+          console.log(this.state.data);
           Object.keys(snapshot.val()).map((item, index) => {
             console.log(snapshot.val()[item].name);
           });

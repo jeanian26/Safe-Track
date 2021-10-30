@@ -22,6 +22,8 @@ import {
 import {color} from 'react-native-reanimated';
 
 // import components
+import {onAuthStateChanged, getAuth, updateProfile} from 'firebase/auth';
+import {getDatabase, ref as redDatabase, onValue} from 'firebase/database';
 import Avatar from '../../components/avatar/Avatar';
 import Divider from '../../components/divider/Divider';
 import Icon from '../../components/icon/Icon';
@@ -169,6 +171,8 @@ export default class Settings extends Component {
     super(props);
     this.state = {
       notificationsOn: true,
+      name: 'Name',
+      email: 'Email address',
     };
   }
 
@@ -207,6 +211,20 @@ export default class Settings extends Component {
     );
   };
 
+  componentDidMount = () => {
+    this.focusListener = this.props.navigation.addListener('focus', () => {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      const db = getDatabase();
+      if (user !== null) {
+        user.providerData.forEach((profile) => {
+          this.setState({name: profile.displayName});
+          this.setState({email: profile.email});
+        });
+      }
+    });
+  };
+
   render() {
     const {notificationsOn} = this.state;
 
@@ -235,10 +253,8 @@ export default class Settings extends Component {
                   size={80}
                 />
                 <View style={styles.profileCenter}>
-                  <Subtitle1 style={styles.name}>
-                    {global.DISPLAY_NAME}
-                  </Subtitle1>
-                  <Subtitle2 style={styles.email}>{global.EMAIL}</Subtitle2>
+                  <Subtitle1 style={styles.name}>{this.state.name}</Subtitle1>
+                  <Subtitle2 style={styles.email}>{this.state.email}</Subtitle2>
                 </View>
               </View>
             </View>

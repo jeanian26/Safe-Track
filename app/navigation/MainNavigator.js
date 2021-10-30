@@ -132,13 +132,6 @@ function MainNavigatorA() {
           component={EditProfile}
           options={({navigation}) => ({
             title: 'Edit Profile',
-            headerRight: () => (
-              <HeaderIconButton
-                onPress={() => navigation.goBack()}
-                name={SAVE_ICON}
-                color={Colors.primaryColor}
-              />
-            ),
           })}
         />
         <Stack.Screen

@@ -185,7 +185,7 @@ export default class Introduction extends Component {
     const {navigation} = this.props;
     onAuthStateChanged(passAuth(), (user) => {
       if (user) {
-        console.log('user logged in', user.uid);
+        console.log('user logged in', user);
         global.USERID = user.uid;
         global.DISPLAY_NAME = user.displayName;
         global.EMAIL = user.email;
