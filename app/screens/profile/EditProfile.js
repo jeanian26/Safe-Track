@@ -1,11 +1,5 @@
-/**
- *
- *
- * @format
- * @flow
- */
+/* eslint-disable prettier/prettier */
 
-// import dependencies
 import React, {Component} from 'react';
 import {
   Platform,
@@ -16,23 +10,19 @@ import {
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
-// import components
 import Avatar from '../../components/avatar/Avatar';
 import Icon from '../../components/icon/Icon';
 import {Subtitle2} from '../../components/text/CustomText';
 import TouchableItem from '../../components/TouchableItem';
 import UnderlineTextInput from '../../components/textinputs/UnderlineTextInput';
 
-// import colors
 import Colors from '../../theme/colors';
 
-// EditProfile Config
 const AVATAR_SIZE = 100;
 const IOS = Platform.OS === 'ios';
 const CAMERA_ICON = IOS ? 'ios-camera' : 'md-camera';
 const INPUT_FOCUSED_BORDER_COLOR = Colors.primaryColor;
 
-// EditProfile Styles
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -80,7 +70,6 @@ const styles = StyleSheet.create({
   },
 });
 
-// EditProfile
 export default class EditProfile extends Component {
   constructor(props) {
     super(props);
@@ -145,6 +134,9 @@ export default class EditProfile extends Component {
     if (nextFiled) {
       nextFiled.focus();
     }
+  };
+  componentDidMount = () => {
+    console.log(global.USERID);
   };
 
   render() {
