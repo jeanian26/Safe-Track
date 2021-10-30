@@ -5,8 +5,6 @@ import {Platform} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import HeaderIconButton from '../components/navigation/HeaderIconButton';
-
 import Intro from '../screens/introduction/Introduction';
 
 import Welcome from '../screens/welcome/Welcome';
@@ -25,10 +23,6 @@ import SearchResults from '../screens/search/SearchResults';
 
 import EditProfile from '../screens/profile/EditProfile';
 
-import DeliveryAddress from '../screens/address/DeliveryAddress';
-
-import AddAddress from '../screens/address/AddAddress';
-
 import EditAddress from '../screens/address/EditAddress';
 
 import Notifications from '../screens/notifications/Notifications';
@@ -36,8 +30,6 @@ import Notifications from '../screens/notifications/Notifications';
 import AboutUs from '../screens/about/AboutUs';
 
 import Colors from '../theme/colors';
-
-const SAVE_ICON = Platform.OS === 'ios' ? 'ios-checkmark' : 'md-checkmark';
 
 const Stack = createStackNavigator();
 
@@ -134,27 +126,7 @@ function MainNavigatorA() {
             title: 'Edit Profile',
           })}
         />
-        <Stack.Screen
-          name="DeliveryAddress"
-          component={DeliveryAddress}
-          options={({navigation}) => ({
-            title: 'Address',
-            headerRight: () => (
-              <HeaderIconButton
-                onPress={() => navigation.goBack()}
-                name={SAVE_ICON}
-                color={Colors.primaryColor}
-              />
-            ),
-          })}
-        />
-        <Stack.Screen
-          name="AddAddress"
-          component={AddAddress}
-          options={{
-            title: 'Add New Address',
-          }}
-        />
+
         <Stack.Screen
           name="EditAddress"
           component={EditAddress}
