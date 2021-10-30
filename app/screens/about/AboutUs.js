@@ -31,7 +31,7 @@ import Colors from '../../theme/colors';
 const isRTL = I18nManager.isRTL;
 
 const AVATAR_SIZE = 54;
-const ADD_ICON = 'account-multiple-plus';
+const REMOVE_ICON = 'account-multiple-minus';
 
 // AboutUs Styles
 const styles = StyleSheet.create({
@@ -229,9 +229,9 @@ export default class AboutUs extends Component {
                       <TouchableItem>
                         <View style={styles.searchButton}>
                           <Icon
-                            name={ADD_ICON}
+                            name={REMOVE_ICON}
                             size={23}
-                            color={Colors.onPrimaryColor}
+                            color={'#BF0A30'}
                           />
                         </View>
                       </TouchableItem>
