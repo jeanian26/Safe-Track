@@ -283,11 +283,7 @@ export default class Settings extends Component {
                 {backgroundColor: Colors.primaryColor})
               }>
               <View style={styles.profileCenter}>
-                <Avatar
-                  imageUri={require('../../assets/img/profile.jpg')}
-                  rounded
-                  size={80}
-                />
+                <Avatar imageUri={this.state.imageUri} rounded size={80} />
                 <View style={styles.profileCenter}>
                   <Subtitle1 style={styles.name}>{this.state.name}</Subtitle1>
                   <Subtitle2 style={styles.email}>{this.state.email}</Subtitle2>

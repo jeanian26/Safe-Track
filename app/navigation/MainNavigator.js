@@ -1,7 +1,6 @@
 /* eslint-disable prettier/prettier */
 
 import React from 'react';
-import {Platform} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
@@ -18,8 +17,6 @@ import ForgotPassword from '../screens/forgotpassword/ForgotPassword';
 import TermsConditions from '../screens/terms/TermsConditions';
 
 import HomeNavigator from './HomeNavigator1';
-
-import SearchResults from '../screens/search/SearchResults';
 
 import EditProfile from '../screens/profile/EditProfile';
 
@@ -109,14 +106,6 @@ function MainNavigatorA() {
           name="HomeNavigator"
           component={HomeNavigator}
           options={{headerShown: false}}
-        />
-
-        <Stack.Screen
-          name="SearchResults"
-          component={SearchResults}
-          options={{
-            title: 'Search Results',
-          }}
         />
 
         <Stack.Screen

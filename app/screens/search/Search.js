@@ -26,7 +26,7 @@ import SafeAreaView from '../../components/SafeAreaView';
 import Contacts from 'react-native-contacts';
 import {passAuth} from '../../config/firebase';
 import {onAuthStateChanged} from 'firebase/auth';
-import {getDatabase, ref, set} from 'firebase/database';
+import {getDatabase, ref, set, get, child} from 'firebase/database';
 
 // import colors
 import Colors from '../../theme/colors';
@@ -135,6 +135,7 @@ export default class Search extends Component {
       dataToDisplay: [],
       searchValue: '',
       uid: '',
+      savedContactsData: [],
     };
   }
 
@@ -161,6 +162,25 @@ export default class Search extends Component {
         console.log('no user logged in');
       }
     });
+    let savedContacts = [];
+    const dbRef = ref(getDatabase());
+    get(child(dbRef, 'contacts/'))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          // console.log(snapshot.val());
+          // console.log(this.state.data);
+          Object.keys(snapshot.val()).map((item, index) => {
+            console.log(snapshot.val()[item].name);
+            savedContacts.push(snapshot.val()[item].name);
+          });
+          this.setState({savedContactsData: savedContacts});
+        } else {
+          console.log('No data available');
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   searchPress(text) {
@@ -178,6 +198,24 @@ export default class Search extends Component {
     this.setState({dataToDisplay: arrayOfData});
   }
   addContact(index) {
+    let dataSaved = this.state.savedContactsData;
+    if (dataSaved.includes(this.state.data[index].displayName)) {
+      Alert.alert(
+        'Adding Contact Failed',
+        'Already Added in your list',
+
+        [
+          {
+            text: 'ok',
+            style: 'cancel',
+          },
+        ],
+        {
+          cancelable: true,
+        },
+      );
+      return;
+    }
     const db = getDatabase();
     set(ref(db, 'contacts/' + uuid.v4({offset: 10})), {
       name: this.state.data[index].displayName,
@@ -198,6 +236,7 @@ export default class Search extends Component {
         cancelable: true,
       },
     );
+    this.componentDidMount();
   }
 
   render() {
