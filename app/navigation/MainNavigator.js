@@ -24,7 +24,7 @@ import EditAddress from '../screens/address/EditAddress';
 
 import Notifications from '../screens/notifications/Notifications';
 
-import AboutUs from '../screens/about/AboutUs';
+import Social from '../screens/Social/Social';
 
 import Colors from '../theme/colors';
 
@@ -132,8 +132,8 @@ function MainNavigatorA() {
           }}
         />
         <Stack.Screen
-          name="AboutUs"
-          component={AboutUs}
+          name="Social"
+          component={Social}
           options={{
             title: 'Social Networks',
           }}

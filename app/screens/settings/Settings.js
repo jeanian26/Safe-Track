@@ -325,7 +325,7 @@ export default class Settings extends Component {
           <Divider type="inset" marginLeft={DIVIDER_MARGIN_LEFT} />
 
           <Setting
-            onPress={this.navigateTo('AboutUs')}
+            onPress={this.navigateTo('Social')}
             icon={ABOUT_ICON}
             title="Social Networks"
           />
