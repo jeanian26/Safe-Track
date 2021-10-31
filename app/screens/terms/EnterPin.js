@@ -78,6 +78,13 @@ const styles = StyleSheet.create({
   pinStyle: {
     fontSize: 50,
   },
+  forgotPassword: {paddingVertical: 23},
+  forgotPasswordText: {
+    fontWeight: '300',
+    fontSize: 13,
+    color: '#000',
+    textAlign: 'center',
+  },
 });
 
 export default class TermsConditions extends Component {
@@ -96,10 +103,20 @@ export default class TermsConditions extends Component {
     if (pin.length === 4) {
       if (JSON.stringify(pin) === JSON.stringify(CorrectPin)) {
         console.log('true');
+        ToastAndroid.showWithGravity(
+          'CORRECT',
+          ToastAndroid.SHORT,
+          ToastAndroid.CENTER,
+        );
         navigation.navigate('HomeNavigator');
       } else {
         console.log('wrong');
         this.setState({PIN: []});
+        ToastAndroid.showWithGravity(
+          'FAILED',
+          ToastAndroid.SHORT,
+          ToastAndroid.CENTER,
+        );
         return;
       }
       return;
@@ -144,6 +161,10 @@ export default class TermsConditions extends Component {
   };
   componentDidMount = async () => {
     this.loadPinCode();
+  };
+  goLogin = () => {
+    const {navigation} = this.props;
+    navigation.navigate('SignIn');
   };
 
   render() {
@@ -284,6 +305,16 @@ export default class TermsConditions extends Component {
             rounded
             titleColor={Colors.primaryColor}
           />
+        </View>
+        <View style={styles.forgotPassword}>
+          <Text
+            // onPress={this.showInputModal(true)}
+            onPress={() => {
+              this.goLogin();
+            }}
+            style={styles.forgotPasswordText}>
+            Log in with another account
+          </Text>
         </View>
       </SafeAreaView>
     );
