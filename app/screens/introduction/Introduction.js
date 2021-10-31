@@ -189,7 +189,7 @@ export default class Introduction extends Component {
         global.USERID = user.uid;
         global.DISPLAY_NAME = user.displayName;
         global.EMAIL = user.email;
-        navigation.navigate('HomeNavigator');
+        navigation.navigate('EnterPin');
       } else {
         console.log('no user logged in');
       }

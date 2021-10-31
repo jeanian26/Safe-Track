@@ -15,6 +15,7 @@ import SignIn from '../screens/signin/SignIn';
 import ForgotPassword from '../screens/forgotpassword/ForgotPassword';
 
 import PinCode from '../screens/terms/PinCode';
+import EnterPin from '../screens/terms/EnterPin';
 
 import HomeNavigator from './HomeNavigator1';
 
@@ -100,6 +101,14 @@ function MainNavigatorA() {
           component={PinCode}
           options={{
             title: 'Pin code',
+          }}
+        />
+        <Stack.Screen
+          name="EnterPin"
+          component={EnterPin}
+          options={{
+            title: 'Pin code',
+            headerShown: false,
           }}
         />
         <Stack.Screen

@@ -67,13 +67,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(35, 47, 52, 0.12)',
     overflow: 'hidden',
   },
-  iconContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-  },
+
   instruction: {
     marginTop: 32,
     paddingHorizontal: 32,
