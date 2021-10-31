@@ -1,12 +1,5 @@
 /* eslint-disable prettier/prettier */
-/**
- *
- *
- * @format
- * @flow
- */
 
-// import dependencies
 import React, {Component} from 'react';
 import {
   I18nManager,
@@ -20,20 +13,17 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import {getDatabase, ref, child, get} from 'firebase/database';
+import {getDatabase, ref, child, get, remove} from 'firebase/database';
 
 import TouchableItem from '../../components/TouchableItem';
 
-// import colors
 import Colors from '../../theme/colors';
 
-// AboutUs Config
 const isRTL = I18nManager.isRTL;
 
 const AVATAR_SIZE = 54;
 const REMOVE_ICON = 'account-multiple-minus';
 
-// AboutUs Styles
 const styles = StyleSheet.create({
   pb6: {paddingBottom: 6},
   pl8: {paddingLeft: 8},
@@ -181,6 +171,12 @@ export default class AboutUs extends Component {
     navigation.goBack();
   };
 
+  deleteContact(index) {
+    const dbRef = ref(getDatabase());
+    remove(child(dbRef, 'contacts/' + index));
+    this.componentDidMount();
+  }
+
   componentDidMount() {
     const dbRef = ref(getDatabase());
     get(child(dbRef, 'contacts/'))
@@ -226,7 +222,7 @@ export default class AboutUs extends Component {
                       <Text>{this.state.data[item].phone}</Text>
                     </View>
                     <View style={styles.AddButtonContainer}>
-                      <TouchableItem>
+                      <TouchableItem onPress={() => this.deleteContact(item)}>
                         <View style={styles.searchButton}>
                           <Icon
                             name={REMOVE_ICON}

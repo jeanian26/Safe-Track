@@ -289,14 +289,7 @@ export default class Home extends Component {
                 </View>
               </View>
             </View>
-            <View style={styles.titleContainer}>
-              <Heading6 style={styles.titleText}>Most Popular</Heading6>
-              <LinkButton
-                title="View all"
-                titleStyle={styles.viewAllText}
-                onPress={this.navigateTo('SearchResults')}
-              />
-            </View>
+
             <FlatList
               data={popularProducts}
               keyExtractor={this.keyExtractor}
