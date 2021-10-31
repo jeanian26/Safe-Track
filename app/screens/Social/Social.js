@@ -10,6 +10,7 @@ import {
   View,
   ScrollView,
   Image,
+  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -163,6 +164,8 @@ export default class AboutUs extends Component {
     this.state = {
       data: [],
       uri: 'https://www.pngall.com/wp-content/uploads/5/Profile-PNG-Clipart.png',
+      noData: true,
+      noDataText: 'NO CONTACTS ADDED',
     };
   }
 
@@ -172,9 +175,22 @@ export default class AboutUs extends Component {
   };
 
   deleteContact(index) {
-    const dbRef = ref(getDatabase());
-    remove(child(dbRef, 'contacts/' + index));
-    this.componentDidMount();
+    console.log(index);
+    Alert.alert('Warning', `Delete ${this.state.data[index].name}?`, [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {
+        text: 'OK',
+        onPress: () => {
+          const dbRef = ref(getDatabase());
+          remove(child(dbRef, 'contacts/' + index));
+          this.componentDidMount();
+        },
+      },
+    ]);
   }
 
   componentDidMount() {
@@ -188,8 +204,11 @@ export default class AboutUs extends Component {
           Object.keys(snapshot.val()).map((item, index) => {
             console.log(snapshot.val()[item].name);
           });
+          this.setState({noData: false});
         } else {
           console.log('No data available');
+          this.setState({data: ['']});
+          this.setState({noData: true});
         }
       })
       .catch((error) => {
@@ -198,6 +217,16 @@ export default class AboutUs extends Component {
   }
 
   render() {
+    let noDataPrompt;
+    if (this.state.noData) {
+      noDataPrompt = (
+        <Text style={{flex: 1, fontSize: 24, alignSelf: 'center'}}>
+          {this.state.noDataText}
+        </Text>
+      );
+      console.log('test');
+    }
+
     return (
       <SafeAreaView style={styles.screenContainer}>
         <StatusBar
@@ -206,6 +235,7 @@ export default class AboutUs extends Component {
         />
 
         <View style={{flex: 1, paddingLeft: 13, paddingRight: 13}}>
+          {noDataPrompt}
           <ScrollView>
             {Object.keys(this.state.data).map((item, index) => {
               if (global.USERID === this.state.data[item].userID) {
