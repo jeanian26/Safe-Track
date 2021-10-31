@@ -320,7 +320,14 @@ export default class Settings extends Component {
           <Setting
             onPress={this.navigateTo('TermsConditions')}
             icon={TERMS_ICON}
-            title="Settings"
+            title="Pin Code"
+            extraData={
+              <View>
+                <View>
+                  <Subtitle2 style={styles.extraData}>On</Subtitle2>
+                </View>
+              </View>
+            }
           />
           <Divider type="inset" marginLeft={DIVIDER_MARGIN_LEFT} />
 

@@ -14,7 +14,7 @@ import SignIn from '../screens/signin/SignIn';
 
 import ForgotPassword from '../screens/forgotpassword/ForgotPassword';
 
-import TermsConditions from '../screens/terms/TermsConditions';
+import PinCode from '../screens/terms/PinCode';
 
 import HomeNavigator from './HomeNavigator1';
 
@@ -97,9 +97,9 @@ function MainNavigatorA() {
         />
         <Stack.Screen
           name="TermsConditions"
-          component={TermsConditions}
+          component={PinCode}
           options={{
-            title: 'Terms and Conditions',
+            title: 'Pin code',
           }}
         />
         <Stack.Screen
