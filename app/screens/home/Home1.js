@@ -1,12 +1,5 @@
 /* eslint-disable prettier/prettier */
-/**
- *
- *
- * @format
- * @flow
- */
 
-// import dependencies
 import React, {Component} from 'react';
 import {
   AppState,
@@ -17,13 +10,8 @@ import {
   Text,
 } from 'react-native';
 
-// import utils
-import getImgSource from '../../utils/getImgSource.js';
-
-// import colors
 import Colors from '../../theme/colors';
 
-// Home Styles
 const styles = StyleSheet.create({
   screenContainer: {
     flex: 1,

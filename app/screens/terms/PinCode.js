@@ -18,7 +18,7 @@ import Colors from '../../theme/colors';
 const styles = StyleSheet.create({
   screenContainer: {
     flex: 1,
-    backgroundColor: Colors.primaryColor,
+    backgroundColor: '#fff',
   },
   content: {
     paddingTop: 24,
@@ -111,11 +111,19 @@ export default class TermsConditions extends Component {
     console.log(this.state.PIN);
   };
   savePinCode = () => {
+    const {navigation} = this.props;
     const db = getDatabase();
     set(ref(db, 'pin/' + global.USERID), {
       pin: this.state.PIN,
       Activate: true,
-    });
+    })
+      .then((result) => {
+        console.log(result);
+        navigation.navigate('Settings');
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
   loadPinCode = () => {
     const dbRef = ref(getDatabase());
