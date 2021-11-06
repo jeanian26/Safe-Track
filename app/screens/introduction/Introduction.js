@@ -25,7 +25,7 @@ import GradientContainer from '../../components/gradientcontainer/GradientContai
 import {Heading5, Paragraph} from '../../components/text/CustomText';
 import {passAuth, checkLoggedIn} from '../../config/firebase';
 import {onAuthStateChanged} from 'firebase/auth';
-
+import {getDatabase, ref, set, get, child} from 'firebase/database';
 // import colors
 import Colors from '../../theme/colors';
 
@@ -189,12 +189,31 @@ export default class Introduction extends Component {
         global.USERID = user.uid;
         global.DISPLAY_NAME = user.displayName;
         global.EMAIL = user.email;
-        navigation.navigate('EnterPin');
+        this.pinCodeRequired();
       } else {
         console.log('no user logged in');
       }
     });
   };
+  pinCodeRequired() {
+    const {navigation} = this.props;
+    const dbRef = ref(getDatabase());
+    get(child(dbRef, `pin/${global.USERID}`))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          let result = snapshot.val();
+          console.log(result.Activate);
+          navigation.navigate('EnterPin');
+        } else {
+          console.log('No data available');
+          navigation.navigate('HomeNavigator');
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        navigation.navigate('HomeNavigator');
+      });
+  }
 
   render() {
     const {activeIndex} = this.state;

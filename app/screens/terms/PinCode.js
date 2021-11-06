@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class TermsConditions extends Component {
+export default class PinCode extends Component {
   constructor(props) {
     super(props);
     this.state = {PIN: []};
@@ -88,7 +88,7 @@ export default class TermsConditions extends Component {
 
   onpressNumber = (number) => {
     let pin = this.state.PIN;
-    if (pin.length === 4) {
+    if (pin.length >= 4) {
       return;
     }
     console.log('Pressed', number);
@@ -103,7 +103,7 @@ export default class TermsConditions extends Component {
   };
   onPressDelete = () => {
     let pin = this.state.PIN;
-    if (pin.length === 0) {
+    if (pin.length >= 0) {
       return;
     }
     pin.pop();
@@ -141,8 +141,11 @@ export default class TermsConditions extends Component {
         console.error(error);
       });
   };
+
   componentDidMount = async () => {
-    this.loadPinCode();
+    this.focusListener = this.props.navigation.addListener('focus', () => {
+      this.loadPinCode();
+    });
   };
 
   render() {

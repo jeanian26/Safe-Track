@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class TermsConditions extends Component {
+export default class EnterPin extends Component {
   constructor(props) {
     super(props);
     this.state = {PIN: [], CorrectPin: []};

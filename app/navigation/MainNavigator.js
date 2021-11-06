@@ -97,7 +97,7 @@ function MainNavigatorA() {
           }}
         />
         <Stack.Screen
-          name="TermsConditions"
+          name="PinCode"
           component={PinCode}
           options={{
             title: 'Pin code',

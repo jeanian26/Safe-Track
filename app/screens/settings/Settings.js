@@ -24,7 +24,14 @@ import {color} from 'react-native-reanimated';
 // import components
 import {getAuth} from 'firebase/auth';
 import {getStorage, ref, getDownloadURL} from 'firebase/storage';
-import {getDatabase, ref as refData, child, get, set} from 'firebase/database';
+import {
+  getDatabase,
+  ref as refData,
+  child,
+  get,
+  set,
+  update,
+} from 'firebase/database';
 import Avatar from '../../components/avatar/Avatar';
 import Divider from '../../components/divider/Divider';
 import Icon from '../../components/icon/Icon';
@@ -180,6 +187,7 @@ export default class Settings extends Component {
       district: '',
       city: '',
       country: 'Philippines',
+      pinCode: 'Set Up',
     };
   }
 
@@ -193,6 +201,75 @@ export default class Settings extends Component {
       notificationsOn: value,
     });
   };
+
+  SetPinCodeFirebase(prompt) {
+    let activate;
+    if (prompt === 'On') {
+      activate = true;
+    } else {
+      activate = false;
+    }
+
+    const auth = getAuth();
+    const user = auth.currentUser;
+    const {navigation} = this.props;
+
+    const db = getDatabase();
+    // set(refData(db, 'pin/' + user.uid), {
+    //   Activate: activate,
+    // }).then(() => {
+    //   this.getData();
+    //   this.getPinCode();
+    // });
+    const updates = {};
+    updates[`/pin/${user.uid}/Activate`] = activate;
+    update(refData(db), updates);
+  }
+  togglePinCode() {
+    const {navigation} = this.props;
+    let textPrompt = 'On';
+    if (this.state.pinCode === 'On') {
+      textPrompt = 'Off';
+      Alert.alert('Pin Code', `Turn ${textPrompt} Pin code?`, [
+        {
+          text: 'Edit',
+          onPress: () => {
+            navigation.navigate('PinCode');
+          },
+        },
+        {
+          text: 'Yes',
+          onPress: () => {
+            this.SetPinCodeFirebase(textPrompt);
+          },
+        },
+        {
+          text: 'No',
+        },
+      ]);
+    } else if (this.state.pinCode === 'Set Up') {
+      navigation.navigate('PinCode');
+    } else {
+      textPrompt = 'On';
+      Alert.alert('Pin Code', `Turn ${textPrompt} Pin code?`, [
+        {
+          text: 'Edit',
+          onPress: () => {
+            navigation.navigate('PinCode');
+          },
+        },
+        {
+          text: 'Yes',
+          onPress: () => {
+            this.SetPinCodeFirebase(textPrompt);
+          },
+        },
+        {
+          text: 'No',
+        },
+      ]);
+    }
+  }
 
   logout = () => {
     const {navigation} = this.props;
@@ -217,53 +294,80 @@ export default class Settings extends Component {
       {cancelable: false},
     );
   };
+  getData() {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    const self = this;
+    console.log(user.uid);
+    if (user !== null) {
+      user.providerData.forEach((profile) => {
+        this.setState({name: profile.displayName});
+        this.setState({email: profile.email});
+      });
+    }
+    const storage = getStorage();
+    getDownloadURL(ref(storage, `profile_images/${user.uid}.jpg`))
+      .then((url) => {
+        self.setState({imageUri: url});
+      })
+      .catch((error) => {
+        // Handle any errors
+      });
+    const dbRef = refData(getDatabase());
+    get(child(dbRef, `address/${user.uid}`))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          console.log(snapshot.val());
+          const result = snapshot.val();
+          self.setState({
+            number: result.str_number,
+            street: result.street_name,
+            district: result.barangay,
+            city: result.city,
+            zip: result.zipcode,
+          });
+        } else {
+          console.log('No data available');
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+  getPinCode() {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    const self = this;
+    const dbRef = refData(getDatabase());
+    get(child(dbRef, `pin/${user.uid}`))
+      .then((snapshot) => {
+        let result = snapshot.val();
+        console.log(result.Activate);
+        if (result.Activate === true) {
+          this.setState({pinCode: 'On'});
+        } else {
+          this.setState({pinCode: 'Off'});
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+  beforeMount() {
+    this.focusListener = this.props.navigation.addListener('focus', () => {
+      this.getData();
+      this.getPinCode();
+    });
+  }
 
   componentDidMount = () => {
     this.focusListener = this.props.navigation.addListener('focus', () => {
-      const auth = getAuth();
-      const user = auth.currentUser;
-      const self = this;
-      console.log(user.uid);
-      if (user !== null) {
-        user.providerData.forEach((profile) => {
-          this.setState({name: profile.displayName});
-          this.setState({email: profile.email});
-        });
-      }
-      const storage = getStorage();
-      getDownloadURL(ref(storage, `profile_images/${user.uid}.jpg`))
-        .then((url) => {
-          self.setState({imageUri: url});
-        })
-        .catch((error) => {
-          // Handle any errors
-        });
-      const dbRef = refData(getDatabase());
-      get(child(dbRef, `address/${user.uid}`))
-        .then((snapshot) => {
-          if (snapshot.exists()) {
-            console.log(snapshot.val());
-            const result = snapshot.val();
-            self.setState({
-              number: result.str_number,
-              street: result.street_name,
-              district: result.barangay,
-              city: result.city,
-              zip: result.zipcode,
-            });
-          } else {
-            console.log('No data available');
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      this.getData();
+      this.getPinCode();
     });
   };
 
   render() {
-    const {notificationsOn} = this.state;
-
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar
@@ -272,10 +376,6 @@ export default class Settings extends Component {
         />
 
         <ScrollView contentContainerStyle={styles.contentContainerStyle}>
-          {/* <View style={styles.titleContainer,{backgroundColor:Colors.primaryColor}}>
-            <Heading6 style={styles.titleText}>Settings</Heading6>
-          </View> */}
-
           <TouchableItem useForeground onPress={this.navigateTo('EditProfile')}>
             <View
               style={
@@ -318,13 +418,15 @@ export default class Settings extends Component {
           <Divider type="inset" marginLeft={DIVIDER_MARGIN_LEFT} />
 
           <Setting
-            onPress={this.navigateTo('TermsConditions')}
+            onPress={() => this.togglePinCode()}
             icon={TERMS_ICON}
             title="Pin Code"
             extraData={
               <View>
                 <View>
-                  <Subtitle2 style={styles.extraData}>On</Subtitle2>
+                  <Subtitle2 style={styles.extraData}>
+                    {this.state.pinCode}
+                  </Subtitle2>
                 </View>
               </View>
             }

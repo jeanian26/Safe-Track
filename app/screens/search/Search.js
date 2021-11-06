@@ -217,10 +217,9 @@ export default class Search extends Component {
       return;
     }
     const db = getDatabase();
-    set(ref(db, 'contacts/' + uuid.v4({offset: 10})), {
+    set(ref(db, 'contacts/' + this.state.uid), {
       name: this.state.data[index].displayName,
-      phone: this.state.data[index].phoneNumbers[0].number,
-      userID: this.state.uid,
+      phone: '/numbers/' + this.state.data[index].phoneNumbers[0].number,
     });
     Alert.alert(
       'Contact Added',
