@@ -20,6 +20,7 @@
     "react": "^16.13.1",
     "react-native": "^0.63.4",
     "react-native-action-button": "^2.8.5",
+    "react-native-android-location-enabler": "^1.2.2",
     "react-native-camera": "*",
     "react-native-contacts": "*",
     "react-native-fetch-blob": "^0.10.8",

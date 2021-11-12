@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   I18nManager,
   Keyboard,
@@ -20,13 +20,13 @@ import uuid from 'react-native-uuid';
 
 // import components
 
-import {Heading6} from '../../components/text/CustomText';
+import { Heading6 } from '../../components/text/CustomText';
 import TouchableItem from '../../components/TouchableItem';
 import SafeAreaView from '../../components/SafeAreaView';
 import Contacts from 'react-native-contacts';
-import {passAuth} from '../../config/firebase';
-import {onAuthStateChanged} from 'firebase/auth';
-import {getDatabase, ref, set, get, child} from 'firebase/database';
+import { passAuth } from '../../config/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+import { getDatabase, ref, set, get, child } from 'firebase/database';
 
 // import colors
 import Colors from '../../theme/colors';
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(35, 47, 52, 0.08)',
     overflow: 'hidden',
   },
-  filterItem: {flex: 1, justifyContent: 'center'},
+  filterItem: { flex: 1, justifyContent: 'center' },
   filterName: {
     top: -1,
     fontWeight: '700',
@@ -140,25 +140,25 @@ export default class Search extends Component {
   }
 
   navigateTo = (screen) => () => {
-    const {navigation} = this.props;
+    const { navigation } = this.props;
 
     Keyboard.dismiss();
 
     navigation.navigate(screen);
   };
 
-  getData(){
+  getData() {
     Contacts.getAll().then(
       (contacts) => {
-        this.setState({data: contacts});
-        this.setState({dataToDisplay: contacts});
+        this.setState({ data: contacts });
+        this.setState({ dataToDisplay: contacts });
       },
-      () => {},
+      () => { },
     );
     onAuthStateChanged(passAuth(), (user) => {
       if (user) {
         const uid = user.uid;
-        this.setState({uid: uid});
+        this.setState({ uid: uid });
       } else {
         console.log('no user logged in');
       }
@@ -174,7 +174,7 @@ export default class Search extends Component {
             console.log(snapshot.val()[item].name);
             savedContacts.push(snapshot.val()[item].name);
           });
-          this.setState({savedContactsData: savedContacts});
+          this.setState({ savedContactsData: savedContacts });
         } else {
           console.log('No data available');
         }
@@ -185,9 +185,9 @@ export default class Search extends Component {
   }
   componentDidMount() {
     const { navigation } = this.props;
-    
+
     this.focusListener = navigation.addListener('focus', () => {
-        this.getData()
+      this.getData()
     });
 
   }
@@ -195,8 +195,8 @@ export default class Search extends Component {
     // Remove the event listener
     if (this.focusListener != null && this.focusListener.remove) {
       this.focusListener.remove();
+    }
   }
-}
 
   searchPress(text) {
     text = text.toLowerCase();
@@ -210,7 +210,7 @@ export default class Search extends Component {
       }
     }
     console.log(arrayOfData);
-    this.setState({dataToDisplay: arrayOfData});
+    this.setState({ dataToDisplay: arrayOfData });
   }
   addContact(index) {
     let dataSaved = this.state.savedContactsData;
@@ -274,16 +274,16 @@ export default class Search extends Component {
             onChangeText={(text) => this.searchPress(text)}
           />
         </View>
-        <View style={{flex: 1, paddingLeft: 13, paddingRight: 13}}>
+        <View style={{ flex: 1, paddingLeft: 13, paddingRight: 13 }}>
           <ScrollView>
             {this.state.dataToDisplay.map((item, index) => (
               <View style={styles.searchResults}>
                 <Image
-                  source={{uri: this.state.uri}}
+                  source={{ uri: this.state.uri }}
                   style={styles.profilePic}
                 />
-                <View style={{paddingLeft: 20}}>
-                  <Text style={{fontSize: 20}}>{item.displayName}</Text>
+                <View style={{ paddingLeft: 20 }}>
+                  <Text style={{ fontSize: 20 }}>{item.displayName}</Text>
                   <Text>{item.phoneNumbers[0].number}</Text>
                 </View>
                 <View style={styles.AddButtonContainer}>

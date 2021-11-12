@@ -1,14 +1,7 @@
 /* eslint-disable consistent-this */
 /* eslint-disable prettier/prettier */
-/**
- *
- *
- * @format
- * @flow
- */
 
-// import dependencies
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   SafeAreaView,
   StatusBar,
@@ -18,9 +11,11 @@ import {
   Button,
   Alert,
 } from 'react-native';
+import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 import Geolocation from 'react-native-geolocation-service';
+
 import MapView from 'react-native-maps';
-import {Marker} from 'react-native-maps';
+import { Marker } from 'react-native-maps';
 
 // import components
 
@@ -60,34 +55,42 @@ export default class Map extends Component {
     };
   }
 
-  getLocation = () => {
+  getPosition = () => {
     const self = this;
-    if (true) {
-      Geolocation.watchPosition(
-        (position) => {
-          console.log(position)
-          console.log(position.coords.longitude);
-          console.log(position.coords.latitude);
-          self.reverseGeoCode(
-            position.coords.latitude,
-            position.coords.longitude,
-          );
-          self.setState({
-            region: {
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
-            },
-          });
-        },
-        (error) => {
-          // See error code charts below.
-          console.log(error.code, error.message);
-        },
-        {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
-      );
-    }
+    RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({
+      interval: 10000,
+      fastInterval: 5000,
+    })
+      .then((data) => {
+        console.log(data)
+        Geolocation.watchPosition(
+          (position) => {
+            console.log(position)
+            console.log(position.coords.longitude);
+            console.log(position.coords.latitude);
+            self.reverseGeoCode(
+              position.coords.latitude,
+              position.coords.longitude,
+            );
+            self.setState({
+              region: {
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+                latitudeDelta: 0.005,
+                longitudeDelta: 0.005 ,
+              },
+            });
+          },
+          (error) => {
+            // See error code charts below.
+            console.log(error.code, error.message);
+          },
+          { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+        );
+      })
+      .catch((err) => {
+        console.log(err)
+      });
   };
   reverseGeoCode = (lat, long) => {
     console.log("Latitude", lat)
@@ -108,11 +111,11 @@ export default class Map extends Component {
       .then((r) => r.json())
       .then((r) => {
         console.log(r.Response.View[0].Result[0].Location.Address.Label);
-        self.showAlert(
-          r.Response.View[0].Result[0].Location.Address.Label,
-          lat,
-          long,
-        );
+        // self.showAlert(
+        //   r.Response.View[0].Result[0].Location.Address.Label,
+        //   lat,
+        //   long,
+        // );
       });
   };
 
@@ -132,12 +135,23 @@ export default class Map extends Component {
       },
     );
 
-  componentDidMount() {
-    this.getLocation()
-  }
+    componentDidMount() {
+      const { navigation } = this.props;
+      this.getPosition()
+      this.focusListener = navigation.addListener('focus', () => {
+        this.getPosition()
+      });
+  
+    }
+    componentWillUnmount() {
+      // Remove the event listener
+      if (this.focusListener != null && this.focusListener.remove) {
+        this.focusListener.remove();
+      }
+    }
 
   render() {
-    const {} = this.state;
+    const { } = this.state;
 
     return (
       <SafeAreaView style={styles.container}>
@@ -145,7 +159,7 @@ export default class Map extends Component {
           backgroundColor={Colors.statusBarColor}
           barStyle="dark-content"
         />
-        <Button onPress={this.getLocation} title="get location" />
+        <Button onPress={() => this.getPosition()} title="get location" />
         <MapView style={styles.map} region={this.state.region}>
           <Marker
             coordinate={{
