@@ -62,10 +62,10 @@ export default class Map extends Component {
       fastInterval: 5000,
     })
       .then((data) => {
-        console.log(data)
+        console.log(data);
         Geolocation.watchPosition(
           (position) => {
-            console.log(position)
+            console.log(position);
             console.log(position.coords.longitude);
             console.log(position.coords.latitude);
             self.reverseGeoCode(
@@ -89,13 +89,12 @@ export default class Map extends Component {
         );
       })
       .catch((err) => {
-        console.log(err)
+        console.log(err);
       });
   };
   reverseGeoCode = (lat, long) => {
-    console.log("Latitude", lat)
-    console.log("Longitude", long)
-    const self = this;
+    console.log('Latitude', lat);
+    console.log('Longitude', long);
     const url = `https://reverse.geocoder.ls.hereapi.com/6.2/reversegeocode.json?prox=${long}%2C${lat}%2C137&mode=retrieveAddresses&maxresults=1&gen=9&apiKey=v_9DU2wi_FDqhJ71oCKfMHhCBVt7L7HszBSG72sWvAQ`;
     console.log('URL: ', url);
     fetch(
@@ -137,9 +136,9 @@ export default class Map extends Component {
 
   componentDidMount() {
     const { navigation } = this.props;
-    this.getPosition()
+    this.getPosition();
     this.focusListener = navigation.addListener('focus', () => {
-      this.getPosition()
+      this.getPosition();
     });
 
   }
