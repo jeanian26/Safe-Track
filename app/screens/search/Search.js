@@ -165,7 +165,7 @@ export default class Search extends Component {
     });
     let savedContacts = [];
     const dbRef = ref(getDatabase());
-    get(child(dbRef, 'contacts/'))
+    get(child(dbRef, 'SocialContacts/' + this.state.uid))
       .then((snapshot) => {
         if (snapshot.exists()) {
           // console.log(snapshot.val());
@@ -232,9 +232,9 @@ export default class Search extends Component {
       return;
     }
     const db = getDatabase();
-    set(ref(db, 'contacts/' + this.state.uid), {
+    set(ref(db, 'SocialContacts/' + this.state.uid + '/' + this.state.data[index].displayName), {
       name: this.state.data[index].displayName,
-      phone: '/numbers/' + this.state.data[index].phoneNumbers[0].number,
+      phone: this.state.data[index].phoneNumbers[0].number,
     });
     Alert.alert(
       'Contact Added',

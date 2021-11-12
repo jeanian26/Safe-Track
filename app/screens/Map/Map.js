@@ -77,7 +77,7 @@ export default class Map extends Component {
                 latitude: position.coords.latitude,
                 longitude: position.coords.longitude,
                 latitudeDelta: 0.005,
-                longitudeDelta: 0.005 ,
+                longitudeDelta: 0.005,
               },
             });
           },
@@ -135,20 +135,20 @@ export default class Map extends Component {
       },
     );
 
-    componentDidMount() {
-      const { navigation } = this.props;
+  componentDidMount() {
+    const { navigation } = this.props;
+    this.getPosition()
+    this.focusListener = navigation.addListener('focus', () => {
       this.getPosition()
-      this.focusListener = navigation.addListener('focus', () => {
-        this.getPosition()
-      });
-  
+    });
+
+  }
+  componentWillUnmount() {
+    // Remove the event listener
+    if (this.focusListener != null && this.focusListener.remove) {
+      this.focusListener.remove();
     }
-    componentWillUnmount() {
-      // Remove the event listener
-      if (this.focusListener != null && this.focusListener.remove) {
-        this.focusListener.remove();
-      }
-    }
+  }
 
   render() {
     const { } = this.state;
