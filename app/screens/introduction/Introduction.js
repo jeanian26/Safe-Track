@@ -1,3 +1,5 @@
+/* eslint-disable quotes */
+/* eslint-disable no-trailing-spaces */
 /* eslint-disable prettier/prettier */
 /**
  *
@@ -203,7 +205,12 @@ export default class Introduction extends Component {
         if (snapshot.exists()) {
           let result = snapshot.val();
           console.log(result.Activate);
-          navigation.navigate('EnterPin');
+          if (result.Activate === true){
+            navigation.navigate('EnterPin');  
+          } else {
+            navigation.navigate("HomeNavigator");
+          }
+          
         } else {
           console.log('No data available');
           navigation.navigate('HomeNavigator');

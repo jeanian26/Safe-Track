@@ -215,15 +215,10 @@ export default class Settings extends Component {
     const {navigation} = this.props;
 
     const db = getDatabase();
-    // set(refData(db, 'pin/' + user.uid), {
-    //   Activate: activate,
-    // }).then(() => {
-    //   this.getData();
-    //   this.getPinCode();
-    // });
     const updates = {};
     updates[`/pin/${user.uid}/Activate`] = activate;
     update(refData(db), updates);
+    this.getPinCode();
   }
   togglePinCode() {
     const {navigation} = this.props;
