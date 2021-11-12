@@ -63,8 +63,9 @@ export default class Map extends Component {
   getLocation = () => {
     const self = this;
     if (true) {
-      Geolocation.getCurrentPosition(
+      Geolocation.watchPosition(
         (position) => {
+          console.log(position)
           console.log(position.coords.longitude);
           console.log(position.coords.latitude);
           self.reverseGeoCode(
@@ -89,6 +90,8 @@ export default class Map extends Component {
     }
   };
   reverseGeoCode = (lat, long) => {
+    console.log("Latitude", lat)
+    console.log("Longitude", long)
     const self = this;
     const url = `https://reverse.geocoder.ls.hereapi.com/6.2/reversegeocode.json?prox=${long}%2C${lat}%2C137&mode=retrieveAddresses&maxresults=1&gen=9&apiKey=v_9DU2wi_FDqhJ71oCKfMHhCBVt7L7HszBSG72sWvAQ`;
     console.log('URL: ', url);
@@ -129,7 +132,9 @@ export default class Map extends Component {
       },
     );
 
-  componentDidMount() {}
+  componentDidMount() {
+    this.getLocation()
+  }
 
   render() {
     const {} = this.state;

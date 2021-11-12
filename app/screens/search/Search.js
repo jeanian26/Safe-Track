@@ -146,7 +146,8 @@ export default class Search extends Component {
 
     navigation.navigate(screen);
   };
-  componentDidMount() {
+
+  getData(){
     Contacts.getAll().then(
       (contacts) => {
         this.setState({data: contacts});
@@ -182,6 +183,20 @@ export default class Search extends Component {
         console.error(error);
       });
   }
+  componentDidMount() {
+    const { navigation } = this.props;
+    
+    this.focusListener = navigation.addListener('focus', () => {
+        this.getData()
+    });
+
+  }
+  componentWillUnmount() {
+    // Remove the event listener
+    if (this.focusListener != null && this.focusListener.remove) {
+      this.focusListener.remove();
+  }
+}
 
   searchPress(text) {
     text = text.toLowerCase();
@@ -235,7 +250,7 @@ export default class Search extends Component {
         cancelable: true,
       },
     );
-    this.componentDidMount();
+    this.getData();
   }
 
   render() {
