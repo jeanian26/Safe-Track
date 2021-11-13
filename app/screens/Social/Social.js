@@ -2,7 +2,7 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable prettier/prettier */
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   I18nManager,
   SafeAreaView,
@@ -16,7 +16,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import {getDatabase, ref, child, get, remove} from 'firebase/database';
+import { getDatabase, ref, child, get, remove } from 'firebase/database';
 
 import TouchableItem from '../../components/TouchableItem';
 
@@ -28,8 +28,8 @@ const AVATAR_SIZE = 54;
 const REMOVE_ICON = 'account-multiple-minus';
 
 const styles = StyleSheet.create({
-  pb6: {paddingBottom: 6},
-  pl8: {paddingLeft: 8},
+  pb6: { paddingBottom: 6 },
+  pl8: { paddingLeft: 8 },
   screenContainer: {
     flex: 1,
     backgroundColor: Colors.background,
@@ -56,10 +56,10 @@ const styles = StyleSheet.create({
   },
   paginationStyle: {
     bottom: 14,
-    transform: [{scaleX: isRTL ? -1 : 1}],
+    transform: [{ scaleX: isRTL ? -1 : 1 }],
   },
-  dot: {backgroundColor: Colors.primaryColor},
-  activeDot: {backgroundColor: Colors.white},
+  dot: { backgroundColor: Colors.primaryColor },
+  activeDot: { backgroundColor: Colors.white },
   bgImg: {
     flex: 1,
     resizeMode: 'cover',
@@ -83,14 +83,14 @@ const styles = StyleSheet.create({
   infoText: {
     color: Colors.white,
     textShadowColor: 'rgba(0, 0, 0, 0.75)',
-    textShadowOffset: {width: -1, height: 1},
+    textShadowOffset: { width: -1, height: 1 },
     textShadowRadius: 4,
     textAlign: 'left',
   },
   caption: {
     color: Colors.primaryColor,
     textShadowColor: 'rgba(0, 0, 0, 0.75)',
-    textShadowOffset: {width: -1, height: 1},
+    textShadowOffset: { width: -1, height: 1 },
     textShadowRadius: 4,
     textAlign: 'left',
   },
@@ -172,7 +172,7 @@ export default class AboutUs extends Component {
   }
 
   goBack = () => {
-    const {navigation} = this.props;
+    const { navigation } = this.props;
     navigation.goBack();
   };
 
@@ -188,7 +188,7 @@ export default class AboutUs extends Component {
         text: 'OK',
         onPress: () => {
           const dbRef = ref(getDatabase());
-          remove(child(dbRef, 'contacts/' + index));
+          remove(child(dbRef, 'SocialContacts/' + global.USERID + "/" + this.state.data[index].name));
           this.componentDidMount();
         },
       },
@@ -197,20 +197,25 @@ export default class AboutUs extends Component {
 
   componentDidMount() {
     const dbRef = ref(getDatabase());
-    get(child(dbRef, 'contacts/'))
+    const dataArray = [];
+
+    get(child(dbRef, 'SocialContacts/' + global.USERID))
       .then((snapshot) => {
         if (snapshot.exists()) {
           console.log(snapshot.val());
-          this.setState({data: snapshot.val()});
+          this.setState({ data: snapshot.val() });
           console.log(this.state.data);
           Object.keys(snapshot.val()).map((item, index) => {
-            console.log(snapshot.val()[item].name);
+            console.log(snapshot.val()[item]);
+            dataArray.push(snapshot.val()[item]);
           });
-          this.setState({noData: false});
+          this.setState({ data: dataArray });
+          this.setState({ noData: false });
+          console.log(this.state.data)
         } else {
           console.log('No data available');
-          this.setState({data: ['']});
-          this.setState({noData: true});
+          this.setState({ data: [''] });
+          this.setState({ noData: true });
         }
       })
       .catch((error) => {
@@ -222,7 +227,7 @@ export default class AboutUs extends Component {
     let noDataPrompt;
     if (this.state.noData) {
       noDataPrompt = (
-        <Text style={{flex: 1, fontSize: 24, alignSelf: 'center'}}>
+        <Text style={{ flex: 1, fontSize: 24, alignSelf: 'center' }}>
           {this.state.noDataText}
         </Text>
       );
@@ -236,37 +241,35 @@ export default class AboutUs extends Component {
           barStyle="dark-content"
         />
 
-        <View style={{flex: 1, paddingLeft: 13, paddingRight: 13}}>
+        <View style={{ flex: 1, paddingLeft: 13, paddingRight: 13 }}>
           {noDataPrompt}
           <ScrollView>
             {Object.keys(this.state.data).map((item, index) => {
-              if (global.USERID === this.state.data[item].userID) {
-                return (
-                  <View style={styles.searchResults}>
-                    <Image
-                      source={{uri: this.state.uri}}
-                      style={styles.profilePic}
-                    />
-                    <View style={{paddingLeft: 20}}>
-                      <Text style={{fontSize: 20}}>
-                        {this.state.data[item].name}
-                      </Text>
-                      <Text>{this.state.data[item].phone}</Text>
-                    </View>
-                    <View style={styles.AddButtonContainer}>
-                      <TouchableItem onPress={() => this.deleteContact(item)}>
-                        <View style={styles.searchButton}>
-                          <Icon
-                            name={REMOVE_ICON}
-                            size={23}
-                            color={'#BF0A30'}
-                          />
-                        </View>
-                      </TouchableItem>
-                    </View>
+              return (
+                <View style={styles.searchResults}>
+                  <Image
+                    source={{ uri: this.state.uri }}
+                    style={styles.profilePic}
+                  />
+                  <View style={{ paddingLeft: 20 }}>
+                    <Text style={{ fontSize: 20 }}>
+                      {this.state.data[item].name}
+                    </Text>
+                    <Text>{this.state.data[item].phone}</Text>
                   </View>
-                );
-              }
+                  <View style={styles.AddButtonContainer}>
+                    <TouchableItem onPress={() => this.deleteContact(item)}>
+                      <View style={styles.searchButton}>
+                        <Icon
+                          name={REMOVE_ICON}
+                          size={23}
+                          color={'#BF0A30'}
+                        />
+                      </View>
+                    </TouchableItem>
+                  </View>
+                </View>
+              );
             })}
           </ScrollView>
         </View>

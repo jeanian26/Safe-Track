@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 /* eslint-disable prettier/prettier */
 /**
  *
@@ -16,10 +17,8 @@ import {
   ScrollView,
   StatusBar,
   StyleSheet,
-  Switch,
   View,
 } from 'react-native';
-import { color } from 'react-native-reanimated';
 
 // import components
 import { getAuth } from 'firebase/auth';
@@ -29,13 +28,12 @@ import {
   ref as refData,
   child,
   get,
-  set,
   update,
 } from 'firebase/database';
 import Avatar from '../../components/avatar/Avatar';
 import Divider from '../../components/divider/Divider';
 import Icon from '../../components/icon/Icon';
-import { Heading6, Subtitle1, Subtitle2 } from '../../components/text/CustomText';
+import { Subtitle1, Subtitle2 } from '../../components/text/CustomText';
 import TouchableItem from '../../components/TouchableItem';
 import { passAuth } from '../../config/firebase';
 import { signOut } from 'firebase/auth';
@@ -49,17 +47,7 @@ const IOS = Platform.OS === 'ios';
 const DIVIDER_MARGIN_LEFT = 60;
 const ARROW_ICON = 'ios-arrow-forward';
 const ADDRESS_ICON = IOS ? 'ios-pin' : 'md-pin';
-const NOTIFICATION_OFF_ICON = IOS
-  ? 'ios-notifications-off'
-  : 'md-notifications-off';
-const NOTIFICATION_ICON = IOS ? 'ios-notifications' : 'md-notifications';
-const PAYMENT_ICON = IOS ? 'ios-card' : 'md-card';
-const ORDERS_ICON = IOS ? 'ios-list' : 'md-list';
 const FINGERPRINT_ICON = "md-finger-print";
-const TERMS_ICON = IOS ? 'ios-document' : 'md-document';
-const ABOUT_ICON = IOS
-  ? 'ios-information-circle-outline'
-  : 'md-information-circle-outline';
 const LOGOUT_ICON = IOS ? 'ios-log-out' : 'md-log-out';
 
 // Settings Styles
@@ -189,6 +177,7 @@ export default class Settings extends Component {
       city: '',
       country: 'Philippines',
       pinCode: 'Set Up',
+      fingerPrintOn: false,
     };
   }
 
@@ -221,6 +210,7 @@ export default class Settings extends Component {
     update(refData(db), updates);
     this.getPinCode();
   }
+
   togglePinCode() {
     const { navigation } = this.props;
     let textPrompt = 'On';
@@ -353,21 +343,103 @@ export default class Settings extends Component {
     this.focusListener = this.props.navigation.addListener('focus', () => {
       this.getData();
       this.getPinCode();
+      this.getFingerPrint();
     });
   }
 
   componentDidMount = () => {
     this.getData();
     this.getPinCode();
+    this.getFingerPrint();
 
 
     this.focusListener = this.props.navigation.addListener('focus', () => {
       this.getData();
       this.getPinCode();
+      this.getFingerPrint();
     });
   };
 
+  getFingerPrint() {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    const self = this;
+    const dbRef = refData(getDatabase());
+    get(child(dbRef, `fingerprint/${user.uid}`))
+      .then((snapshot) => {
+        let result = snapshot.val();
+        console.log(result.Activate);
+        if (result.Activate === true) {
+          this.setState({ fingerPrintOn: true });
+        } else {
+          this.setState({ fingerPrintOn: false });
+        }
+      })
+      .catch((error) => {
+        console.log("Fingerprint", error);
+        this.setState({ fingerPrintOn: false });
+      });
+  }
+  toggleFingerPrint() {
+    const { navigation } = this.props;
+    let textPrompt = 'On';
+    if (this.state.fingerPrintOn === true) {
+      textPrompt = 'Off';
+      Alert.alert('Finger Print', `Turn ${textPrompt} Fingerprint Authentication? `, [
+        {
+          text: 'Yes',
+          onPress: () => {
+            this.setFingerPrint(textPrompt);
+          },
+        },
+        {
+          text: 'No',
+        },
+      ]);
+    } else if (this.state.pinCode === 'Set Up') {
+      navigation.navigate('PinCode');
+    } else {
+      textPrompt = 'On';
+      Alert.alert('Finger Print', `Turn ${textPrompt} Pin code? \nWe Will use your enrolled fingerprint`, [
+        {
+          text: 'Yes',
+          onPress: () => {
+            this.setFingerPrint(textPrompt);
+          },
+        },
+        {
+          text: 'No',
+        },
+      ]);
+    }
+  }
+
+  setFingerPrint(prompt) {
+    let activate;
+    if (prompt === 'On') {
+      activate = true;
+    } else {
+      activate = false;
+    }
+
+    const auth = getAuth();
+    const user = auth.currentUser;
+    const { navigation } = this.props;
+
+    const db = getDatabase();
+    const updates = {};
+    updates[`/fingerprint/${user.uid}/Activate`] = activate;
+    update(refData(db), updates);
+    this.getFingerPrint();
+  }
+
   render() {
+    let fingerPrintText = "Off";
+    if (this.state.fingerPrintOn === true) {
+      fingerPrintText = "On";
+    }
+
+
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar
@@ -420,7 +492,7 @@ export default class Settings extends Component {
           <Setting
             onPress={() => this.togglePinCode()}
             icon={"md-lock-open"}
-            title="Pin Code"
+            title="Pin Code Authentication"
             extraData={
               <View>
                 <View>
@@ -433,14 +505,14 @@ export default class Settings extends Component {
           />
           <Divider type="inset" marginLeft={DIVIDER_MARGIN_LEFT} />
           <Setting
-            onPress={() => this.togglePinCode()}
+            onPress={() => this.toggleFingerPrint()}
             icon={FINGERPRINT_ICON}
-            title="Pin Code"
+            title="Finger Print Authentication"
             extraData={
               <View>
                 <View>
                   <Subtitle2 style={styles.extraData}>
-                    Not Yet Implemented
+                    {fingerPrintText}
                   </Subtitle2>
                 </View>
               </View>

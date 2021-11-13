@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
 
 import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
 import Intro from '../screens/introduction/Introduction';
 
@@ -16,6 +16,7 @@ import ForgotPassword from '../screens/forgotpassword/ForgotPassword';
 
 import PinCode from '../screens/terms/PinCode';
 import EnterPin from '../screens/terms/EnterPin';
+import Fingerprint from '../screens/terms/Fingerprint';
 
 import HomeNavigator from './HomeNavigator1';
 
@@ -51,12 +52,12 @@ function MainNavigatorA() {
         <Stack.Screen
           name="Onboarding"
           component={Intro}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Welcome"
           component={Welcome}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="SignUp"
@@ -104,6 +105,13 @@ function MainNavigatorA() {
           }}
         />
         <Stack.Screen
+          name="Fingerprint"
+          component={Fingerprint}
+          options={{
+            title: 'Fingerprint',
+          }}
+        />
+        <Stack.Screen
           name="EnterPin"
           component={EnterPin}
           options={{
@@ -114,13 +122,13 @@ function MainNavigatorA() {
         <Stack.Screen
           name="HomeNavigator"
           component={HomeNavigator}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
 
         <Stack.Screen
           name="EditProfile"
           component={EditProfile}
-          options={({navigation}) => ({
+          options={({ navigation }) => ({
             title: 'Edit Profile',
           })}
         />

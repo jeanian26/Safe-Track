@@ -18,6 +18,16 @@ const bgImg = 'http://www.newgeography.com/files/manila-1.jpg';
 import Colors from '../../theme/colors';
 import GradientContainer from '../../components/gradientcontainer/GradientContainer';
 import Logo from '../../components/logo/Logo';
+import {
+  accelerometer,
+  gyroscope,
+  setUpdateIntervalForType,
+  SensorTypes
+} from "react-native-sensors";
+import { map, filter } from "rxjs/operators";
+
+
+
 const styles = StyleSheet.create({
   screenContainer: {
     flex: 1,
@@ -71,6 +81,7 @@ export default class Home extends Component {
     navigation.navigate(screen);
   };
   componentDidMount() {
+    this.Subscribeshake();
     this.appStateSubscription = AppState.addEventListener(
       'change',
       (nextAppState) => {
@@ -89,6 +100,24 @@ export default class Home extends Component {
       },
     );
   }
+  Subscribeshake() {
+    const subscription = accelerometer.subscribe(
+      ({ x, y, z }) => this.computeShake(x, y, z, subscription),
+      error => console.log(error)
+    );
+
+
+
+  }
+  computeShake(x, y, z,) {
+    let total = Math.abs(x) + Math.abs(y) + Math.abs(z);
+    console.log(total);
+    if (total >= 15) {
+      console.log("SHAKE SHAKE", Math.abs(x) + Math.abs(y) + Math.abs(z));
+    }
+
+  }
+
 
   render() {
     const { } = this.state;
@@ -129,6 +158,7 @@ export default class Home extends Component {
                 borderRadius={100}
               />
             </View>
+
           </View>
         </GradientContainer>
       </ImageBackground>

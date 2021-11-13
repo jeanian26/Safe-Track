@@ -196,6 +196,10 @@ export default class Introduction extends Component {
       }
     });
   };
+
+  // fingerPrint() {
+
+  // }
   pinCodeRequired() {
     const { navigation } = this.props;
     const dbRef = ref(getDatabase());
