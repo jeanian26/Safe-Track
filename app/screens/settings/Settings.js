@@ -7,7 +7,7 @@
  */
 
 // import dependencies
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   Alert,
   I18nManager,
@@ -19,11 +19,11 @@ import {
   Switch,
   View,
 } from 'react-native';
-import {color} from 'react-native-reanimated';
+import { color } from 'react-native-reanimated';
 
 // import components
-import {getAuth} from 'firebase/auth';
-import {getStorage, ref, getDownloadURL} from 'firebase/storage';
+import { getAuth } from 'firebase/auth';
+import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 import {
   getDatabase,
   ref as refData,
@@ -35,10 +35,10 @@ import {
 import Avatar from '../../components/avatar/Avatar';
 import Divider from '../../components/divider/Divider';
 import Icon from '../../components/icon/Icon';
-import {Heading6, Subtitle1, Subtitle2} from '../../components/text/CustomText';
+import { Heading6, Subtitle1, Subtitle2 } from '../../components/text/CustomText';
 import TouchableItem from '../../components/TouchableItem';
-import {passAuth} from '../../config/firebase';
-import {signOut} from 'firebase/auth';
+import { passAuth } from '../../config/firebase';
+import { signOut } from 'firebase/auth';
 
 // import colors
 import Colors from '../../theme/colors';
@@ -55,6 +55,7 @@ const NOTIFICATION_OFF_ICON = IOS
 const NOTIFICATION_ICON = IOS ? 'ios-notifications' : 'md-notifications';
 const PAYMENT_ICON = IOS ? 'ios-card' : 'md-card';
 const ORDERS_ICON = IOS ? 'ios-list' : 'md-list';
+const FINGERPRINT_ICON = "md-finger-print";
 const TERMS_ICON = IOS ? 'ios-document' : 'md-document';
 const ABOUT_ICON = IOS
   ? 'ios-information-circle-outline'
@@ -134,7 +135,7 @@ const styles = StyleSheet.create({
   extraData: {
     textAlign: 'left',
   },
-  logout: {color: Colors.primaryText},
+  logout: { color: Colors.primaryText },
 });
 
 // Settings Props
@@ -146,7 +147,7 @@ type Props = {
 };
 
 // Settings Components
-const Setting = ({icon, title, onPress, extraData}: Props) => (
+const Setting = ({ icon, title, onPress, extraData }: Props) => (
   <TouchableItem onPress={onPress}>
     <View>
       <View style={[styles.row, styles.setting]}>
@@ -159,7 +160,7 @@ const Setting = ({icon, title, onPress, extraData}: Props) => (
           <Subtitle1 style={styles.mediumText}>{title}</Subtitle1>
         </View>
 
-        <View style={isRTL && {transform: [{scaleX: -1}]}}>
+        <View style={isRTL && { transform: [{ scaleX: -1 }] }}>
           <Icon name={ARROW_ICON} size={16} color="rgba(0, 0, 0, 0.16)" />
         </View>
       </View>
@@ -192,7 +193,7 @@ export default class Settings extends Component {
   }
 
   navigateTo = (screen) => () => {
-    const {navigation} = this.props;
+    const { navigation } = this.props;
     navigation.navigate(screen);
   };
 
@@ -212,7 +213,7 @@ export default class Settings extends Component {
 
     const auth = getAuth();
     const user = auth.currentUser;
-    const {navigation} = this.props;
+    const { navigation } = this.props;
 
     const db = getDatabase();
     const updates = {};
@@ -221,7 +222,7 @@ export default class Settings extends Component {
     this.getPinCode();
   }
   togglePinCode() {
-    const {navigation} = this.props;
+    const { navigation } = this.props;
     let textPrompt = 'On';
     if (this.state.pinCode === 'On') {
       textPrompt = 'Off';
@@ -267,12 +268,12 @@ export default class Settings extends Component {
   }
 
   logout = () => {
-    const {navigation} = this.props;
+    const { navigation } = this.props;
     Alert.alert(
       'Logout',
       'Are you sure you want to logout?',
       [
-        {text: 'Cancel', onPress: () => {}, style: 'cancel'},
+        { text: 'Cancel', onPress: () => { }, style: 'cancel' },
         {
           text: 'OK',
           onPress: () => {
@@ -286,7 +287,7 @@ export default class Settings extends Component {
           },
         },
       ],
-      {cancelable: false},
+      { cancelable: false },
     );
   };
   getData() {
@@ -296,14 +297,14 @@ export default class Settings extends Component {
     console.log(user.uid);
     if (user !== null) {
       user.providerData.forEach((profile) => {
-        this.setState({name: profile.displayName});
-        this.setState({email: profile.email});
+        this.setState({ name: profile.displayName });
+        this.setState({ email: profile.email });
       });
     }
     const storage = getStorage();
     getDownloadURL(ref(storage, `profile_images/${user.uid}.jpg`))
       .then((url) => {
-        self.setState({imageUri: url});
+        self.setState({ imageUri: url });
       })
       .catch((error) => {
         // Handle any errors
@@ -339,9 +340,9 @@ export default class Settings extends Component {
         let result = snapshot.val();
         console.log(result.Activate);
         if (result.Activate === true) {
-          this.setState({pinCode: 'On'});
+          this.setState({ pinCode: 'On' });
         } else {
-          this.setState({pinCode: 'Off'});
+          this.setState({ pinCode: 'Off' });
         }
       })
       .catch((error) => {
@@ -356,6 +357,10 @@ export default class Settings extends Component {
   }
 
   componentDidMount = () => {
+    this.getData();
+    this.getPinCode();
+
+
     this.focusListener = this.props.navigation.addListener('focus', () => {
       this.getData();
       this.getPinCode();
@@ -375,10 +380,10 @@ export default class Settings extends Component {
             <View
               style={
                 ([styles.row, styles.profileContainer],
-                {backgroundColor: Colors.primaryColor})
+                  { backgroundColor: Colors.primaryColor })
               }>
               <View style={styles.profileCenter}>
-                <Avatar imageUri={this.state.imageUri} rounded size={80} />
+                <Avatar imageUri={this.state.imageUri} rounded size={120} />
                 <View style={styles.profileCenter}>
                   <Subtitle1 style={styles.name}>{this.state.name}</Subtitle1>
                   <Subtitle2 style={styles.email}>{this.state.email}</Subtitle2>
@@ -414,7 +419,7 @@ export default class Settings extends Component {
 
           <Setting
             onPress={() => this.togglePinCode()}
-            icon={TERMS_ICON}
+            icon={"md-lock-open"}
             title="Pin Code"
             extraData={
               <View>
@@ -427,10 +432,24 @@ export default class Settings extends Component {
             }
           />
           <Divider type="inset" marginLeft={DIVIDER_MARGIN_LEFT} />
-
+          <Setting
+            onPress={() => this.togglePinCode()}
+            icon={FINGERPRINT_ICON}
+            title="Pin Code"
+            extraData={
+              <View>
+                <View>
+                  <Subtitle2 style={styles.extraData}>
+                    {this.state.pinCode}
+                  </Subtitle2>
+                </View>
+              </View>
+            }
+          />
+          <Divider type="inset" marginLeft={DIVIDER_MARGIN_LEFT} />
           <Setting
             onPress={this.navigateTo('Social')}
-            icon={ABOUT_ICON}
+            icon={"md-people-circle"}
             title="Social Networks"
           />
           <Divider type="inset" marginLeft={DIVIDER_MARGIN_LEFT} />
