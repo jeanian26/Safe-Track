@@ -1,5 +1,4 @@
 /* eslint-disable quotes */
-/* eslint-disable no-trailing-spaces */
 /* eslint-disable prettier/prettier */
 /**
  *
@@ -9,7 +8,7 @@
  */
 
 // import dependencies
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   Image,
   ImageBackground,
@@ -24,10 +23,10 @@ import Swiper from 'react-native-swiper';
 // import components
 import ContainedButton from '../../components/buttons/ContainedButton';
 import GradientContainer from '../../components/gradientcontainer/GradientContainer';
-import {Heading5, Paragraph} from '../../components/text/CustomText';
-import {passAuth, checkLoggedIn} from '../../config/firebase';
-import {onAuthStateChanged} from 'firebase/auth';
-import {getDatabase, ref, set, get, child} from 'firebase/database';
+import { Heading5, Paragraph } from '../../components/text/CustomText';
+import { passAuth, checkLoggedIn } from '../../config/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+import { getDatabase, ref, set, get, child } from 'firebase/database';
 // import colors
 import Colors from '../../theme/colors';
 
@@ -180,11 +179,11 @@ export default class Introduction extends Component {
   };
 
   navigateTo = (screen) => () => {
-    const {navigation} = this.props;
+    const { navigation } = this.props;
     navigation.navigate(screen);
   };
   componentDidMount = () => {
-    const {navigation} = this.props;
+    const { navigation } = this.props;
     onAuthStateChanged(passAuth(), (user) => {
       if (user) {
         console.log('user logged in', user);
@@ -198,19 +197,19 @@ export default class Introduction extends Component {
     });
   };
   pinCodeRequired() {
-    const {navigation} = this.props;
+    const { navigation } = this.props;
     const dbRef = ref(getDatabase());
     get(child(dbRef, `pin/${global.USERID}`))
       .then((snapshot) => {
         if (snapshot.exists()) {
           let result = snapshot.val();
           console.log(result.Activate);
-          if (result.Activate === true){
-            navigation.navigate('EnterPin');  
+          if (result.Activate === true) {
+            navigation.navigate('EnterPin');
           } else {
             navigation.navigate("HomeNavigator");
           }
-          
+
         } else {
           console.log('No data available');
           navigation.navigate('HomeNavigator');
@@ -223,10 +222,10 @@ export default class Introduction extends Component {
   }
 
   render() {
-    const {activeIndex} = this.state;
+    const { activeIndex } = this.state;
 
     return (
-      <ImageBackground source={{uri: bgImg}} style={styles.bgImg}>
+      <ImageBackground source={{ uri: bgImg }} style={styles.bgImg}>
         <StatusBar
           //translucent
           backgroundColor={Colors.primaryColor}
@@ -235,8 +234,8 @@ export default class Introduction extends Component {
 
         <GradientContainer
           colors={[Colors.secondaryGradientColor, 'transparent']}
-          start={{x: 0, y: 0.64}}
-          end={{x: 0, y: 0}}>
+          start={{ x: 0, y: 0.64 }}
+          end={{ x: 0, y: 0 }}>
           <SafeAreaView style={styles.screenContainer}>
             <View style={styles.swiperContainer}>
               <Swiper

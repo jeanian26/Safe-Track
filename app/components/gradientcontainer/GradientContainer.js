@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /**
  *
  *
@@ -7,7 +8,7 @@
 
 // import dependencies
 import React from 'react';
-import {StyleSheet, ViewStyle} from 'react-native';
+import { StyleSheet, ViewStyle } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 // import colors
@@ -25,8 +26,8 @@ const styles = StyleSheet.create({
 // GradientContainer Props
 type Props = {
   colors: Array,
-  start: {x: number, y: number}, // number in range [0, 1]
-  end: {x: number, y: number}, // number in range [0, 1]
+  start: { x: number, y: number }, // number in range [0, 1]
+  end: { x: number, y: number }, // number in range [0, 1]
   children: any,
   containerStyle: ViewStyle,
 };
@@ -40,8 +41,8 @@ const GradientContainer = ({
   children,
 }: Props) => (
   <LinearGradient
-    start={start || {x: 0, y: 0}}
-    end={end || {x: 0, y: 1}}
+    start={start || { x: 0, y: 0 }}
+    end={end || { x: 0, y: 1 }}
     colors={
       colors || [Colors.primaryGradientColor, Colors.secondaryGradientColor]
     }

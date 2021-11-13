@@ -1,7 +1,8 @@
 /* eslint-disable prettier/prettier */
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
+  ImageBackground,
   AppState,
   SafeAreaView,
   StatusBar,
@@ -9,15 +10,18 @@ import {
   View,
   Text,
 } from 'react-native';
-
+const bgImg = 'http://www.newgeography.com/files/manila-1.jpg';
 import Colors from '../../theme/colors';
-
+import GradientContainer from '../../components/gradientcontainer/GradientContainer';
 const styles = StyleSheet.create({
   screenContainer: {
     flex: 1,
     backgroundColor: Colors.background,
   },
   container: {
+    flex: 1,
+  },
+  bgImg: {
     flex: 1,
   },
 });
@@ -32,7 +36,7 @@ export default class Home extends Component {
   }
 
   navigateTo = (screen) => () => {
-    const {navigation} = this.props;
+    const { navigation } = this.props;
     navigation.navigate(screen);
   };
   componentDidMount() {
@@ -50,21 +54,29 @@ export default class Home extends Component {
             console.log('task run on background');
           }, 5000);
         }
-        this.setState({appState: nextAppState});
+        this.setState({ appState: nextAppState });
       },
     );
   }
 
   render() {
-    const {} = this.state;
+    const { } = this.state;
 
     return (
-      <SafeAreaView style={styles.screenContainer}>
-        <StatusBar backgroundColor={Colors.white} barStyle="dark-content" />
-        <View style={styles.container}>
-          <Text>{this.state.appState}</Text>
-        </View>
-      </SafeAreaView>
+      <ImageBackground source={{uri: bgImg}} style={styles.bgImg}>
+      <StatusBar
+        //translucent
+        backgroundColor={Colors.primaryColor}
+        barStyle="light-content"
+      />
+
+      <GradientContainer
+        colors={[Colors.secondaryGradientColor, 'transparent']}
+        start={{x: 0, y: 0.90}}
+        end={{x: 0, y: 0}}>
+          <View><Text>TEST</Text></View>
+      </GradientContainer>
+    </ImageBackground>
     );
   }
 }
