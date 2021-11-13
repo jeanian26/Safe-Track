@@ -7,12 +7,12 @@
  */
 
 // import dependencies
-import React, {Component} from 'react';
-import {ImageBackground, StatusBar, StyleSheet, View} from 'react-native';
+import React, { Component } from 'react';
+import { ImageBackground, StatusBar, StyleSheet, View } from 'react-native';
 
 // import components
 import Button from '../../components/buttons/Button';
-import {Heading5, Paragraph} from '../../components/text/CustomText';
+import { Heading5, Paragraph } from '../../components/text/CustomText';
 import LinkButton from '../../components/buttons/LinkButton';
 import Logo from '../../components/logo/Logo';
 import SafeAreaView from '../../components/SafeAreaView';
@@ -105,19 +105,19 @@ export default class Welcome extends Component {
   }
 
   navigateTo = (screen) => () => {
-    const {navigation} = this.props;
+    const { navigation } = this.props;
     navigation.navigate(screen);
   };
 
   render() {
     return (
-      <SafeAreaView forceInset={{top: 'never'}} style={styles.screenContainer}>
+      <SafeAreaView forceInset={{ top: 'never' }} style={styles.screenContainer}>
         <StatusBar
           backgroundColor={Colors.primaryColor}
           barStyle="light-content"
         />
 
-        <View style={{position: 'relative'}}>
+        <View style={{ position: 'relative' }}>
           <ImageBackground
             source={headerImg}
             style={styles.headerImg}></ImageBackground>
@@ -125,7 +125,7 @@ export default class Welcome extends Component {
 
         <View style={styles.footer}>
           <View style={styles.logoContainer}>
-            <Logo logoStyle={{borderRadius: 100}} size={96} />
+            <Logo logoStyle={{ borderRadius: 100 }} size={96} />
           </View>
 
           <View style={styles.center}>

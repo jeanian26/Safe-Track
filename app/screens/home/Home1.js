@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable prettier/prettier */
 
@@ -11,7 +12,8 @@ import {
   View,
   Text,
 } from 'react-native';
-import { Heading4 } from '../../components/text/CustomText';
+import Button from '../../components/buttons/Button';
+import { Heading4, Heading6 } from '../../components/text/CustomText';
 const bgImg = 'http://www.newgeography.com/files/manila-1.jpg';
 import Colors from '../../theme/colors';
 import GradientContainer from '../../components/gradientcontainer/GradientContainer';
@@ -31,19 +33,27 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     fontWeight: '700',
-    color: 'white'
+    color: 'white',
+    textAlign: 'center',
+    paddingLeft: 20,
+    paddingRight: 20,
   },
   logoContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: -60,
     borderRadius: 999,
     width: 154,
     height: 154,
     backgroundColor: Colors.white,
+    marginTop: 20,
   },
   titleText: {
     fontWeight: '700',
+  },
+  buttonContainer: {
+    paddingTop: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
@@ -102,11 +112,22 @@ export default class Home extends Component {
           }}><View style={styles.logoContainer}>
               <Logo logoStyle={{ borderRadius: 100 }} size={120} />
             </View>
-            <View style={{ marginTop: 20 }}>
+            <View style={{ marginTop: 20, alignItems: "center" }}>
               <Heading4
                 style={(styles.titleText, styles.categoryHeading)}>
                 SafeTrack
-              </Heading4>
+              </Heading4 >
+              <Heading6 style={(styles.titleText, styles.categoryHeading)}>Welcome to SafeTrack Security App. Your own personal security system</Heading6>
+            </View>
+            <View style={styles.buttonContainer}>
+              <Button
+                onPress={this.navigateTo("Settings")}
+                color={"#fff"}
+                small
+                title={'get Started'.toUpperCase()}
+                titleColor={Colors.primaryColor}
+                borderRadius={100}
+              />
             </View>
           </View>
         </GradientContainer>
