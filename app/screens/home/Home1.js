@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable prettier/prettier */
 
 import React, { Component } from 'react';
@@ -10,9 +11,11 @@ import {
   View,
   Text,
 } from 'react-native';
+import { Heading4 } from '../../components/text/CustomText';
 const bgImg = 'http://www.newgeography.com/files/manila-1.jpg';
 import Colors from '../../theme/colors';
 import GradientContainer from '../../components/gradientcontainer/GradientContainer';
+import Logo from '../../components/logo/Logo';
 const styles = StyleSheet.create({
   screenContainer: {
     flex: 1,
@@ -23,6 +26,24 @@ const styles = StyleSheet.create({
   },
   bgImg: {
     flex: 1,
+  },
+  categoryHeading: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    fontWeight: '700',
+    color: 'white'
+  },
+  logoContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: -60,
+    borderRadius: 999,
+    width: 154,
+    height: 154,
+    backgroundColor: Colors.white,
+  },
+  titleText: {
+    fontWeight: '700',
   },
 });
 
@@ -63,20 +84,33 @@ export default class Home extends Component {
     const { } = this.state;
 
     return (
-      <ImageBackground source={{uri: bgImg}} style={styles.bgImg}>
-      <StatusBar
-        //translucent
-        backgroundColor={Colors.primaryColor}
-        barStyle="light-content"
-      />
+      <ImageBackground source={{ uri: bgImg }} style={styles.bgImg}>
+        <StatusBar
+          //translucent
+          backgroundColor={Colors.primaryColor}
+          barStyle="light-content"
+        />
 
-      <GradientContainer
-        colors={[Colors.secondaryGradientColor, 'transparent']}
-        start={{x: 0, y: 0.90}}
-        end={{x: 0, y: 0}}>
-          <View><Text>TEST</Text></View>
-      </GradientContainer>
-    </ImageBackground>
+        <GradientContainer
+          colors={[Colors.secondaryGradientColor, 'transparent']}
+          start={{ x: 0, y: 0.90 }}
+          end={{ x: 0, y: 0 }}>
+          <View style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            flex: 1,
+          }}><View style={styles.logoContainer}>
+              <Logo logoStyle={{ borderRadius: 100 }} size={120} />
+            </View>
+            <View style={{ marginTop: 20 }}>
+              <Heading4
+                style={(styles.titleText, styles.categoryHeading)}>
+                SafeTrack
+              </Heading4>
+            </View>
+          </View>
+        </GradientContainer>
+      </ImageBackground>
     );
   }
 }
