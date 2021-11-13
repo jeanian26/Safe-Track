@@ -440,7 +440,7 @@ export default class Settings extends Component {
               <View>
                 <View>
                   <Subtitle2 style={styles.extraData}>
-                    {this.state.pinCode}
+                    Not Yet Implemented
                   </Subtitle2>
                 </View>
               </View>
