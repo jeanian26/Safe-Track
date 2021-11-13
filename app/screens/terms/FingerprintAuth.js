@@ -53,9 +53,16 @@ const styles = StyleSheet.create({
     extraSmallButton: {
         width: '48%',
     },
+    forgotPassword: { paddingVertical: 23 },
+    forgotPasswordText: {
+        fontWeight: '300',
+        fontSize: 13,
+        color: '#000',
+        textAlign: 'center',
+    },
 });
 
-export default class Fingerprint extends Component {
+export default class FingerprintAuth extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -91,10 +98,12 @@ export default class Fingerprint extends Component {
         return Platform.Version < 23;
     }
     authCurrent() {
+        const { navigation } = this.props;
         FingerprintScanner
             .authenticate({ title: 'Log in with Biometrics' })
             .then((result) => {
                 this.setState({ fingerPrint: "Good" });
+                navigation.navigate("HomeNavigator")
                 console.log(result);
             }).catch((error) => {
                 console.log(error);
@@ -117,6 +126,10 @@ export default class Fingerprint extends Component {
     handleAuthenticationAttemptedLegacy = (error) => {
         this.setState({ errorMessageLegacy: error.message });
         this.description.shake();
+    };
+    goLogin = () => {
+        const { navigation } = this.props;
+        navigation.navigate('SignIn');
     };
 
 
@@ -145,6 +158,16 @@ export default class Fingerprint extends Component {
                         title={'Try again'.toUpperCase()}
                         buttonStyle={styles.extraSmallButton}
                     />
+                </View>
+                <View style={styles.forgotPassword}>
+                    <Text
+                        // onPress={this.showInputModal(true)}
+                        onPress={() => {
+                            this.goLogin();
+                        }}
+                        style={styles.forgotPasswordText}>
+                        Log in with another account
+                    </Text>
                 </View>
 
             </SafeAreaView >

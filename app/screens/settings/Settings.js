@@ -387,6 +387,12 @@ export default class Settings extends Component {
       textPrompt = 'Off';
       Alert.alert('Finger Print', `Turn ${textPrompt} Fingerprint Authentication? `, [
         {
+          text: 'Test',
+          onPress: () => {
+            navigation.navigate("Fingerprint");
+          },
+        },
+        {
           text: 'Yes',
           onPress: () => {
             this.setFingerPrint(textPrompt);
@@ -401,6 +407,12 @@ export default class Settings extends Component {
     } else {
       textPrompt = 'On';
       Alert.alert('Finger Print', `Turn ${textPrompt} Pin code? \nWe Will use your enrolled fingerprint`, [
+        {
+          text: 'Test',
+          onPress: () => {
+            navigation.navigate("Fingerprint");
+          },
+        },
         {
           text: 'Yes',
           onPress: () => {

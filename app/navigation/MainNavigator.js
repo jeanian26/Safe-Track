@@ -17,6 +17,7 @@ import ForgotPassword from '../screens/forgotpassword/ForgotPassword';
 import PinCode from '../screens/terms/PinCode';
 import EnterPin from '../screens/terms/EnterPin';
 import Fingerprint from '../screens/terms/Fingerprint';
+import FingerprintAuth from '../screens/terms/FingerprintAuth';
 
 import HomeNavigator from './HomeNavigator1';
 
@@ -109,6 +110,14 @@ function MainNavigatorA() {
           component={Fingerprint}
           options={{
             title: 'Fingerprint',
+          }}
+        />
+        <Stack.Screen
+          name="FingerprintAuth"
+          component={FingerprintAuth}
+          options={{
+            title: 'Fingerprint Authentication',
+            headerShown: false,
           }}
         />
         <Stack.Screen

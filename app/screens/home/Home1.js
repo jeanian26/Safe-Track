@@ -11,6 +11,7 @@ import {
   StyleSheet,
   View,
   Text,
+  Alert
 } from 'react-native';
 import Button from '../../components/buttons/Button';
 import { Heading4, Heading6 } from '../../components/text/CustomText';
@@ -109,11 +110,25 @@ export default class Home extends Component {
 
 
   }
-  computeShake(x, y, z,) {
+  computeShake(x, y, z, subscription) {
     let total = Math.abs(x) + Math.abs(y) + Math.abs(z);
-    console.log(total);
     if (total >= 15) {
-      console.log("SHAKE SHAKE", Math.abs(x) + Math.abs(y) + Math.abs(z));
+      subscription.unsubscribe();
+      console.log('STOP');
+      Alert.alert('Shake', `Test`, [
+        {
+          text: 'Yes',
+          onPress: () => {
+            this.SetPinCodeFirebase("test");
+          },
+        },
+        {
+          text: 'No',
+          onPress: () => {
+            this.Subscribeshake();
+          }
+        },
+      ]);
     }
 
   }

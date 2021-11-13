@@ -190,16 +190,36 @@ export default class Introduction extends Component {
         global.USERID = user.uid;
         global.DISPLAY_NAME = user.displayName;
         global.EMAIL = user.email;
-        this.pinCodeRequired();
+        this.fingerPrint();
+
       } else {
         console.log('no user logged in');
       }
     });
   };
 
-  // fingerPrint() {
+  fingerPrint() {
+    const { navigation } = this.props;
+    const dbRef = ref(getDatabase());
+    get(child(dbRef, `fingerprint/${global.USERID}`))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          let result = snapshot.val();
+          console.log(result.Activate);
+          if (result.Activate === true) {
+            navigation.navigate('FingerprintAuth');
+          } else {
+            this.pinCodeRequired();
+          }
 
-  // }
+        } else {
+          console.log('No data available');
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
   pinCodeRequired() {
     const { navigation } = this.props;
     const dbRef = ref(getDatabase());

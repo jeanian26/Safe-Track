@@ -76,8 +76,8 @@ export default class Map extends Component {
               region: {
                 latitude: position.coords.latitude,
                 longitude: position.coords.longitude,
-                latitudeDelta: 0.005,
-                longitudeDelta: 0.005,
+                latitudeDelta: 0.05,
+                longitudeDelta: 0.05,
               },
             });
           },
