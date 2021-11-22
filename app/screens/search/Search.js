@@ -187,7 +187,7 @@ export default class Search extends Component {
     const { navigation } = this.props;
 
     this.focusListener = navigation.addListener('focus', () => {
-      this.getData()
+      this.getData();
     });
 
   }

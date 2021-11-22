@@ -11,8 +11,16 @@ import {
   StyleSheet,
   View,
   Text,
-  Alert
+  Alert,
 } from 'react-native';
+import { getAuth } from 'firebase/auth';
+import {
+  getDatabase,
+  ref as refData,
+  child,
+  get,
+} from 'firebase/database';
+
 import Button from '../../components/buttons/Button';
 import { Heading4, Heading6 } from '../../components/text/CustomText';
 const bgImg = 'http://www.newgeography.com/files/manila-1.jpg';
@@ -23,7 +31,7 @@ import {
   accelerometer,
   gyroscope,
   setUpdateIntervalForType,
-  SensorTypes
+  SensorTypes,
 } from "react-native-sensors";
 import { map, filter } from "rxjs/operators";
 
@@ -73,8 +81,27 @@ export default class Home extends Component {
     super(props);
 
     this.state = {
-      appState: AppState.currentState,
+      ShakeSetting: true,
     };
+  }
+  getShakeSettings() {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    const dbRef = refData(getDatabase());
+    get(child(dbRef, `Shake/${user.uid}`))
+      .then((snapshot) => {
+        let result = snapshot.val();
+        console.log(result.Activate);
+        if (result.Activate === true) {
+          this.setState({ ShakeSetting: true });
+        } else {
+          this.setState({ ShakeSetting: false });
+        }
+      })
+      .catch((error) => {
+        console.log("Shake Error", error);
+        this.setState({ ShakeSetting: false });
+      });
   }
 
   navigateTo = (screen) => () => {
@@ -82,24 +109,14 @@ export default class Home extends Component {
     navigation.navigate(screen);
   };
   componentDidMount() {
+    const { navigation } = this.props;
+    this.getShakeSettings();
     this.Subscribeshake();
-    this.appStateSubscription = AppState.addEventListener(
-      'change',
-      (nextAppState) => {
-        if (
-          this.state.appState.match(/inactive|background/) &&
-          nextAppState === 'active'
-        ) {
-          console.log('App has come to the foreground!');
-        } else {
-          console.log('background');
-          setTimeout(function () {
-            console.log('task run on background');
-          }, 5000);
-        }
-        this.setState({ appState: nextAppState });
-      },
-    );
+
+    this.focusListener = navigation.addListener('focus', () => {
+      this.getShakeSettings();
+      this.Subscribeshake();
+    });
   }
   Subscribeshake() {
     const subscription = accelerometer.subscribe(
@@ -115,21 +132,22 @@ export default class Home extends Component {
     if (total >= 15) {
       subscription.unsubscribe();
       console.log('STOP');
-      Alert.alert('Shake', `Test`, [
+      Alert.alert('SHAKE EVENT DETECTED', `DO YOU WANT TO RECORD A VIDEO?`, [
         {
           text: 'Yes',
           onPress: () => {
-            this.SetPinCodeFirebase("test");
+            this.Subscribeshake();
           },
         },
         {
           text: 'No',
           onPress: () => {
             this.Subscribeshake();
-          }
+          },
         },
       ]);
     }
+
 
   }
 

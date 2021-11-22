@@ -29,6 +29,7 @@ import {
   child,
   get,
   update,
+  set,
 } from 'firebase/database';
 import Avatar from '../../components/avatar/Avatar';
 import Divider from '../../components/divider/Divider';
@@ -37,6 +38,7 @@ import { Subtitle1, Subtitle2 } from '../../components/text/CustomText';
 import TouchableItem from '../../components/TouchableItem';
 import { passAuth } from '../../config/firebase';
 import { signOut } from 'firebase/auth';
+import { Slider } from '@miblanchard/react-native-slider';
 
 // import colors
 import Colors from '../../theme/colors';
@@ -178,6 +180,7 @@ export default class Settings extends Component {
       country: 'Philippines',
       pinCode: 'Set Up',
       fingerPrintOn: false,
+      ShakeSetting: true,
     };
   }
 
@@ -351,12 +354,14 @@ export default class Settings extends Component {
     this.getData();
     this.getPinCode();
     this.getFingerPrint();
+    this.getShakeSettings();
 
 
     this.focusListener = this.props.navigation.addListener('focus', () => {
       this.getData();
       this.getPinCode();
       this.getFingerPrint();
+      this.getShakeSettings();
     });
   };
 
@@ -444,11 +449,46 @@ export default class Settings extends Component {
     update(refData(db), updates);
     this.getFingerPrint();
   }
+  getShakeSettings() {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    const dbRef = refData(getDatabase());
+    get(child(dbRef, `Shake/${user.uid}`))
+      .then((snapshot) => {
+        let result = snapshot.val();
+        console.log(result.Activate);
+        if (result.Activate === true) {
+          this.setState({ ShakeSetting: true });
+        } else {
+          this.setState({ ShakeSetting: false });
+        }
+      })
+      .catch((error) => {
+        console.log("Shake Error", error);
+        this.setState({ ShakeSetting: false });
+      });
+  }
+  setShakeSetting() {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    const { navigation } = this.props;
+
+    const db = getDatabase();
+    set(refData(db, 'Shake/' + user.uid), {
+      Activate:!this.state.ShakeSetting,
+    });
+    this.getShakeSettings();
+  }
 
   render() {
     let fingerPrintText = "Off";
     if (this.state.fingerPrintOn === true) {
       fingerPrintText = "On";
+    }
+
+    let ShakeText = "Off";
+    if (this.state.ShakeSetting === true) {
+      ShakeText = "On";
     }
 
 
@@ -525,6 +565,21 @@ export default class Settings extends Component {
                 <View>
                   <Subtitle2 style={styles.extraData}>
                     {fingerPrintText}
+                  </Subtitle2>
+                </View>
+              </View>
+            }
+          />
+          <Divider type="inset" marginLeft={DIVIDER_MARGIN_LEFT} />
+          <Setting
+            onPress={() => this.setShakeSetting()}
+            icon={"md-phone-landscape"}
+            title="Shake"
+            extraData={
+              <View>
+                <View>
+                  <Subtitle2 style={styles.extraData}>
+                    {ShakeText}
                   </Subtitle2>
                 </View>
               </View>
