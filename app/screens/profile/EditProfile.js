@@ -14,11 +14,12 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import {passAuth} from '../../config/firebase';
 import {
   getDatabase,
-  ref as refDatabase,
+  ref as refData,
   onValue,
   child,
   get,
   set,
+  update,
 } from 'firebase/database';
 import {onAuthStateChanged, getAuth, updateProfile} from 'firebase/auth';
 
@@ -127,23 +128,29 @@ export default class EditProfile extends Component {
   saveProfile() {
     const {navigation} = this.props;
     const auth = getAuth();
-    updateProfile(auth.currentUser, {
-      displayName: this.state.name,
-      phoneNumber: '1235467',
-      email: this.state.email,
-    })
-      .then(() => {
-        global.DISPLAY_NAME = this.state.name;
-        global.EMAIL = this.state.email;
-        navigation.navigate('Settings');
-      })
-      .catch((error) => {
-        console.log('failed');
-      });
+    // updateProfile(auth.currentUser, {
+    //   displayName: this.state.name,
+    //   phoneNumber: '1235467',
+    //   email: this.state.email,
+    // })
+    //   .then(() => {
+    //     global.DISPLAY_NAME = this.state.name;
+    //     global.EMAIL = this.state.email;
+    //     navigation.navigate('Settings');
+    //   })
+    //   .catch((error) => {
+    //     console.log('failed');
+    //   });
+    const user = auth.currentUser;
+    const updates = {};
     const db = getDatabase();
-    set(refDatabase(db, 'userPhoneNumber/' + global.USERID), {
-      phone: this.state.phone,
-    });
+
+    updates[`/Accounts/${user.uid}/name`] = this.state.name;
+    updates[`/Accounts/${user.uid}/phone`] = this.state.phone;
+    update(refData(db), updates);
+    // set(refData(db, 'userPhoneNumber/' + global.USERID), {
+    //   phone: this.state.phone,
+    // });
   }
 
   chooseImage = async () => {
@@ -179,14 +186,14 @@ export default class EditProfile extends Component {
     });
   };
   componentDidMount = async () => {
-    const auth = getAuth();
-    const user = auth.currentUser;
-    if (user !== null) {
-      user.providerData.forEach((profile) => {
-        this.setState({name: profile.displayName});
-        this.setState({email: profile.email});
-      });
-    }
+    // const auth = getAuth();
+    // const user = auth.currentUser;
+    // if (user !== null) {
+    //   user.providerData.forEach((profile) => {
+    //     this.setState({name: profile.displayName});
+    //     this.setState({email: profile.email});
+    //   });
+    // }
 
     const storage = getStorage();
     getDownloadURL(ref(storage, `profile_images/${global.USERID}.jpg`))
@@ -197,12 +204,12 @@ export default class EditProfile extends Component {
         console.log('error', error);
       });
 
-    const dbRef = refDatabase(getDatabase());
-    get(child(dbRef, `userPhoneNumber/${global.USERID}`))
+    const dbRef = refData(getDatabase());
+    get(child(dbRef, `Accounts/${global.USERID}`))
       .then((snapshot) => {
         if (snapshot.exists()) {
           let result = snapshot.val();
-          this.setState({phone: result.phone});
+          this.setState({phone: result.phone, name:result.name});
         } else {
           console.log('No data available');
         }
@@ -318,7 +325,7 @@ export default class EditProfile extends Component {
               inputContainerStyle={styles.inputContainerStyle}
             />
 
-            <Subtitle2 style={styles.overline}>E-mail Address</Subtitle2>
+            {/* <Subtitle2 style={styles.overline}>E-mail Address</Subtitle2>
             <UnderlineTextInput
               onRef={(r) => {
                 this.email = r;
@@ -332,7 +339,7 @@ export default class EditProfile extends Component {
               keyboardType="email-address"
               focusedBorderColor={INPUT_FOCUSED_BORDER_COLOR}
               inputContainerStyle={styles.inputContainerStyle}
-            />
+            /> */}
 
             <Subtitle2 style={styles.overline}>Phone Number</Subtitle2>
             <UnderlineTextInput

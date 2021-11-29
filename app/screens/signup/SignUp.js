@@ -7,7 +7,7 @@
  */
 
 // import dependencies
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   SafeAreaView,
   StatusBar,
@@ -18,17 +18,18 @@ import {
   ToastAndroid,
   Alert,
 } from 'react-native';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 // import components
 import Button from '../../components/buttons/Button';
 import UnderlinePasswordInput from '../../components/textinputs/UnderlinePasswordInput';
 import UnderlineTextInput from '../../components/textinputs/UnderlineTextInput';
-import {createUserWithEmailAndPassword} from 'firebase/auth';
-import {passAuth} from '../../config/firebase';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { passAuth } from '../../config/firebase';
 // import colors, layout
 import Colors from '../../theme/colors';
 import Layout from '../../theme/layout';
+import { getDatabase, ref, set} from 'firebase/database';
 
 // SignUp Config
 const PLACEHOLDER_TEXT_COLOR = Colors.onPrimaryColor;
@@ -52,7 +53,7 @@ const styles = StyleSheet.create({
   form: {
     paddingHorizontal: Layout.LARGE_PADDING,
   },
-  inputContainer: {marginBottom: 7},
+  inputContainer: { marginBottom: 7 },
   vSpacer: {
     height: 15,
   },
@@ -156,14 +157,14 @@ export default class SignUp extends Component {
   };
 
   onTogglePress = () => {
-    const {secureTextEntry} = this.state;
+    const { secureTextEntry } = this.state;
     this.setState({
       secureTextEntry: !secureTextEntry,
     });
   };
 
   navigateTo = (screen) => () => {
-    const {navigation} = this.props;
+    const { navigation } = this.props;
     navigation.navigate(screen);
   };
 
@@ -174,7 +175,7 @@ export default class SignUp extends Component {
       phoneFocused: false,
       passwordFocused: false,
     });
-    const {navigation} = this.props;
+    const { navigation } = this.props;
     try {
       createUserWithEmailAndPassword(
         passAuth(),
@@ -185,6 +186,14 @@ export default class SignUp extends Component {
           navigation.navigate('SignIn');
           const user = result.user;
           console.log(user);
+          const db = getDatabase();
+          set(ref(db, `Accounts/${user.uid}`), {
+            email:this.state.email,
+            name: '',
+            phone: this.state.phone,
+            admin:false,
+            status:'active',
+          });
           Alert.alert(
             'Signup ',
             'Succesfully Created an Account.. Proceed to login',
@@ -338,7 +347,7 @@ export default class SignUp extends Component {
             </View>
 
             <TouchableWithoutFeedback>
-              <View style={styles.footer}></View>
+              <View style={styles.footer} />
             </TouchableWithoutFeedback>
           </View>
         </KeyboardAwareScrollView>

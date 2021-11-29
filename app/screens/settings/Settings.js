@@ -290,10 +290,23 @@ export default class Settings extends Component {
     console.log(user.uid);
     if (user !== null) {
       user.providerData.forEach((profile) => {
-        this.setState({ name: profile.displayName });
         this.setState({ email: profile.email });
       });
     }
+
+    const dbRef = refData(getDatabase());
+    get(child(dbRef, `Accounts/${global.USERID}`))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          let result = snapshot.val();
+          this.setState({phone: result.phone, name:result.name});
+        } else {
+          console.log('No data available');
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
     const storage = getStorage();
     getDownloadURL(ref(storage, `profile_images/${user.uid}.jpg`))
       .then((url) => {
@@ -302,7 +315,6 @@ export default class Settings extends Component {
       .catch((error) => {
         // Handle any errors
       });
-    const dbRef = refData(getDatabase());
     get(child(dbRef, `address/${user.uid}`))
       .then((snapshot) => {
         if (snapshot.exists()) {
