@@ -82,6 +82,7 @@ export default class Home extends Component {
 
     this.state = {
       ShakeSetting: true,
+      isAlertActive: false,
     };
   }
   getShakeSettings() {
@@ -109,13 +110,19 @@ export default class Home extends Component {
     navigation.navigate(screen);
   };
   componentDidMount() {
+    console.log('test');
     const { navigation } = this.props;
-    this.getShakeSettings();
-    this.Subscribeshake();
-
-    this.focusListener = navigation.addListener('focus', () => {
+    if (this.state.isAlertActive === false) {
       this.getShakeSettings();
       this.Subscribeshake();
+    }
+
+
+    this.focusListener = navigation.addListener('focus', () => {
+      if (this.state.isAlertActive === false) {
+        this.getShakeSettings();
+        this.Subscribeshake();
+      }
     });
   }
   Subscribeshake() {
@@ -124,30 +131,41 @@ export default class Home extends Component {
       error => console.log(error)
     );
 
+    // this.componentDidUpdate{
+    //   if
+    // }
 
 
   }
   computeShake(x, y, z, subscription) {
     const { navigation } = this.props;
     let total = Math.abs(x) + Math.abs(y) + Math.abs(z);
-    if (total >= 17) {
-      subscription.unsubscribe();
-      console.log('STOP');
-      Alert.alert('SHAKE EVENT DETECTED', `DO YOU WANT TO RECORD A VIDEO?`, [
-        {
-          text: 'Yes',
-          onPress: () => {
-            navigation.navigate("Camera",{event:true});
+    if (this.state.isAlertActive === false) {
+      if (total >= 20) {
+        this.setState({ isAlertActive: true });
+        subscription.unsubscribe();
+        console.log('STOP');
+        Alert.alert('SHAKE EVENT DETECTED', `DO YOU WANT TO RECORD A VIDEO?`, [
+          {
+            text: 'Yes',
+            onPress: () => {
+              this.setState({ isAlertActive: false });
+              navigation.navigate("Camera", { event: true });
+            },
           },
-        },
-        {
-          text: 'No',
-          onPress: () => {
-            this.Subscribeshake();
+          {
+            text: 'No',
+            onPress: () => {
+              this.setState({ isAlertActive: false });
+              this.Subscribeshake();
+              return;
+            },
           },
-        },
-      ]);
+        ]);
+      }
     }
+
+    return;
 
 
   }
