@@ -128,15 +128,16 @@ export default class Home extends Component {
 
   }
   computeShake(x, y, z, subscription) {
+    const { navigation } = this.props;
     let total = Math.abs(x) + Math.abs(y) + Math.abs(z);
-    if (total >= 15) {
+    if (total >= 17) {
       subscription.unsubscribe();
       console.log('STOP');
       Alert.alert('SHAKE EVENT DETECTED', `DO YOU WANT TO RECORD A VIDEO?`, [
         {
           text: 'Yes',
           onPress: () => {
-            this.Subscribeshake();
+            navigation.navigate("Camera",{event:true});
           },
         },
         {

@@ -7,7 +7,7 @@
  */
 
 // import dependencies
-import React, {Component, PureComponent} from 'react';
+import React, { Component, PureComponent } from 'react';
 import {
   AppRegistry,
   SafeAreaView,
@@ -15,16 +15,16 @@ import {
   StyleSheet,
   View,
   Text,
+  Alert,
   TouchableOpacity,
 } from 'react-native';
 import RNFS from 'react-native-fs';
-import {RNCamera} from 'react-native-camera';
+import { RNCamera } from 'react-native-camera';
+import { getStorage, uploadBytes, ref } from 'firebase/storage';
 
-// import components
 
-// import colors
 import Colors from '../../theme/colors';
-
+const delay = ms => new Promise(res => setTimeout(res, ms));
 const styles = StyleSheet.create({
   flex1: {
     flex: 1,
@@ -64,23 +64,52 @@ export default class Cart extends Component {
       recordOptions: {
         quality: RNCamera.Constants.VideoQuality['1080p'],
         videoBitrate: 10,
+        willrecord: true,
       },
     };
   }
 
+
+  componentDidUpdate() {
+    this.autotakeVideo();
+
+  }
+  autotakeVideo = async () => {
+    await delay(2000);
+    if (this.props.route.params && this.state.isRecording !== true) {
+      let { event } = this.props.route.params;
+      console.log('event', event);
+      if (event === true) {
+        this.props.route.params = false;
+        this.takeVideo();
+        await delay(7000);
+        this.takeVideo();
+
+      } else {
+        console.log('event false');
+      }
+    } else {
+      console.log('not working');
+    }
+  }
+
   takeVideo = async () => {
-    if (this.state.isRecording == false) {
+
+    // eslint-disable-next-line no-unused-vars
+    const storage = getStorage();
+    if (this.state.isRecording === false) {
       if (this.camera) {
         try {
           const promise = this.camera.recordAsync(this.state.recordOptions);
 
           if (promise) {
-            this.setState({isRecording: true});
+            this.setState({ isRecording: true });
             const data = await promise;
 
-            this.setState({isRecording: false});
+            this.setState({ isRecording: false });
             console.log('takeVideo', data);
-            const destinationAddress = RNFS.ExternalDirectoryPath + '/vid.mp4';
+            const destinationAddress = RNFS.ExternalDirectoryPath + `/${global.USERID}.mp4`;
+            this.uploadImage(data.uri);
             RNFS.moveFile(data.uri, destinationAddress).then(
               () => {
                 console.log('Video copied locally!!');
@@ -90,17 +119,51 @@ export default class Cart extends Component {
               },
             );
           }
+
         } catch (e) {
           console.error(e);
-          this.setState({isRecording: false});
+          this.setState({ isRecording: false });
         }
       }
     } else {
       this.camera.stopRecording();
     }
   };
+
+  uploadImage = async (uri) => {
+    const filename = global.USERID + '.mp4';
+    //const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
+    const storage = getStorage();
+    const metadata = {
+      contentType: 'video/mp4',
+    };
+    const storageRef = ref(storage, `/videos/${filename}`);
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function (e) {
+        console.log(e);
+        reject(new TypeError('Network request failed'));
+      };
+      xhr.responseType = 'blob';
+      xhr.open('GET', uri, true);
+      xhr.send(null);
+    });
+    uploadBytes(storageRef, blob, metadata).then((snapshot) => {
+      console.log('Uploaded a blob or file!', snapshot);
+    });
+  };
+  async simulatePress() {
+    this.swiper.onPress();
+    await delay(7000);
+    this.swiper.onPress();
+  }
+
   render() {
-    const {} = this.state;
+    const { } = this.state;
+
 
     return (
       <SafeAreaView style={styles.container}>
@@ -130,15 +193,22 @@ export default class Cart extends Component {
             }}
           />
           <View
-            style={{flex: 0, flexDirection: 'row', justifyContent: 'center'}}>
+            style={{ flex: 0, flexDirection: 'row', justifyContent: 'center' }}>
             <TouchableOpacity
+              ref={(swiper) => {
+                this.swiper = swiper;
+              }}
               onPress={this.takeVideo.bind(this)}
+
               style={styles.capture}>
-              <Text style={{fontSize: 14}}>
+              <Text style={{ fontSize: 14 }}>
                 {' '}
-                {this.state.isRecording == false ? 'START' : 'STOP'}{' '}
+                {this.state.isRecording === false ? 'START' : 'STOP'}{' '}
               </Text>
             </TouchableOpacity>
+            {/* <Button onPress={this.takeVideo.bind(this)}
+              ref={(button) => {this.button = button; }}
+              title="some button" /> */}
           </View>
         </View>
       </SafeAreaView>
