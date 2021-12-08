@@ -5,12 +5,9 @@
 import React, { Component } from 'react';
 import {
   ImageBackground,
-  AppState,
-  SafeAreaView,
   StatusBar,
   StyleSheet,
   View,
-  Text,
   Alert,
 } from 'react-native';
 import { getAuth } from 'firebase/auth';
@@ -29,11 +26,7 @@ import GradientContainer from '../../components/gradientcontainer/GradientContai
 import Logo from '../../components/logo/Logo';
 import {
   accelerometer,
-  gyroscope,
-  setUpdateIntervalForType,
-  SensorTypes,
 } from "react-native-sensors";
-import { map, filter } from "rxjs/operators";
 
 
 
@@ -81,7 +74,7 @@ export default class Home extends Component {
     super(props);
 
     this.state = {
-      ShakeSetting: true,
+      ShakeSetting: false,
       isAlertActive: false,
     };
   }
@@ -92,12 +85,9 @@ export default class Home extends Component {
     get(child(dbRef, `Shake/${user.uid}`))
       .then((snapshot) => {
         let result = snapshot.val();
-        console.log(result.Activate);
-        if (result.Activate === true) {
-          this.setState({ ShakeSetting: true });
-        } else {
-          this.setState({ ShakeSetting: false });
-        }
+        console.log(result);
+        this.setState({ ShakeSetting: result.Activate });
+        console.log('Set Shake Setting:', result.Activate);
       })
       .catch((error) => {
         console.log("Shake Error", error);
@@ -110,7 +100,6 @@ export default class Home extends Component {
     navigation.navigate(screen);
   };
   componentDidMount() {
-    console.log('test');
     const { navigation } = this.props;
     if (this.state.isAlertActive === false) {
       this.getShakeSettings();
@@ -126,9 +115,10 @@ export default class Home extends Component {
     });
   }
   Subscribeshake() {
+    console.log('Subscribe to shake');
     const subscription = accelerometer.subscribe(
       ({ x, y, z }) => this.computeShake(x, y, z, subscription),
-      error => console.log(error)
+      error => console.log("Shake Error", error)
     );
 
     // this.componentDidUpdate{
@@ -140,7 +130,7 @@ export default class Home extends Component {
   computeShake(x, y, z, subscription) {
     const { navigation } = this.props;
     let total = Math.abs(x) + Math.abs(y) + Math.abs(z);
-    if (this.state.isAlertActive === false) {
+    if (this.state.isAlertActive === false && this.state.ShakeSetting === true) {
       if (total >= 20) {
         this.setState({ isAlertActive: true });
         subscription.unsubscribe();
@@ -164,10 +154,7 @@ export default class Home extends Component {
         ]);
       }
     }
-
     return;
-
-
   }
 
 

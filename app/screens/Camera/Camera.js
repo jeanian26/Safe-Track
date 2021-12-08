@@ -84,6 +84,9 @@ export default class Cart extends Component {
         latitude: 1,
         longitude: 1,
       },
+      phone: '',
+      name: '',
+      socialContacts: [],
     };
   }
 
@@ -91,9 +94,13 @@ export default class Cart extends Component {
   componentDidMount() {
     const { navigation } = this.props;
     this.autotakeVideo();
+    this.getUserData();
+    this.getSocialContacts();
 
     this.focusListener = navigation.addListener('focus', () => {
       this.autotakeVideo();
+      this.getUserData();
+      this.getSocialContacts();
     });
 
   }
@@ -195,11 +202,11 @@ export default class Cart extends Component {
     });
     uploadBytes(storageRef, blob, metadata).then((snapshot) => {
       console.log('Uploaded a blob or file!', snapshot);
+      this.getPosition(snapshot.fullPath);
     });
-    this.getPosition();
   }
 
-  getPosition = () => {
+  getPosition = (filePath) => {
     const self = this;
     RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({
       interval: 10000,
@@ -215,6 +222,7 @@ export default class Cart extends Component {
             self.reverseGeoCode(
               position.coords.latitude,
               position.coords.longitude,
+              filePath
             );
             self.setState({
               region: {
@@ -236,7 +244,7 @@ export default class Cart extends Component {
         console.log(err);
       });
   };
-  reverseGeoCode = (lat, long) => {
+  reverseGeoCode = (lat, long,filePath) => {
     console.log('Latitude', lat);
     console.log('Longitude', long);
     const url = `https://reverse.geocoder.ls.hereapi.com/6.2/reversegeocode.json?prox=${long}%2C${lat}%2C137&mode=retrieveAddresses&maxresults=1&gen=9&apiKey=v_9DU2wi_FDqhJ71oCKfMHhCBVt7L7HszBSG72sWvAQ`;
@@ -253,30 +261,107 @@ export default class Cart extends Component {
     )
       .then((r) => r.json())
       .then((r) => {
-        console.log(r.Response.View[0].Result[0].Location.Address.Label);
-        // this.showAlert(
-        //   r.Response.View[0].Result[0].Location.Address.Label,
-        //   lat,
-        //   long,
-        // );
         this.saveEvent(r.Response.View[0].Result[0].Location.Address.Label,
           lat,
-          long);
+          long,filePath);
       });
   };
-  saveEvent(location, lat, long){
+  saveEvent(location, lat, long,filePath) {
     let time = Date.now();
-    console.log(location,lat,long);
+    console.log(location, lat, long);
     const db = getDatabase();
     set(dataRef(db, 'Events/' + this.state.filename), {
       filename: this.state.filename,
-      user:global.USERID ,
-      time:time,
-      active:true,
-      location:location,
-      lat:lat,
-      long:long,
-    });
+      user: global.USERID,
+      time: time,
+      active: true,
+      location: location,
+      lat: lat,
+      long: long,
+    }).then(() => {
+      console.log('success');
+      this.sendMessages(location);
+    }).catch((error) => console.log(error));
+
+
+  }
+
+  getUserData() {
+    const dbRef = dataRef(getDatabase());
+    get(child(dbRef, `Accounts/${global.USERID}`))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          let result = snapshot.val();
+          this.setState({ phone: result.phone, name: result.name });
+        } else {
+          console.log('No data available');
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+  getSocialContacts() {
+    let dataArray = [];
+    const dbRef = dataRef(getDatabase());
+    get(child(dbRef, `SocialContacts/${global.USERID}`))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          let result = snapshot.val();
+          for (var key in result) {
+            if (result.hasOwnProperty(key)) {
+              let phone = result[key].phone;
+              phone = phone.replace(/\s/g, '');
+              dataArray.push(phone);
+              console.log(dataArray);
+
+            }
+          }
+          this.setState({ socialContacts: dataArray });
+        } else {
+          console.log('No data available');
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+  }
+
+  sendMessages(location) {
+    var url = 'https://api.sms.to/sms/send';
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', url);
+
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('Authorization', 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGg6ODA4MC9hcGkvdjEvdXNlcnMvYXBpL2tleS9nZW5lcmF0ZSIsImlhdCI6MTYzODg0MTYzNCwibmJmIjoxNjM4ODQxNjM0LCJqdGkiOiJwNkZNejA5MXR5QUEzYkVXIiwic3ViIjozMjQ0NjIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.mOc-oCCT7bh1-t2aqGGzT2gI8FrExi0FEs_aZluznlE');
+
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4) {
+        console.log(xhr.status);
+        console.log(xhr.responseText);
+      }
+    };
+    var socialContacts = this.state.socialContacts;
+  //   var data = `{
+  //   "message": "${this.state.name} asks for help in this location: ${location} ",
+  //   "to":["+639751160135"],
+  //   "sender_id": "SMSto",
+  //   "callback_url": "https://example.com/callback/handler"
+  // }`;
+
+  var data = {
+    message: `SafeTrack Advisory, ${this.state.name} Triggered an SOS this location: ${location} `,
+    to: socialContacts,
+    sender_id: 'SMSto',
+    callback_url: 'https://example.com/callback/handler',
+  };
+
+  data = JSON.stringify(data);
+
+    xhr.send(data);
+
   }
 
   showAlert = (location, lat, long) =>
