@@ -112,7 +112,7 @@ export default class Cart extends Component {
       if (event === true) {
         this.props.route.params = false;
         this.takeVideo();
-        await delay(10000);
+        await delay(7000);
         this.takeVideo();
 
       } else {

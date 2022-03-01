@@ -120,7 +120,7 @@ export default class Welcome extends Component {
         <View style={{ position: 'relative' }}>
           <ImageBackground
             source={headerImg}
-            style={styles.headerImg}></ImageBackground>
+            style={styles.headerImg} />
         </View>
 
         <View style={styles.footer}>

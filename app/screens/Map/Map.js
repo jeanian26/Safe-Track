@@ -158,7 +158,7 @@ export default class Map extends Component {
           backgroundColor={Colors.statusBarColor}
           barStyle="dark-content"
         />
-        <Button onPress={() => this.getPosition()} title="get location" />
+        {/* <Button onPress={() => this.getPosition()} title="get location" /> */}
         <MapView style={styles.map} region={this.state.region}>
           <Marker
             coordinate={{
