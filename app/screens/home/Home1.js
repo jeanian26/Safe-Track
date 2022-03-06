@@ -27,6 +27,7 @@ import Logo from '../../components/logo/Logo';
 import {
   accelerometer,
 } from "react-native-sensors";
+import { GoogleSignin  } from '@react-native-google-signin/google-signin';
 
 
 
@@ -78,11 +79,10 @@ export default class Home extends Component {
       isAlertActive: false,
     };
   }
-  getShakeSettings() {
-    const auth = getAuth();
-    const user = auth.currentUser;
-    const dbRef = refData(getDatabase());
-    get(child(dbRef, `Shake/${user.uid}`))
+  getShakeSettings = async () => {
+    let dbRef = refData(getDatabase());
+
+    get(child(dbRef, `Shake/${global.USERID}`))
       .then((snapshot) => {
         let result = snapshot.val();
         console.log(result);
@@ -131,7 +131,7 @@ export default class Home extends Component {
     const { navigation } = this.props;
     let total = Math.abs(x) + Math.abs(y) + Math.abs(z);
     if (this.state.isAlertActive === false && this.state.ShakeSetting === true) {
-      if (total >= 20) {
+      if (total >= 15) {
         this.setState({ isAlertActive: true });
         subscription.unsubscribe();
         console.log('STOP');

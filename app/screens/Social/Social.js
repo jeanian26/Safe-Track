@@ -188,7 +188,7 @@ export default class AboutUs extends Component {
         text: 'OK',
         onPress: () => {
           const dbRef = ref(getDatabase());
-          remove(child(dbRef, 'SocialContacts/' + global.USERID + "/" + this.state.data[index].name));
+          remove(child(dbRef, 'SocialContacts/' + global.USERID + '/' + this.state.data[index].name));
           this.componentDidMount();
         },
       },
@@ -211,10 +211,10 @@ export default class AboutUs extends Component {
           });
           this.setState({ data: dataArray });
           this.setState({ noData: false });
-          console.log(this.state.data)
+          console.log(this.state.data);
         } else {
           console.log('No data available');
-          this.setState({ data: [''] });
+          this.setState({ data: [] });
           this.setState({ noData: true });
         }
       })

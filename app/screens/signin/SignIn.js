@@ -7,7 +7,7 @@
  */
 
 // import dependencies
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   SafeAreaView,
   StatusBar,
@@ -17,18 +17,24 @@ import {
   View,
   Alert,
 } from 'react-native';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 // import components
 import Button from '../../components/buttons/Button';
 import InputModal from '../../components/modals/InputModal';
 import UnderlinePasswordInput from '../../components/textinputs/UnderlinePasswordInput';
 import UnderlineTextInput from '../../components/textinputs/UnderlineTextInput';
-import {signInWithEmailAndPassword} from 'firebase/auth';
-import {passAuth, USERID} from '../../config/firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { passAuth, USERID } from '../../config/firebase';
 // import colors, layout
 import Colors from '../../theme/colors';
 import Layout from '../../theme/layout';
+
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
 
 // SignIn Config
 const PLACEHOLDER_TEXT_COLOR = Colors.onPrimaryColor;
@@ -42,7 +48,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.primaryColor,
   },
-  contentContainerStyle: {flex: 1},
+  contentContainerStyle: { flex: 1 },
   content: {
     flex: 1,
     justifyContent: 'space-between',
@@ -50,9 +56,9 @@ const styles = StyleSheet.create({
   form: {
     paddingHorizontal: Layout.LARGE_PADDING,
   },
-  inputContainer: {marginBottom: 7},
-  buttonContainer: {paddingTop: 23},
-  forgotPassword: {paddingVertical: 23},
+  inputContainer: { marginBottom: 7 },
+  buttonContainer: { paddingTop: 23 },
+  forgotPassword: { paddingVertical: 23 },
   forgotPasswordText: {
     fontWeight: '300',
     fontSize: 13,
@@ -142,7 +148,7 @@ export default class SignIn extends Component {
   };
 
   onTogglePress = () => {
-    const {secureTextEntry} = this.state;
+    const { secureTextEntry } = this.state;
     this.setState({
       secureTextEntry: !secureTextEntry,
     });
@@ -161,12 +167,12 @@ export default class SignIn extends Component {
   };
 
   navigateTo = (screen) => () => {
-    const {navigation} = this.props;
+    const { navigation } = this.props;
     navigation.navigate(screen);
   };
 
   signIn = () => () => {
-    const {navigation} = this.props;
+    const { navigation } = this.props;
     this.setState({
       emailFocused: false,
       passwordFocused: false,
@@ -202,7 +208,6 @@ export default class SignIn extends Component {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        self.showAlert(false);
         console.log('Error' + errorCode, errorMessage);
         Alert.alert(
           'Signup ',
@@ -220,21 +225,36 @@ export default class SignIn extends Component {
         );
       });
   };
-  showAlert = () => {
-    Alert.alert(
-      'TEST',
-      'TEST',
 
-      [
-        {
-          text: 'ok',
-          style: 'cancel',
-        },
-      ],
-      {
-        cancelable: true,
-      },
-    );
+  signInGoogle = async () => {
+    try {
+      const { navigation } = this.props;
+
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      this.setState({ userInfo });
+      console.log(userInfo.user.id, userInfo.user.name, userInfo.user.email);
+      global.USERID = userInfo.user.id;
+      global.DISPLAY_NAME = userInfo.user.name;
+      global.EMAIL = userInfo.user.email;
+      navigation.navigate('HomeNavigator');
+    } catch (error) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        console.log(1, error.code, statusCodes.SIGN_IN_CANCELLED);
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        // operation (e.g. sign in) is in progress already
+        console.log(2, error.code, statusCodes.IN_PROGRESS);
+
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        // play services not available or outdated
+        console.log(3, error.code, statusCodes.PLAY_SERVICES_NOT_AVAILABLE);
+
+      } else {
+        // some other error happened
+        console.log(4, error);
+
+      }
+    }
   };
 
   render() {
@@ -309,6 +329,16 @@ export default class SignIn extends Component {
                   titleColor={Colors.primaryColor}
                 />
               </View>
+              <View style={styles.buttonContainer}>
+                <Button
+                  color={'#fff'}
+                  rounded
+                  borderRadius
+                  onPress={() => this.signInGoogle()}
+                  title={'Sign in With Google'.toUpperCase()}
+                  titleColor={Colors.primaryColor}
+                />
+              </View>
 
               <View style={styles.forgotPassword}>
                 <Text
@@ -317,11 +347,20 @@ export default class SignIn extends Component {
                   style={styles.forgotPasswordText}>
                   Forgot password?
                 </Text>
+                {/* <GoogleSigninButton
+                  style={{ width: '100%', height: 50, alignSelf: 'center', marginBottom: 20, marginTop: 50,borderRadius: }}
+                  size={GoogleSigninButton.Size.Wide}
+                  color={GoogleSigninButton.Color.Dark}
+                  onPress={this.signInGoogle}
+                  disabled={this.state.isSigninInProgress}
+                /> */}
               </View>
+
+
             </View>
 
             <TouchableWithoutFeedback>
-              <View style={styles.footer}></View>
+              <View style={styles.footer} />
             </TouchableWithoutFeedback>
           </View>
         </KeyboardAwareScrollView>

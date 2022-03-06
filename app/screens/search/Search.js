@@ -159,7 +159,11 @@ export default class Search extends Component {
       if (user) {
         const uid = user.uid;
         this.setState({ uid: uid });
-      } else {
+      } else if (global.USERID){
+        this.setState({uid:global.USERID});
+      }
+      else {
+        this.set;
         console.log('no user logged in');
       }
     });

@@ -9,7 +9,7 @@ import {
     Text,
     View,
     Platform,
-    Alert
+    Alert,
 } from 'react-native';
 import FingerprintScanner from 'react-native-fingerprint-scanner';
 import { Caption, Paragraph } from '../../components/text/CustomText';
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     instructionContainer: {
         justifyContent: 'center',
         alignItems: 'center',
-        paddingTop: 30
+        paddingTop: 30,
     },
     result: {
         marginTop: 32,
@@ -66,7 +66,7 @@ export default class FingerprintAuth extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            fingerPrint: "Not Good"
+            fingerPrint: 'Not Good',
         };
     }
 
@@ -80,9 +80,10 @@ export default class FingerprintAuth extends Component {
         this.askFingerprint();
     }
     askFingerprint() {
+        FingerprintScanner.release();
         FingerprintScanner
             .isSensorAvailable()
-            .then(biometryType => console.log("Good", biometryType))
+            .then(biometryType => console.log('Good', biometryType))
             .catch(error => console.log(error));
 
         if (this.requiresLegacyAuthentication()) {
@@ -99,15 +100,16 @@ export default class FingerprintAuth extends Component {
     }
     authCurrent() {
         const { navigation } = this.props;
+
         FingerprintScanner
             .authenticate({ title: 'Log in with Biometrics' })
             .then((result) => {
-                this.setState({ fingerPrint: "Good" });
-                navigation.navigate("HomeNavigator")
+                this.setState({ fingerPrint: 'Good' });
+                navigation.navigate('HomeNavigator');
                 console.log(result);
             }).catch((error) => {
                 console.log(error);
-                this.setState({ fingerPrint: "Not Good" });
+                this.setState({ fingerPrint: 'Not Good' });
             }
             );
     }

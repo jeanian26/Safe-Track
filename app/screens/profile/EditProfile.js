@@ -144,9 +144,9 @@ export default class EditProfile extends Component {
     const user = auth.currentUser;
     const updates = {};
     const db = getDatabase();
-
-    updates[`/Accounts/${user.uid}/name`] = this.state.name;
-    updates[`/Accounts/${user.uid}/phone`] = this.state.phone;
+    updates[`/Accounts/${global.USERID}/email`] = global.EMAIL;
+    updates[`/Accounts/${global.USERID}/name`] = this.state.name;
+    updates[`/Accounts/${global.USERID}/phone`] = this.state.phone;
     update(refData(db), updates);
     // set(refData(db, 'userPhoneNumber/' + global.USERID), {
     //   phone: this.state.phone,
@@ -186,14 +186,6 @@ export default class EditProfile extends Component {
     });
   };
   componentDidMount = async () => {
-    // const auth = getAuth();
-    // const user = auth.currentUser;
-    // if (user !== null) {
-    //   user.providerData.forEach((profile) => {
-    //     this.setState({name: profile.displayName});
-    //     this.setState({email: profile.email});
-    //   });
-    // }
 
     const storage = getStorage();
     getDownloadURL(ref(storage, `profile_images/${global.USERID}.jpg`))

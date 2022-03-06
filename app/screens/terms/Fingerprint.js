@@ -9,7 +9,7 @@ import {
     Text,
     View,
     Platform,
-    Alert
+    Alert,
 } from 'react-native';
 import FingerprintScanner from 'react-native-fingerprint-scanner';
 import { Caption, Paragraph } from '../../components/text/CustomText';
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     instructionContainer: {
         justifyContent: 'center',
         alignItems: 'center',
-        paddingTop: 30
+        paddingTop: 30,
     },
     result: {
         marginTop: 32,
@@ -59,7 +59,7 @@ export default class Fingerprint extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            fingerPrint: "Not Good"
+            fingerPrint: 'Not Good',
         };
     }
 
@@ -73,9 +73,11 @@ export default class Fingerprint extends Component {
         this.askFingerprint();
     }
     askFingerprint() {
+        console.log('start biometrics');
+        FingerprintScanner.release();
         FingerprintScanner
             .isSensorAvailable()
-            .then(biometryType => console.log("Good", biometryType))
+            .then(biometryType => console.log('Good', biometryType))
             .catch(error => console.log(error));
 
         if (this.requiresLegacyAuthentication()) {
@@ -94,11 +96,11 @@ export default class Fingerprint extends Component {
         FingerprintScanner
             .authenticate({ title: 'Log in with Biometrics' })
             .then((result) => {
-                this.setState({ fingerPrint: "Good" });
+                this.setState({ fingerPrint: 'Good' });
                 console.log(result);
             }).catch((error) => {
                 console.log(error);
-                this.setState({ fingerPrint: "Not Good" });
+                this.setState({ fingerPrint: 'Not Good' });
             }
             );
     }

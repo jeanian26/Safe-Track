@@ -1574,6 +1574,11 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/toolbar-android/-/toolbar-android-0.1.0-rc.2.tgz#86cae655836afacc52d4063062cc59837d1a8640"
   integrity sha512-UCblqsitOcoYxVc6QzcaqCKogeRnePPMw7cbGvW5GI/GXIwQel8Kge9d910W3MUPUzw3pFzhIZVug6U3W067Pg==
 
+"@react-native-google-signin/google-signin@^7.1.0":
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/@react-native-google-signin/google-signin/-/google-signin-7.1.0.tgz#de39000dc1e095c54b8136436ad43cfd8c938a0c"
+  integrity sha512-F8eaK4hATG/r+YSObKK15eFbJ2dZsf/fEL8+7T7iL4kDM4+oUJ43qUYv6fbvdsR29aRHaHcezVrfLVIY1Gswiw==
+
 "@react-navigation/bottom-tabs@^5.11.8":
   version "5.11.15"
   resolved "https://registry.yarnpkg.com/@react-navigation/bottom-tabs/-/bottom-tabs-5.11.15.tgz#f973625cc32d9c5a4067851f084cb11ccd68fe79"

@@ -27,6 +27,7 @@ import { Heading5, Paragraph } from '../../components/text/CustomText';
 import { passAuth, checkLoggedIn } from '../../config/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { getDatabase, ref, set, get, child } from 'firebase/database';
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 // import colors
 import Colors from '../../theme/colors';
 
@@ -161,6 +162,7 @@ export default class Introduction extends Component {
     super(props);
     this.state = {
       activeIndex: 0,
+      currentUser:[],
     };
   }
 
@@ -183,6 +185,7 @@ export default class Introduction extends Component {
     navigation.navigate(screen);
   };
   componentDidMount = () => {
+    this.getCurrentUser();
     const { navigation } = this.props;
     onAuthStateChanged(passAuth(), (user) => {
       if (user) {
@@ -192,10 +195,23 @@ export default class Introduction extends Component {
         global.EMAIL = user.email;
         this.fingerPrint();
 
+      } else if (this.state.currentUser){
+        console.log('GOOGLE LOGIN ACTIVE',this.state.currentUser);
+        let userAccount = this.state.currentUser;
+        global.USERID = userAccount.user.id;
+        global.DISPLAY_NAME = userAccount.user.name;
+        global.EMAIL = userAccount.user.email;
+        this.fingerPrint();
+
       } else {
         console.log('no user logged in');
       }
     });
+
+  };
+  getCurrentUser = async () => {
+    const currentUser = await GoogleSignin.getCurrentUser();
+    this.setState({ currentUser });
   };
 
   fingerPrint() {

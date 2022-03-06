@@ -175,12 +175,10 @@ export default class EditAddress extends Component {
     }
   };
   saveAddress = () => {
-    const auth = getAuth();
-    const user = auth.currentUser;
     const {navigation} = this.props;
 
     const db = getDatabase();
-    set(ref(db, 'address/' + user.uid), {
+    set(ref(db, 'address/' + global.USERID), {
       str_number: this.state.number,
       street_name: this.state.street,
       barangay: this.state.district,
@@ -195,7 +193,7 @@ export default class EditAddress extends Component {
     const user = auth.currentUser;
     const dbRef = ref(getDatabase());
     const self = this;
-    get(child(dbRef, `address/${user.uid}`))
+    get(child(dbRef, `address/${global.USERID}`))
       .then((snapshot) => {
         if (snapshot.exists()) {
           console.log(snapshot.val());

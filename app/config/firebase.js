@@ -8,6 +8,8 @@ import {
   signInWithEmailAndPassword,
 } from 'firebase/auth';
 
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+
 const firebaseConfig = {
   apiKey: 'AIzaSyALWJDjGJ4PDcJ5j7XZewfcdtlbwsQAxsw',
   authDomain: 'safetrack-579c5.firebaseapp.com',
@@ -15,7 +17,11 @@ const firebaseConfig = {
   storageBucket: 'safetrack-579c5.appspot.com',
   messagingSenderId: '1016427529309',
   appId: '1:1016427529309:web:57584804a491e3f4ce39b4',
+  webClientId:'1016427529309-mkufc642gef0e1tl9g1sl5t5st4b7t65.apps.googleusercontent.com',
+  webClientSecret:'AqhdpZ_2WMgRAzWvfnN3nsfU',
 };
+GoogleSignin.configure(firebaseConfig);
+
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 

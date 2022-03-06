@@ -38,7 +38,9 @@ import { Subtitle1, Subtitle2 } from '../../components/text/CustomText';
 import TouchableItem from '../../components/TouchableItem';
 import { passAuth } from '../../config/firebase';
 import { signOut } from 'firebase/auth';
-import { Slider } from '@miblanchard/react-native-slider';
+import {
+  GoogleSignin,
+} from '@react-native-google-signin/google-signin';
 
 // import colors
 import Colors from '../../theme/colors';
@@ -202,14 +204,9 @@ export default class Settings extends Component {
     } else {
       activate = false;
     }
-
-    const auth = getAuth();
-    const user = auth.currentUser;
-    const { navigation } = this.props;
-
     const db = getDatabase();
     const updates = {};
-    updates[`/pin/${user.uid}/Activate`] = activate;
+    updates[`/pin/${global.USERID}/Activate`] = activate;
     update(refData(db), updates);
     this.getPinCode();
   }
@@ -259,6 +256,14 @@ export default class Settings extends Component {
       ]);
     }
   }
+  // signOutGoogle = async () => {
+  //   try {
+  //     await GoogleSignin.signOut();
+  //     this.setState({ user: null }); // Remember to remove the user from your app's state as well
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   logout = () => {
     const { navigation } = this.props;
@@ -270,6 +275,8 @@ export default class Settings extends Component {
         {
           text: 'OK',
           onPress: () => {
+            GoogleSignin.signOut();
+            GoogleSignin.revokeAccess();
             signOut(passAuth())
               .then(() => {
                 navigation.navigate('Welcome');
@@ -287,11 +294,13 @@ export default class Settings extends Component {
     const auth = getAuth();
     const user = auth.currentUser;
     const self = this;
-    console.log(user.uid);
     if (user !== null) {
       user.providerData.forEach((profile) => {
         this.setState({ email: profile.email });
       });
+    }
+    else {
+      this.setState({email:global.EMAIL});
     }
 
     const dbRef = refData(getDatabase());
@@ -308,14 +317,14 @@ export default class Settings extends Component {
         console.error(error);
       });
     const storage = getStorage();
-    getDownloadURL(ref(storage, `profile_images/${user.uid}.jpg`))
+    getDownloadURL(ref(storage, `profile_images/${global.USERID}.jpg`))
       .then((url) => {
         self.setState({ imageUri: url });
       })
       .catch((error) => {
         // Handle any errors
       });
-    get(child(dbRef, `address/${user.uid}`))
+    get(child(dbRef, `address/${global.USERID}`))
       .then((snapshot) => {
         if (snapshot.exists()) {
           console.log(snapshot.val());
@@ -336,11 +345,8 @@ export default class Settings extends Component {
       });
   }
   getPinCode() {
-    const auth = getAuth();
-    const user = auth.currentUser;
-    const self = this;
     const dbRef = refData(getDatabase());
-    get(child(dbRef, `pin/${user.uid}`))
+    get(child(dbRef, `pin/${global.USERID}`))
       .then((snapshot) => {
         let result = snapshot.val();
         console.log(result.Activate);
@@ -378,11 +384,8 @@ export default class Settings extends Component {
   };
 
   getFingerPrint() {
-    const auth = getAuth();
-    const user = auth.currentUser;
-    const self = this;
     const dbRef = refData(getDatabase());
-    get(child(dbRef, `fingerprint/${user.uid}`))
+    get(child(dbRef, `fingerprint/${global.USERID}`))
       .then((snapshot) => {
         let result = snapshot.val();
         console.log(result.Activate);
@@ -451,21 +454,17 @@ export default class Settings extends Component {
       activate = false;
     }
 
-    const auth = getAuth();
-    const user = auth.currentUser;
     const { navigation } = this.props;
 
     const db = getDatabase();
     const updates = {};
-    updates[`/fingerprint/${user.uid}/Activate`] = activate;
+    updates[`/fingerprint/${global.USERID}/Activate`] = activate;
     update(refData(db), updates);
     this.getFingerPrint();
   }
   getShakeSettings() {
-    const auth = getAuth();
-    const user = auth.currentUser;
     const dbRef = refData(getDatabase());
-    get(child(dbRef, `Shake/${user.uid}`))
+    get(child(dbRef, `Shake/${global.USERID}`))
       .then((snapshot) => {
         let result = snapshot.val();
         console.log(result.Activate);
@@ -481,12 +480,8 @@ export default class Settings extends Component {
       });
   }
   setShakeSetting() {
-    const auth = getAuth();
-    const user = auth.currentUser;
-    const { navigation } = this.props;
-
     const db = getDatabase();
-    set(refData(db, 'Shake/' + user.uid), {
+    set(refData(db, 'Shake/' + global.USERID), {
       Activate:!this.state.ShakeSetting,
     });
     this.getShakeSettings();
