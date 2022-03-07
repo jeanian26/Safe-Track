@@ -24,8 +24,11 @@ import Button from '../../components/buttons/Button';
 import InputModal from '../../components/modals/InputModal';
 import UnderlinePasswordInput from '../../components/textinputs/UnderlinePasswordInput';
 import UnderlineTextInput from '../../components/textinputs/UnderlineTextInput';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, fetchSignInMethodsForEmail } from 'firebase/auth';
 import { passAuth, USERID } from '../../config/firebase';
+import { get, getDatabase, ref, set, child, update } from 'firebase/database';
+import uuid from 'react-native-uuid';
+
 // import colors, layout
 import Colors from '../../theme/colors';
 import Layout from '../../theme/layout';
@@ -189,28 +192,80 @@ export default class SignIn extends Component {
         global.USERID = userCredential._tokenResponse.localId;
         global.DISPLAY_NAME = userCredential._tokenResponse.displayName;
         global.EMAIL = userCredential._tokenResponse.email;
-        Alert.alert(
-          'Signup ',
-          `Welcome Back ${userCredential._tokenResponse.displayName}`,
 
-          [
-            {
-              text: 'ok',
-              style: 'cancel',
-            },
-          ],
-          {
-            cancelable: true,
-          },
-        );
+        let email = userCredential._tokenResponse.email;
+        email = email.split('.');
+        const dbRef = ref(getDatabase());
+        get(child(dbRef, `Logs/${email[0]}/seen`))
+          .then((snapshot) => {
+            if (snapshot.exists()) {
+              let result = snapshot.val();
+              const db = getDatabase();
+
+              console.log(result);
+              if (!result) {
+                Alert.alert(
+                  'Login Success ',
+                  'Welcome Back, You have new logs',
+                  [
+                    {
+                      text: 'ok',
+                      style: 'cancel',
+                    },
+                    {
+                      text: 'Go to Logs',
+                      onPress: () => {
+                        const updates = {};
+
+                        updates[`/Logs/${email[0]}/seen`] = true;
+                        update(ref(db), updates).then((r) => {
+                        navigation.navigate('Logs');
+                        });
+
+
+                      },
+                    },
+                  ],
+                  {
+                    cancelable: true,
+                  },
+                );
+              }
+            } else {
+              console.log('No data available');
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+
+
         navigation.navigate('HomeNavigator');
       })
       .catch((error) => {
         const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log('Error' + errorCode, errorMessage);
+        console.log(errorCode);
+        if (errorCode === 'auth/wrong-password') {
+          const logID = uuid.v4();
+          var today = new Date();
+          var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+          var time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
+          var dateTime = date + ' ' + time;
+          let email = this.state.email;
+          email = email.split('.');
+          const db = getDatabase();
+          set(ref(db, `Logs/${email[0]}/${logID}`), {
+            ID: logID,
+            email: this.state.email,
+            time: dateTime,
+          });
+          const updates = {};
+          updates[`/Logs/${email[0]}/seen`] = false;
+          update(ref(db), updates).then((r) => {
+          });
+        }
         Alert.alert(
-          'Signup ',
+          'Login ',
           'Failed to Login',
 
           [

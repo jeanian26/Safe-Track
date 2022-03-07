@@ -128,29 +128,16 @@ export default class EditProfile extends Component {
   saveProfile() {
     const {navigation} = this.props;
     const auth = getAuth();
-    // updateProfile(auth.currentUser, {
-    //   displayName: this.state.name,
-    //   phoneNumber: '1235467',
-    //   email: this.state.email,
-    // })
-    //   .then(() => {
-    //     global.DISPLAY_NAME = this.state.name;
-    //     global.EMAIL = this.state.email;
-    //     navigation.navigate('Settings');
-    //   })
-    //   .catch((error) => {
-    //     console.log('failed');
-    //   });
     const user = auth.currentUser;
     const updates = {};
     const db = getDatabase();
     updates[`/Accounts/${global.USERID}/email`] = global.EMAIL;
     updates[`/Accounts/${global.USERID}/name`] = this.state.name;
     updates[`/Accounts/${global.USERID}/phone`] = this.state.phone;
-    update(refData(db), updates);
-    // set(refData(db, 'userPhoneNumber/' + global.USERID), {
-    //   phone: this.state.phone,
-    // });
+    update(refData(db), updates).then((r) => {
+      navigation.navigate('Settings');
+    });
+
   }
 
   chooseImage = async () => {

@@ -599,6 +599,12 @@ export default class Settings extends Component {
             title="Social Networks"
           />
           <Divider type="inset" marginLeft={DIVIDER_MARGIN_LEFT} />
+          <Setting
+            onPress={this.navigateTo('Logs')}
+            icon={"log-in"}
+            title="Logs"
+          />
+          <Divider type="inset" marginLeft={DIVIDER_MARGIN_LEFT} />
 
           <TouchableItem onPress={this.logout}>
             <View style={[styles.row, styles.setting]}>

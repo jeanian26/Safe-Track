@@ -28,6 +28,8 @@ import EditAddress from '../screens/address/EditAddress';
 import Notifications from '../screens/notifications/Notifications';
 
 import Social from '../screens/Social/Social';
+import Logs from '../screens/Logs/logs';
+
 
 import Colors from '../theme/colors';
 
@@ -162,6 +164,13 @@ function MainNavigatorA() {
           component={Social}
           options={{
             title: 'Social Networks',
+          }}
+        />
+        <Stack.Screen
+          name="Logs"
+          component={Logs}
+          options={{
+            title: 'Account Logs',
           }}
         />
       </Stack.Navigator>
