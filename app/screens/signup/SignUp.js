@@ -17,6 +17,7 @@ import {
   View,
   ToastAndroid,
   Alert,
+  CheckBox,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
@@ -29,7 +30,7 @@ import { passAuth } from '../../config/firebase';
 // import colors, layout
 import Colors from '../../theme/colors';
 import Layout from '../../theme/layout';
-import { getDatabase, ref, set} from 'firebase/database';
+import { getDatabase, ref, set } from 'firebase/database';
 
 // SignUp Config
 const PLACEHOLDER_TEXT_COLOR = Colors.onPrimaryColor;
@@ -96,6 +97,18 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     textDecorationLine: 'underline',
   },
+  checkboxContainer: {
+    marginTop: 20,
+    flexDirection: 'row',
+  },
+  checkbox: {
+    alignSelf: 'center',
+  },
+  label: {
+    fontSize: 16,
+    color: '#fff',
+    margin: 8,
+  },
 });
 
 // SignUp
@@ -111,6 +124,7 @@ export default class SignUp extends Component {
       password: '',
       passwordFocused: false,
       secureTextEntry: true,
+      isSelected: false,
     };
   }
 
@@ -169,6 +183,11 @@ export default class SignUp extends Component {
   };
 
   createAccount = async () => {
+    console.log(this.state.isSelected);
+    if (this.state.isSelected === false) {
+      Alert.alert('Error','Accept Privacy Statement');
+      return;
+    }
     // const { email, phone, password } = this.state;
     this.setState({
       emailFocused: false,
@@ -188,12 +207,12 @@ export default class SignUp extends Component {
           console.log(user);
           const db = getDatabase();
           set(ref(db, `Accounts/${user.uid}`), {
-            UserID:user.uid,
-            email:this.state.email,
+            UserID: user.uid,
+            email: this.state.email,
             name: '',
             phone: this.state.phone,
-            admin:false,
-            status:'active',
+            admin: false,
+            status: 'active',
           });
           Alert.alert(
             'Signup ',
@@ -249,9 +268,18 @@ export default class SignUp extends Component {
       nextFiled.focus();
     }
   };
+  setSelection(e) {
+    console.log(e);
+    this.setState({
+      isSelected: e,
+    });
+
+
+  }
 
   render() {
     const {
+      isSelected,
       emailFocused,
       phoneFocused,
       password,
@@ -328,7 +356,14 @@ export default class SignUp extends Component {
                 toggleText={secureTextEntry ? 'Show' : 'Hide'}
                 onTogglePress={this.onTogglePress}
               />
-
+              <View style={styles.checkboxContainer} >
+                <CheckBox
+                  value={isSelected}
+                  onValueChange={(e) => this.setSelection(e)}
+                  style={styles.checkbox}
+                />
+                <Text style={styles.label} onPress={this.navigateTo('Terms')}>Accept Privacy Statement </Text>
+              </View>
               <View style={styles.buttonContainer}>
                 <Button
                   color={'#fff'}

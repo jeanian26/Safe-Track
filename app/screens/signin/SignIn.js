@@ -68,6 +68,13 @@ const styles = StyleSheet.create({
     color: Colors.onPrimaryColor,
     textAlign: 'center',
   },
+  privacy: {
+    fontWeight: '300',
+    fontSize: 13,
+    color: Colors.onPrimaryColor,
+    textAlign: 'center',
+    marginTop:20,
+  },
   separator: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -401,6 +408,12 @@ export default class SignIn extends Component {
                   onPress={this.navigateTo('ForgotPassword')}
                   style={styles.forgotPasswordText}>
                   Forgot password?
+                </Text>
+                <Text
+                  // onPress={this.showInputModal(true)}
+                  onPress={this.navigateTo('Terms')}
+                  style={styles.privacy}>
+                  Privacy Policy
                 </Text>
                 {/* <GoogleSigninButton
                   style={{ width: '100%', height: 50, alignSelf: 'center', marginBottom: 20, marginTop: 50,borderRadius: }}

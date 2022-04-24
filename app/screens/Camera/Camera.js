@@ -160,22 +160,23 @@ export default class Cart extends Component {
   };
 
   confirmUpload = (uri) => {
-    console.log(uri);
-    Alert.alert('VIDEO RECORDED', 'DO YOU WANT TO SEND SOS?', [
-      {
-        text: 'Yes',
-        onPress: () => {
-          this.upload(uri);
+    this.upload(uri);
+    // console.log(uri);
+    // Alert.alert('VIDEO RECORDED', 'DO YOU WANT TO SEND SOS?', [
+    //   {
+    //     text: 'Yes',
+    //     onPress: () => {
+    //       this.upload(uri);
 
-        },
-      },
-      {
-        text: 'No',
-        onPress: () => {
-          return;
-        },
-      },
-    ]);
+    //     },
+    //   },
+    //   {
+    //     text: 'No',
+    //     onPress: () => {
+    //       return;
+    //     },
+    //   },
+    // ]);
   };
   upload = async (uri) => {
     const filename = uuid.v4();
@@ -280,7 +281,7 @@ export default class Cart extends Component {
       long: long,
     }).then(() => {
       console.log('success');
-      this.sendMessages(location);
+      Alert.alert('Success', 'Succesfully Send SOS');
     }).catch((error) => console.log(error));
 
 

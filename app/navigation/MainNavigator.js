@@ -18,6 +18,7 @@ import PinCode from '../screens/terms/PinCode';
 import EnterPin from '../screens/terms/EnterPin';
 import Fingerprint from '../screens/terms/Fingerprint';
 import FingerprintAuth from '../screens/terms/FingerprintAuth';
+import Terms from '../screens/terms/Terms';
 
 import HomeNavigator from './HomeNavigator1';
 
@@ -171,6 +172,13 @@ function MainNavigatorA() {
           component={Logs}
           options={{
             title: 'Account Logs',
+          }}
+        />
+        <Stack.Screen
+          name="Terms"
+          component={Terms}
+          options={{
+            title: 'Privacy Terms',
           }}
         />
       </Stack.Navigator>

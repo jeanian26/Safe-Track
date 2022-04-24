@@ -605,6 +605,12 @@ export default class Settings extends Component {
             title="Logs"
           />
           <Divider type="inset" marginLeft={DIVIDER_MARGIN_LEFT} />
+          <Setting
+            onPress={this.navigateTo('Terms')}
+            icon={"log-in"}
+            title="Privacy Policy"
+          />
+          <Divider type="inset" marginLeft={DIVIDER_MARGIN_LEFT} />
 
           <TouchableItem onPress={this.logout}>
             <View style={[styles.row, styles.setting]}>
