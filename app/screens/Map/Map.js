@@ -17,6 +17,7 @@ import Geolocation from 'react-native-geolocation-service';
 import MapView from 'react-native-maps';
 import { Marker } from 'react-native-maps';
 
+
 // import components
 
 import Colors from '../../theme/colors';
@@ -30,6 +31,7 @@ const styles = StyleSheet.create({
   map: {
     width: '100%',
     height: '100%',
+    flex: 1,
   },
 });
 
@@ -115,6 +117,8 @@ export default class Map extends Component {
         //   lat,
         //   long,
         // );
+      }).catch((error) => {
+        console.log("Error fetching location data:", error);
       });
   };
 

@@ -262,10 +262,18 @@ export default class Cart extends Component {
     )
       .then((r) => r.json())
       .then((r) => {
-        this.saveEvent(r.Response.View[0].Result[0].Location.Address.Label,
-          lat,
-          long,filePath);
+        if (r.Response && r.Response.View && r.Response.View.length > 0 && r.Response.View[0].Result && r.Response.View[0].Result.length > 0) {
+          const location = r.Response.View[0].Result[0].Location;
+          console.log(location.Address.Label);
+          this.saveEvent(location.Address.Label, lat, long, filePath);
+        } else {
+          console.log("Unexpected response from API:", r);
+        }
+      })
+      .catch((error) => {
+        console.log("Error fetching location data:", error);
       });
+    
   };
   saveEvent(location, lat, long,filePath) {
     let time = Date.now();

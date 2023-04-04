@@ -150,6 +150,12 @@ export default class Search extends Component {
   getData() {
     Contacts.getAll().then(
       (contacts) => {
+
+        // console.log(contacts)
+        for (let idx in contacts) {
+          console.log(contacts[idx])
+        }
+
         this.setState({ data: contacts });
         this.setState({ dataToDisplay: contacts });
       },
@@ -159,8 +165,8 @@ export default class Search extends Component {
       if (user) {
         const uid = user.uid;
         this.setState({ uid: uid });
-      } else if (global.USERID){
-        this.setState({uid:global.USERID});
+      } else if (global.USERID) {
+        this.setState({ uid: global.USERID });
       }
       else {
         this.set;
@@ -288,7 +294,9 @@ export default class Search extends Component {
                 />
                 <View style={{ paddingLeft: 20 }}>
                   <Text style={{ fontSize: 20 }}>{item.displayName}</Text>
-                  <Text>{item.phoneNumbers[0].number}</Text>
+                  {item.phoneNumbers.length > 0 && item.phoneNumbers[0].number && (
+                    <Text>{item.phoneNumbers[0].number}</Text>
+                  )}
                 </View>
                 <View style={styles.AddButtonContainer}>
                   <TouchableItem onPress={() => this.addContact(index)}>
@@ -303,6 +311,7 @@ export default class Search extends Component {
                 </View>
               </View>
             ))}
+
           </ScrollView>
         </View>
       </SafeAreaView>
